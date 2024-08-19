@@ -9,11 +9,12 @@ from aiogram_dialog import setup_dialogs
 from fluentogram import TranslatorHub
 
 from tgbot.config.config import Config, load_config
+from tgbot.dialogs.start.dialogs import start_dialog
+from dev.handlers.admin.admin import router as admin_router
 from tgbot.handlers.user.user import router as user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.services.i18n import create_translator_hub
-from tgbot.services.logger import LoggerFormatter, FORMAT, get_logger_dev
-from tgbot.dialogs.start.dialogs import start_dialog
+from tgbot.services.logger import LoggerFormatter, FORMAT
 
 # Конфигурация логирования
 logging.basicConfig(
@@ -24,11 +25,10 @@ logging.getLogger().handlers[0].setFormatter(LoggerFormatter())
 logging.getLogger().handlers[1].setFormatter(logging.Formatter(FORMAT))
 
 log = logging.getLogger(__name__)
-log_dev = get_logger_dev(__name__, log.getEffectiveLevel())
 
 
 async def main():
-    log_dev.debug('Bot init...')
+    log.debug('Bot init...')
 
     # Инициализация конфигурации бота
     config: Config = load_config()
@@ -49,8 +49,9 @@ async def main():
     translator_hub: TranslatorHub = create_translator_hub()
 
     # Регистрация роутеров
-    dp.include_router(user_router)      # Роутеры хэндлеров
-    dp.include_router(start_dialog)     # Роутеры aiogram_dialog
+    dp.include_router(user_router)  # Роутеры хэндлеров
+    dp.include_router(admin_router)
+    dp.include_router(start_dialog)  # Роутеры aiogram_dialog
 
     # Регистрация миддлварей
     dp.update.middleware(TranslatorRunnerMiddleware())  # i18n
