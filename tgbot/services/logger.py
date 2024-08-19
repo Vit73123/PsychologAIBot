@@ -39,17 +39,17 @@ class LoggerFormatterSelected(logging.Formatter):
         return formatter.format(record)
 
 
-def get_logger_sel(name: str, level: logging) -> Logger:
-    name = name + "new"
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.propagate = False
+def get_logger_dev(name: str, level: int) -> Logger:
+    name = name + "dev"
+    log = logging.getLogger(name)
+    log.setLevel(level)
+    log.propagate = False
 
     handler = logging.StreamHandler()
     handler.setLevel(level)
 
     handler.setFormatter(LoggerFormatterSelected())
 
-    logger.addHandler(handler)
+    log.addHandler(handler)
 
-    return logger
+    return log
