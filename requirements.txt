@@ -20,3 +20,4 @@ typing_extensions==4.12.2
 yarl==1.9.4
 
 fluentogram~=1.1.7
+aiogram_dialog~=2.2.0a5

@@ -5,13 +5,15 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram_dialog import setup_dialogs
 from fluentogram import TranslatorHub
 
 from tgbot.config.config import Config, load_config
 from tgbot.handlers.user.user import router as user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.services.i18n import create_translator_hub
-from tgbot.services.logger import LoggerFormatter, FORMAT, get_logger_sel
+from tgbot.services.logger import LoggerFormatter, FORMAT, get_logger_dev
+from tgbot.dialogs.start.dialogs import start_dialog
 
 # Конфигурация логирования
 logging.basicConfig(
@@ -22,11 +24,11 @@ logging.getLogger().handlers[0].setFormatter(LoggerFormatter())
 logging.getLogger().handlers[1].setFormatter(logging.Formatter(FORMAT))
 
 log = logging.getLogger(__name__)
-log_sel = get_logger_sel(__name__, log.getEffectiveLevel())
+log_dev = get_logger_dev(__name__, log.getEffectiveLevel())
 
 
 async def main():
-    log.debug('Bot init...')
+    log_dev.debug('Bot init...')
 
     # Инициализация конфигурации бота
     config: Config = load_config()
@@ -46,14 +48,15 @@ async def main():
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()
 
-    # Инициализация aiogram-dialog
-    # setup_dialogs(dp)
-
     # Регистрация роутеров
-    dp.include_router(user_router)
+    dp.include_router(user_router)      # Роутеры хэндлеров
+    dp.include_router(start_dialog)     # Роутеры aiogram_dialog
 
     # Регистрация миддлварей
     dp.update.middleware(TranslatorRunnerMiddleware())  # i18n
+
+    # Инициализация aiogram-dialog
+    setup_dialogs(dp)
 
     # Запуск бота
     log.info('Start bot...')

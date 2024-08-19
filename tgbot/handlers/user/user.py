@@ -1,28 +1,20 @@
 import logging
-from typing import TYPE_CHECKING
 
 from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
-from fluentogram import TranslatorRunner
+from aiogram_dialog import DialogManager, StartMode
 
-from tgbot.services.logger import get_logger_sel
-from tgbot.common import commands as cmd
-
-if TYPE_CHECKING:
-    from tgbot.locales.stub import TranslatorRunner
+from tgbot.dialogs.states import Start
+from tgbot.services.logger import get_logger_dev
 
 log = logging.getLogger(__name__)
-log_new = get_logger_sel(__name__, log.getEffectiveLevel())
+log_dev = get_logger_dev(__name__, log.level)
 
 router = Router()
 
 
 @router.message(CommandStart())
-async def cmd_start(message: Message, i18n: TranslatorRunner):
+async def cmd_start(message: Message, dialog_manager: DialogManager):
     log.debug('/start')
-    await message.answer(text=i18n.start(
-        cmd_psychology='/psychology',
-        cmd_tests='/tests',
-        cmd_profile='/profile'
-    ))
+    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)
