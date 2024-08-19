@@ -1,7 +1,7 @@
 import logging
 from logging import Logger
 
-from utils.colors import Colors as c
+from tgbot.services.colors import Colors as c
 
 FORMAT = ("#%(levelname)-8s "
           "[%(asctime)s] "
@@ -39,7 +39,7 @@ class LoggerFormatterSelected(logging.Formatter):
         return formatter.format(record)
 
 
-def get_logger_new(name: str, level: logging) -> Logger:
+def get_logger_sel(name: str, level: logging) -> Logger:
     name = name + "new"
     logger = logging.getLogger(name)
     logger.setLevel(level)
