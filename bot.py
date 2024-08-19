@@ -9,8 +9,12 @@ from aiogram_dialog import setup_dialogs
 from fluentogram import TranslatorHub
 
 from tgbot.config.config import Config, load_config
-from tgbot.dialogs.start.dialogs import start_dialog
-from dev.handlers.admin.admin import router as admin_router
+from tgbot.dialogs import (
+    start_dialog,
+    psychology_dialog,
+    tests_dialog,
+    profile_dialog,
+)
 from tgbot.handlers.user.user import router as user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.services.i18n import create_translator_hub
@@ -49,9 +53,15 @@ async def main():
     translator_hub: TranslatorHub = create_translator_hub()
 
     # Регистрация роутеров
-    dp.include_router(user_router)  # Роутеры хэндлеров
-    dp.include_router(admin_router)
-    dp.include_router(start_dialog)  # Роутеры aiogram_dialog
+    dp.include_routers(  # Роутеры хэндлеров
+        user_router,
+    )
+    dp.include_routers(  # Роутеры диалогов
+        start_dialog,
+        psychology_dialog,
+        tests_dialog,
+        profile_dialog,
+    )
 
     # Регистрация миддлварей
     dp.update.middleware(TranslatorRunnerMiddleware())  # i18n

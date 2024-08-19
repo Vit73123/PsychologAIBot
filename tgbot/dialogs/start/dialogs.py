@@ -8,7 +8,7 @@ from .getters import get_start
 
 start_dialog = Dialog(
     Window(
-        Format('{start}'),
+        Format('{dlg_start}'),
         StaticMedia(
             path='resources/images/start.png',
             type=ContentType.PHOTO

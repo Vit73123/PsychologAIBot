@@ -12,4 +12,4 @@ async def get_start(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    return {"start": i18n.dlg.start()}
+    return {"dlg_start": i18n.dlg.start()}

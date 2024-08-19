@@ -10,7 +10,7 @@ class Psychology(StatesGroup):
     session = State()
 
 
-class Test(StatesGroup):
+class Tests(StatesGroup):
     start = State()
     test_selection = State()
     test = State()
