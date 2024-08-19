@@ -12,4 +12,8 @@ async def get_start(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    return {"dlg_tests": i18n.dlg.tests()}
+    return {
+        "dlg_tests": i18n.dlg.tests(),
+        "btn_choose_test": i18n.btn.choose.test(),
+        "btn_back": i18n.btn.back(),
+    }

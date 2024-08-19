@@ -12,4 +12,8 @@ async def get_start(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    return {"dlg_psychology": i18n.dlg.psychology()}
+    return {
+        "dlg_psychology": i18n.dlg.psychology(),
+        "btn_start_session": i18n.btn.start.session(),
+        "btn_back": i18n.btn.back(),
+    }

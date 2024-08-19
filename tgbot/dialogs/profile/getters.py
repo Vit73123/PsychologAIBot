@@ -12,4 +12,8 @@ async def get_start(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    return {"dlg_profile": i18n.dlg.profile()}
+    return {
+        "dlg_profile": i18n.dlg.profile(),
+        "btn_create_profile": i18n.btn.create.profile(),
+        "btn_back": i18n.btn.back(),
+    }

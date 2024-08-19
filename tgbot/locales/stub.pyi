@@ -6,6 +6,7 @@ class TranslatorRunner:
     
     cmd: Cmd
     dlg: Dlg
+    btn: Btn
 
 
 class Cmd:
@@ -67,4 +68,31 @@ class Dlg:
 
 Ответьте на несколько простых вопросов.
 Вы можете создать статус: опишите своё текущее состояние или проблему, что является актуальным для вас в ближайшее время."""]: ...
+
+
+class Btn:
+    start: BtnStart
+    choose: BtnChoose
+    create: BtnCreate
+
+    @staticmethod
+    def back() -> Literal["""Вернуться"""]: ...
+
+
+class BtnStart:
+    @staticmethod
+    def session() -> Literal["""Начать сеанс"""]: ...
+
+    @staticmethod
+    def test() -> Literal["""Выбрать тест"""]: ...
+
+
+class BtnChoose:
+    @staticmethod
+    def test() -> Literal["""Выбрать тест"""]: ...
+
+
+class BtnCreate:
+    @staticmethod
+    def profile() -> Literal["""Создать профиль"""]: ...
 
