@@ -5,10 +5,8 @@ from environs import Env
 
 @dataclass
 class DatabaseConfig:
-    database: str  # Название базы данных
-    db_host: str  # URL-адрес базы данных
-    db_user: str  # Username пользователя базы данных
-    db_password: str  # Пароль к базе данных
+    dsn: str  # Подключение к базе данных по DSN
+    is_echo: bool  # Вывод лога СУБД
 
 
 @dataclass
@@ -44,9 +42,7 @@ def load_config(path: str | None = None) -> Config:
             url=env('GPT_URL')
         ),
         db=DatabaseConfig(
-            database=env('DATABASE'),
-            db_host=env('DB_HOST'),
-            db_user=env('DB_USER'),
-            db_password=env('DB_PASSWORD')
+            dsn=env('DB_DSN'),
+            is_echo=True if env('DB_IS_ECHO') == 'yes' else False
         )
     )

@@ -19,6 +19,7 @@ from tgbot.handlers.user.user import router as user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.services.i18n import create_translator_hub
 from tgbot.services.logger import LoggerFormatter, FORMAT
+from tgbot.db.db import setup_db
 
 # Конфигурация логирования
 logging.basicConfig(
@@ -36,6 +37,9 @@ async def main():
 
     # Инициализация конфигурации бота
     config: Config = load_config()
+
+    # Подключение к базе данных
+    setup_db(config.db)
 
     # Инициализация бота
     bot = Bot(
