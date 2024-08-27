@@ -4,7 +4,7 @@ from environs import Env
 
 
 @dataclass
-class DatabaseConfig:
+class DBConfig:
     dsn: str  # Подключение к базе данных по DSN
     is_echo: bool  # Вывод лога СУБД
 
@@ -25,7 +25,7 @@ class TgBot:
 class Config:
     tg_bot: TgBot
     gpt: GPT
-    db: DatabaseConfig
+    db: DBConfig
 
 
 def load_config(path: str | None = None) -> Config:
@@ -41,7 +41,7 @@ def load_config(path: str | None = None) -> Config:
             token=env('GPT_TOKEN'),
             url=env('GPT_URL')
         ),
-        db=DatabaseConfig(
+        db=DBConfig(
             dsn=env('DB_DSN'),
             is_echo=True if env('DB_IS_ECHO') == 'yes' else False
         )

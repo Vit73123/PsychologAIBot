@@ -19,7 +19,7 @@ from tgbot.handlers.user.user import router as user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.services.i18n import create_translator_hub
 from tgbot.services.logger import LoggerFormatter, FORMAT
-from tgbot.db.db import setup_db
+from tgbot.db.engine import create_pool
 
 # Конфигурация логирования
 logging.basicConfig(
@@ -39,7 +39,7 @@ async def main():
     config: Config = load_config()
 
     # Подключение к базе данных
-    setup_db(config.db)
+    session_pool = create_pool(config.db)
 
     # Инициализация бота
     bot = Bot(
@@ -76,7 +76,7 @@ async def main():
     # Запуск бота
     log.info('Start bot...')
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot, _translator_hub=translator_hub)
+    await dp.start_polling(bot, _translator_hub=translator_hub, session_pool=session_pool)
 
 
 if __name__ == '__main__':
