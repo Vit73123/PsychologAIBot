@@ -5,7 +5,7 @@ from tgbot.services.colors import Colors as c
 
 FORMAT = ("#%(levelname)-8s "
           "[%(asctime)s] "
-          "%(filename)-14s:%(lineno)-3d: "
+          "%(filename)-14s:%(lineno)4d: "
           "%(message)s")
 
 

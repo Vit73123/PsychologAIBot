@@ -1,16 +1,46 @@
 import asyncio
+import logging
 
 from tests.test_db import run_db_tests
 from tgbot.config.config import Config, load_config
-from tgbot.db.engine import create_pool
+from tgbot.db.factory import (
+    create_engine,
+    create_session_maker,
+    create_tables
+)
+from tgbot.services.logger import LoggerFormatter, FORMAT
+
+# Конфигурация логирования
+logging.basicConfig(
+    # level=logging.DEBUG,
+    level=logging.INFO,
+    handlers=[logging.StreamHandler(), logging.FileHandler('tgbot/log/my_test_log.log', 'w')]
+)
+logging.getLogger().handlers[0].setFormatter(LoggerFormatter())
+logging.getLogger().handlers[1].setFormatter(logging.Formatter(FORMAT))
+
+# Отключить дублирование логирования SQLAlchemy
+from sqlalchemy import log as sqlalchemy_log
+
+sqlalchemy_log._add_default_handler = lambda x: None
+
+log = logging.getLogger(__name__)
 
 
 async def main():
     config: Config = load_config()
 
-    session_pool = create_pool(config.db)
+    # Подключение к базе данных
+    engine = create_engine(config.db)
 
-    await run_db_tests(session_pool)
+    # Создание пула сессий базы данных
+    session_pool = create_session_maker(engine)
+
+    # Создание таблиц
+    if config.db.create_tables:
+        await create_tables(engine)
+
+    await run_db_tests(engine, session_pool)
 
 
 if __name__ == '__main__':
