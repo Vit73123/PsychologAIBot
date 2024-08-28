@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from tgbot.config.config import DBConfig
-from tgbot.db.models import Base
 
 
 def create_pool(db_config: DBConfig) -> async_sessionmaker[AsyncSession]:
@@ -28,11 +27,3 @@ def create_session_maker(engine: AsyncEngine) -> async_sessionmaker:
         expire_on_commit=False
     )
     return pool
-
-
-async def create_tables(engine: AsyncEngine):
-    async with engine.begin() as conn:
-        # db.async_engine.echo = False
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-        engine.echo = True

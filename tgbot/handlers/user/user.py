@@ -1,4 +1,5 @@
 import logging
+from pprint import pprint
 
 from aiogram import Router
 from aiogram.filters import CommandStart, Command
@@ -16,10 +17,10 @@ router = Router()
 
 
 @router.message(CommandStart())
-async def cmd_start(message: Message, dialog_manager: DialogManager, session: dict):
+async def cmd_start(message: Message, dialog_manager: DialogManager, **kwargs):
     log.info(' /start')
 
-    await set_user(session, message.from_user)
+    await set_user(message, **kwargs)
     await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)
 
 

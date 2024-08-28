@@ -1,7 +1,7 @@
 from logging import getLogger
-from pprint import pprint
 from typing import TYPE_CHECKING
 
+from aiogram.fsm.context import FSMContext
 from fluentogram import TranslatorRunner
 
 from tgbot.services.logger import get_logger_dev
@@ -15,10 +15,13 @@ log_dev = get_logger_dev(__name__, log.level)
 
 async def get_start(
         i18n: TranslatorRunner,
-        session: dict,
+        state: FSMContext,
         **kwargs
 ) -> dict[str, str]:
+    log.info(" state: %s", await state.get_data())
+    state_data = await state.get_data()
+
     return {
-        "dlg_start": i18n.dlg.start(),
-        "username": session['user_data']["username"]
+        'dlg_start': i18n.dlg.start(),
+        'username': state_data.get('username')
     }

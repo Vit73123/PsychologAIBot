@@ -14,6 +14,6 @@ async def get_start(
 ) -> dict[str, str]:
     return {
         "dlg_profile": i18n.dlg.profile(),
-        "btn_create_profile": i18n.btn.create.profile(),
+        "btn_about_me": i18n.btn.about.me(),
         "btn_back": i18n.btn.back(),
     }

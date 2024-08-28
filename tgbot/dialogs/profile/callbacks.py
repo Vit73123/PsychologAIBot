@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 
-async def btn_create_profile_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+async def btn_about_me_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug("Button clicked: Creat profile")
 
 

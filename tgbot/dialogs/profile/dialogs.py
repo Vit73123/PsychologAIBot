@@ -6,7 +6,7 @@ from aiogram_dialog.widgets.text import Format
 
 from tgbot.dialogs.states import Profile
 from .callbacks import (
-    btn_create_profile_clicked,
+    btn_about_me_clicked,
     btn_back_clicked,
 )
 from .getters import get_start
@@ -20,9 +20,9 @@ profile_dialog = Dialog(
         ),
         Row(
             Button(
-                text=Format('{btn_create_profile}'),
-                id='btn_create_profile',
-                on_click=btn_create_profile_clicked,
+                text=Format('{btn_about_me}'),
+                id='btn_about_me',
+                on_click=btn_about_me_clicked,
             ),
             Button(
                 text=Format('{btn_back}'),
