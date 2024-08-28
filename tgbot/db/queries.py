@@ -11,36 +11,31 @@ log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 
-async def get_user_by_user_id(session_pool: async_sessionmaker, user_id: int) -> User:
-    log.info("Get user by Telegram user_id=%s", str(user_id))
+async def get_user_by_user_id(session_pool: async_sessionmaker, tg_user_id: int) -> User:
+    log.info(" Get user: id=%s", tg_user_id)
     async with session_pool() as session:
         query = (
             select(User)
-            .filter(User.user_id == user_id)
+            .filter(User.user_id == tg_user_id)
         )
         result_ = await session.execute(query)
         result = result_.scalars().first()
         return result
 
 
-async def insert_user(session_pool: async_sessionmaker, user: types.User) -> User:
-    log_dev.info("Insert Bot User=%s", user)
+async def insert_user(session_pool: async_sessionmaker, tg_user: types.User) -> User:
+    log.info(" Insert user: id=%s", tg_user.id)
     async with session_pool() as session:
-        user_ = User(
-            user_id=user.id,
-            username=user.username,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            name=user.username,
+        user = User(
+            user_id=tg_user.id,
+            username=tg_user.username,
+            first_name=tg_user.first_name,
+            last_name=tg_user.last_name,
+            name=tg_user.username,
         )
-        session.add(user_)
+        session.add(user)
         await session.commit()
-        return user_
+        return user
 
 
-async def create_if_new_user(session_pool: async_sessionmaker, user: types.User) -> User | None:
-    log_dev.info("Create new user if not exists Bot User=%s", user)
-    user_ = await get_user_by_user_id(session_pool, user.id)
-    if not user_:
-        return await insert_user(session_pool, user)
-    return
+

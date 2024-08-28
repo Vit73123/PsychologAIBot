@@ -48,6 +48,7 @@ async def main():
 
     # Создание пула сессий базы данных
     session_pool = create_session_maker(engine)
+    session = {"session_pool": session_pool}
 
     # Создание таблиц
     if config.db.create_tables:
@@ -63,7 +64,7 @@ async def main():
     storage = MemoryStorage()
 
     # Инициализация диспетчера
-    dp = Dispatcher(storage=storage, session_pool=session_pool)
+    dp = Dispatcher(storage=storage, session=session)
 
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()
