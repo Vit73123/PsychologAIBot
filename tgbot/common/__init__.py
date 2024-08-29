@@ -1,1 +1,1 @@
-from .handlers import set_user
+from .user import set_user

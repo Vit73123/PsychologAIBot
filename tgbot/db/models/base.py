@@ -23,4 +23,3 @@ class Base(DeclarativeBase):
     id: Mapped[intpk]
     created_at: Mapped[date_time_now]
     updated_at: Mapped[date_time_now_upd]
-

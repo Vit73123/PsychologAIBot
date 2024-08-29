@@ -3,10 +3,7 @@ import logging
 
 from tests.test_db import run_db_tests
 from tgbot.config.config import Config, load_config
-from tgbot.db import (
-    factory as db_factory,
-    create_repo
-)
+from tgbot.db import create_repo
 from tgbot.services.logger import LoggerFormatter, FORMAT
 
 # Конфигурация логирования
@@ -29,23 +26,14 @@ log = logging.getLogger(__name__)
 async def main():
     config: Config = load_config()
 
-    # Подключение к базе данных
-    engine = db_factory.create_engine(config.db)
-
-    # Создание пула сессий базы данных
-    session = db_factory.create_session_maker(engine)
-
-    # Создание репозитория базы данных
-    repo = create_repo()
+    # Подключение к базе данных и создание репозитория
+    repo = create_repo(config.db)
 
     # Создание таблиц
     if config.db.create_tables:
-        await repo.create_tables(engine)
+        await repo.create_tables()
 
-    await run_db_tests(
-        session,
-        repo
-    )
+    await run_db_tests(repo)
 
 
 if __name__ == '__main__':
