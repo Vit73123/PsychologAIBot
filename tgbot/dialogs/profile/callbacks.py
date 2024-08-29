@@ -1,7 +1,7 @@
 import logging
 
 from aiogram.types import CallbackQuery
-from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog import DialogManager, StartMode, ShowMode
 from aiogram_dialog.widgets.kbd import Button
 
 from tgbot.dialogs.states import Start
@@ -13,7 +13,7 @@ log_dev = get_logger_dev(__name__, log.level)
 
 async def btn_profile_start_aboutme_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.info(" Button clicked: about me")
-    await dialog_manager.next()
+    await dialog_manager.next(show_mode=ShowMode.SEND)
 
 
 async def btn_back_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
