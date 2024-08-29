@@ -13,7 +13,7 @@ async def get_start(
         **kwargs
 ) -> dict[str, str]:
     return {
-        "dlg_psychology": i18n.dlg.psychology(),
-        "btn_start_session": i18n.btn.start.session(),
+        "win_psychology_start": i18n.win.psychology.start(),
+        "btn_psychology_start_session": i18n.btn.psychology.start.session(),
         "btn_back": i18n.btn.back(),
     }

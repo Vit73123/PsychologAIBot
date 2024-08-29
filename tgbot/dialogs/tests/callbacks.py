@@ -11,8 +11,8 @@ log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 
-async def btn_choose_test_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug("Button clicked: Choose test")
+async def btn_tests_start_choosetest_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug("Button clicked: Test")
 
 
 async def btn_back_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):

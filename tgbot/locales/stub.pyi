@@ -5,7 +5,7 @@ class TranslatorRunner:
     def get(self, path: str, **kwargs) -> str: ...
     
     cmd: Cmd
-    dlg: Dlg
+    win: Win
     btn: Btn
 
 
@@ -48,9 +48,14 @@ class CmdProfile:
     def description() -> Literal["""О себе: кто вы и как ваше самочувствие?"""]: ...
 
 
-class Dlg:
-    win: DlgWin
+class Win:
+    start: WinStart
+    psychology: WinPsychology
+    tests: WinTests
+    profile: WinProfile
 
+
+class WinStart:
     @staticmethod
     def start() -> Literal["""&lt;b&gt;Добро пожаловать в Бот психологической поддержки!&lt;/b&gt;
 
@@ -61,15 +66,19 @@ class Dlg:
 /tests - пройдите тесты и узнайте больше о себе
 /profile - добавьте информацию о себе и составьте свой психологический профиль"""]: ...
 
+
+class WinPsychology:
     @staticmethod
-    def psychology() -> Literal["""&lt;b&gt;Мой личный психолог&lt;/b&gt;
+    def start() -> Literal["""&lt;b&gt;Мой личный психолог&lt;/b&gt;
 
 Психолог пообщается с вами и постарается улучшить ваше психологическое самочувствие.
 
 Будьте искренни и доброжелательны."""]: ...
 
+
+class WinTests:
     @staticmethod
-    def tests() -> Literal["""&lt;b&gt;Тесты: психологические и не только&lt;/b&gt;
+    def start() -> Literal["""&lt;b&gt;Тесты: психологические и не только&lt;/b&gt;
 
 Пройдите психологический тест, чтобы лучше понять себя.
 
@@ -85,8 +94,10 @@ class Dlg:
 
 В добрый путь к самопознанию!"""]: ...
 
+
+class WinProfile:
     @staticmethod
-    def profile() -> Literal["""&lt;b&gt;О себе: кто вы и как ваше самочувствие?&lt;/b&gt;
+    def start() -> Literal["""&lt;b&gt;О себе: кто вы и как ваше самочувствие?&lt;/b&gt;
 
 Создайте свой профиль и добавьте данные о себе.
 
@@ -96,16 +107,14 @@ class Dlg:
 Ответьте на несколько простых вопросов.
 Вы можете создать статус: опишите своё текущее состояние или проблему, что является актуальным для вас в ближайшее время."""]: ...
 
-
-class DlgWin:
     @staticmethod
-    def profile() -> Literal["""= &lt;b&gt;&lt;/b."""]: ...
+    def aboutme() -> Literal["""= &lt;b&gt;&lt;/b."""]: ...
 
 
 class Btn:
-    start: BtnStart
-    choose: BtnChoose
-    about: BtnAbout
+    psychology: BtnPsychology
+    tests: BtnTests
+    profile: BtnProfile
 
     @staticmethod
     def back() -> Literal["""Вернуться"""]: ...
@@ -113,21 +122,57 @@ class Btn:
     @staticmethod
     def save() -> Literal["""Сохранить"""]: ...
 
+    @staticmethod
+    def ok() -> Literal["""Ok"""]: ...
 
-class BtnStart:
+    @staticmethod
+    def cancel() -> Literal["""Отменить"""]: ...
+
+
+class BtnPsychology:
+    start: BtnPsychologyStart
+
+
+class BtnPsychologyStart:
     @staticmethod
     def session() -> Literal["""Начать сеанс"""]: ...
 
+
+class BtnTests:
+    start: BtnTestsStart
+
+
+class BtnTestsStart:
     @staticmethod
-    def test() -> Literal["""Выбрать тест"""]: ...
+    def choosetest() -> Literal["""Выбрать тест"""]: ...
 
-
-class BtnChoose:
     @staticmethod
-    def test() -> Literal["""Выбрать тест"""]: ...
+    def dotest() -> Literal["""Пройти тест"""]: ...
 
 
-class BtnAbout:
+class BtnProfile:
+    start: BtnProfileStart
+    aboutme: BtnProfileAboutme
+
+
+class BtnProfileStart:
     @staticmethod
-    def me() -> Literal["""О себе"""]: ...
+    def aboutme() -> Literal["""О себе"""]: ...
+
+
+class BtnProfileAboutme:
+    @staticmethod
+    def name() -> Literal["""Меня зовут:"""]: ...
+
+    @staticmethod
+    def mail() -> Literal["""[М ]"""]: ...
+
+    @staticmethod
+    def femail() -> Literal["""[Ж ]"""]: ...
+
+    @staticmethod
+    def age() -> Literal["""Мне лет:"""]: ...
+
+    @staticmethod
+    def status() -> Literal["""Как я себя чуствую?"""]: ...
 

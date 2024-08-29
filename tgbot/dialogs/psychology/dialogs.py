@@ -6,23 +6,23 @@ from aiogram_dialog.widgets.text import Format
 
 from tgbot.dialogs.states import Psychology
 from .callbacks import (
-    btn_start_session_clicked,
+    btn_psychology_start_session_clicked,
     btn_back_clicked,
 )
 from .getters import get_start
 
 psychology_dialog = Dialog(
     Window(
-        Format('{dlg_psychology}'),
+        Format('{win_psychology_start}'),
         StaticMedia(
             path='resources/images/psychology.jpg',
             type=ContentType.PHOTO
         ),
         Row(
             Button(
-                text=Format('{btn_start_session}'),
-                id='btn_start_session',
-                on_click=btn_start_session_clicked,
+                text=Format('{btn_psychology_start_session}'),
+                id='btn_psychology_start_session',
+                on_click=btn_psychology_start_session_clicked,
             ),
             Button(
                 text=Format('{btn_back}'),

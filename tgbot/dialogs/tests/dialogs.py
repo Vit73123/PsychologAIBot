@@ -6,23 +6,23 @@ from aiogram_dialog.widgets.text import Format
 
 from tgbot.dialogs.states import Tests
 from .callbacks import (
-    btn_choose_test_clicked,
+    btn_tests_start_choosetest_clicked,
     btn_back_clicked,
 )
 from .getters import get_start
 
 tests_dialog = Dialog(
     Window(
-        Format('{dlg_tests}'),
+        Format('{win_tests_start}'),
         StaticMedia(
             path='resources/images/tests.jpg',
             type=ContentType.PHOTO
         ),
         Row(
             Button(
-                text=Format('{btn_choose_test}'),
-                id='btn_choose_test',
-                on_click=btn_choose_test_clicked,
+                text=Format('{btn_tests_start_choosetest}'),
+                id='btn_tests_start_choosetest',
+                on_click=btn_tests_start_choosetest_clicked,
             ),
             Button(
                 text=Format('{btn_back}'),

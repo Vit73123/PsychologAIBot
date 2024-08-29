@@ -4,7 +4,6 @@ from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager, StartMode
 from aiogram_dialog.widgets.kbd import Button
 
-from tgbot.db import Repo
 from tgbot.dialogs.states import Start
 from tgbot.services.logger import get_logger_dev
 
@@ -12,13 +11,35 @@ log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 
-async def btn_about_me_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.info(" Button clicked: About me")
-    repo: Repo = dialog_manager.middleware_data['repo']
-    user_id = callback.from_user.id
-    log_dev.info(" user_id: %s", user_id)
+async def btn_profile_start_aboutme_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.info(" Button clicked: about me")
+    await dialog_manager.next()
 
 
 async def btn_back_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Button clicked: Back to Start dialog")
+    log_dev.info(" Button clicked: back to Start dialog")
     await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)
+
+
+async def btn_profile_aboutme_name_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.info(" Button clicked: name")
+
+
+async def btn_profile_aboutme_male_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.info(" Button clicked: male")
+
+
+async def btn_profile_aboutme_female_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.info(" Button clicked: female")
+
+
+async def btn_profile_aboutme_age_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.info(" Button clicked: age")
+
+
+async def btn_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.info(" Button clicked: ok")
+
+
+async def btn_cancel_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.info(" Button clicked: cancel")

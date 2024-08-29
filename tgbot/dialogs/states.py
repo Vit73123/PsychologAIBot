@@ -12,10 +12,10 @@ class Psychology(StatesGroup):
 
 class Tests(StatesGroup):
     start = State()
-    test_selection = State()
+    choose_test = State()
     test = State()
 
 
 class Profile(StatesGroup):
     start = State()
-    profile = State()
+    about_me = State()

@@ -22,6 +22,6 @@ async def get_start(
     state_data = await state.get_data()
 
     return {
-        'dlg_start': i18n.dlg.start(),
+        'win_start_start': i18n.win.start.start(),
         'username': state_data.get('username')
     }
