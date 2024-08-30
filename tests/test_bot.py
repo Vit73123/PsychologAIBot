@@ -16,7 +16,7 @@ from tests.handlers import (
     root_router,
 )
 from tgbot.config.config import Config, load_config
-from tgbot.db import create_repo
+from tgbot.db import create_db
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.services.i18n import create_translator_hub
 from tgbot.services.logger import LoggerFormatter, FORMAT
@@ -39,7 +39,7 @@ async def main():
     config: Config = load_config()
 
     # Подключение к базе данных и создание репозитория
-    repo = create_repo(config.db)
+    db = create_db(config.db)
 
     # Инициализация бота
     bot = Bot(
@@ -51,7 +51,7 @@ async def main():
     storage = MemoryStorage()
 
     # Инициализация диспетчера
-    dp = Dispatcher(storage=storage, repo=repo)
+    dp = Dispatcher(storage=storage, db=db)
 
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()
@@ -72,10 +72,13 @@ async def main():
     # Инициализация aiogram-dialog
     setup_dialogs(dp)
 
+    # from tests.services.utils import on_startup
+    # dp.startup.register(await on_startup(bot))
+
     # Запуск бота
     log.info('Start bot...')
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot, _translator_hub=translator_hub)
-    await dp.start_polling(bot)
 
 
 if __name__ == '__main__':

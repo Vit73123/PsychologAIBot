@@ -2,11 +2,13 @@ import logging
 
 from aiogram import Router
 from aiogram.filters import Command, CommandStart
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import DialogManager, StartMode
 
 from tests.dialogs.states import Start
-from tgbot.db.repo.repo import Repo
+from tgbot.db import DbDTO
+from tgbot.db.repo.db import DbRepo
 from tgbot.services.logger import get_logger_dev
 
 log = logging.getLogger(__name__)
@@ -17,11 +19,23 @@ router = Router()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, dialog_manager: DialogManager, **kwargs):
-    log_dev.debug(' /start')
+    log.info(' /start')
+    state: FSMContext = kwargs.get("state")
+    data = await state.get_data()
+    log.info(' state: %s', data)
+    # pprint(kwargs)                  # Вывести весь контекст бота
+
     await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)
 
 
 @router.message(Command(commands='c'))
-async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, repo: Repo, **kwargs):
-    log_dev.debug(' /c: create tables')
-    await repo.create_tables()
+async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, db: DbDTO, **kwargs):
+    log.info(' /c: create tables')
+    await db.create_tables()
+
+
+@router.message(Command(commands='a'))
+async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, db: DbDTO, **kwargs):
+    log.info(' /a: insert user: %s', message.from_user)
+
+    # await db.user.insert_user(message.from_user)
