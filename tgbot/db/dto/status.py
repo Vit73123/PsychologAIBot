@@ -1,8 +1,8 @@
-from tgbot.db.repo import DbRepo
+from tgbot.db.repo.status import StatusRepo
 
 
 class StatusDTO:
-    _repo: DbRepo
+    _repo: StatusRepo
 
-    def __init__(self, repo: DbRepo):
+    def __init__(self, repo: StatusRepo):
         self._repo = repo

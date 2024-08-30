@@ -8,7 +8,6 @@ from aiogram_dialog import DialogManager, StartMode
 
 from tgbot.dialogs.states import Start
 from tgbot.services.logger import get_logger_dev
-from tgbot.services.user import create_user
 
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -20,7 +19,7 @@ router = Router()
 async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMContext, **kwargs):
     log.info(' /start')
 
-    data = state.get_state()
+    data = await state.get_state()
     # TODO: state from handler arguments
     # await create_user(message.from_user, **kwargs)
 

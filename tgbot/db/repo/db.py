@@ -13,9 +13,9 @@ from .user import UserRepo
 
 
 class DbRepo:
-    user: UserRepo
-    session: SessionRepo
-    status: StatusRepo
+    user_repo: UserRepo
+    session_repo: SessionRepo
+    status_repo: StatusRepo
 
     engine: AsyncEngine
     pool: async_sessionmaker[AsyncSession]
@@ -33,9 +33,9 @@ class DbRepo:
             expire_on_commit=False
         )
 
-        self.user = UserRepo(self.pool)
-        self.session = SessionRepo(self.pool)
-        self.status = StatusRepo(self.pool)
+        self.user_repo = UserRepo(self.pool)
+        self.session_repo = SessionRepo(self.pool)
+        self.status_repo = StatusRepo(self.pool)
 
     async def create_tables(self):
         async with self.engine.begin() as conn:

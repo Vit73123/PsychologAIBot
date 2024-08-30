@@ -2,6 +2,7 @@ from logging import getLogger
 from typing import TYPE_CHECKING
 
 from aiogram.fsm.context import FSMContext
+from aiogram_dialog import DialogManager
 from fluentogram import TranslatorRunner
 
 from tgbot.services.logger import get_logger_dev
