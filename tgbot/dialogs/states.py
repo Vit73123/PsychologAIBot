@@ -16,6 +16,11 @@ class Tests(StatesGroup):
     test = State()
 
 
-class Profile(StatesGroup):
+class Aboutme(StatesGroup):
     start = State()
-    about_me = State()
+    profile = State()
+    name = State()
+    age = State()
+    status = State()
+    state = State()
+    grade = State()

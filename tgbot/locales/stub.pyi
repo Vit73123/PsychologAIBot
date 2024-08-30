@@ -7,6 +7,7 @@ class TranslatorRunner:
     cmd: Cmd
     win: Win
     btn: Btn
+    srv: Srv
 
 
 class Cmd:
@@ -49,13 +50,8 @@ class CmdProfile:
 
 
 class Win:
-    start: WinStart
-    psychology: WinPsychology
-    tests: WinTests
-    profile: WinProfile
+    aboutme: WinAboutme
 
-
-class WinStart:
     @staticmethod
     def start() -> Literal["""&lt;b&gt;Добро пожаловать в Бот психологической поддержки!&lt;/b&gt;
 
@@ -66,19 +62,15 @@ class WinStart:
 /tests - пройдите тесты и узнайте больше о себе
 /profile - добавьте информацию о себе и составьте свой психологический профиль"""]: ...
 
-
-class WinPsychology:
     @staticmethod
-    def start() -> Literal["""&lt;b&gt;Мой личный психолог&lt;/b&gt;
+    def psychology() -> Literal["""&lt;b&gt;Мой личный психолог&lt;/b&gt;
 
 Психолог пообщается с вами и постарается улучшить ваше психологическое самочувствие.
 
 Будьте искренни и доброжелательны."""]: ...
 
-
-class WinTests:
     @staticmethod
-    def start() -> Literal["""&lt;b&gt;Тесты: психологические и не только&lt;/b&gt;
+    def tests() -> Literal["""&lt;b&gt;Тесты: психологические и не только&lt;/b&gt;
 
 Пройдите психологический тест, чтобы лучше понять себя.
 
@@ -95,9 +87,11 @@ class WinTests:
 В добрый путь к самопознанию!"""]: ...
 
 
-class WinProfile:
+class WinAboutme:
+    profile: WinAboutmeProfile
+
     @staticmethod
-    def start() -> Literal["""&lt;b&gt;О себе: кто вы и как ваше самочувствие?&lt;/b&gt;
+    def __call__() -> Literal["""&lt;b&gt;О себе: кто вы и как ваше самочувствие?&lt;/b&gt;
 
 Создайте свой профиль и добавьте данные о себе.
 
@@ -107,17 +101,72 @@ class WinProfile:
 Ответьте на несколько простых вопросов.
 Вы можете создать статус: опишите своё текущее состояние или проблему, что является актуальным для вас в ближайшее время."""]: ...
 
+
+class WinAboutmeProfile:
+    h: WinAboutmeProfileH
+    name: WinAboutmeProfileName
+    age: WinAboutmeProfileAge
+
     @staticmethod
-    def aboutme() -> Literal["""= &lt;b&gt;&lt;/b."""]: ...
+    def state() -> Literal["""&lt;b&gt;Хочу рассказать, что для меня сейчас важнее всего: ‼&lt;/b&gt;
+
+✅ В настоящее время и в ближайщем будущем - лично для меня и моего самочувствия?
+✅ Какую проблему решаем?
+✅ Что направляет мои мысли, мои эмоции, мои действия?
+✅ Есть ли проблема, которая беспокоит меня больше всего?
+✅ Как я чувствую себя в целом, как настроение?"""]: ...
+
+    @staticmethod
+    def grade() -> Literal["""Как я оценил бы уровень своего эмоционального состояния?"""]: ...
+
+
+class WinAboutmeProfileH:
+    @staticmethod
+    def state() -> Literal["""&lt;b&gt;‼ Для меня сейчас важно: ‼&lt;/b&gt;"""]: ...
+
+    @staticmethod
+    def grade() -> Literal["""&lt;b&gt;Моё состояние: 🥵😧😟🙁🫤😏😑😌🙂😀😆&lt;/b&gt;"""]: ...
+
+
+class WinAboutmeProfileName:
+    @staticmethod
+    def __call__() -> Literal["""&lt;b&gt;Моё имя: 🙋&lt;/b&gt;
+
+✅ Ко мне будут обращаться так, как я представлюсь.🙏"""]: ...
+
+    @staticmethod
+    def error() -> Literal["""&lt;b&gt;Я ошибся: ❌&lt;/b&gt;
+
+✅ В имени не должно быть ничего лишнего:
+цифры, знаки и т.п., 🤷"""]: ...
+
+
+class WinAboutmeProfileAge:
+    @staticmethod
+    def __call__() -> Literal["""&lt;b&gt;Солько мне лет: 🙋&lt;/b&gt;
+
+✅ Возраст всегда присутствует в общении.🤝🏻"""]: ...
+
+    @staticmethod
+    def error() -> Literal["""&lt;b&gt;Я ошибся: ❌&lt;/b&gt;
+
+✅ Вряд ли мне меньше 5 или больше 150 лет,
+или я укажу возраст чем-нибудь, кроме числа. 🤷"""]: ...
 
 
 class Btn:
     psychology: BtnPsychology
     tests: BtnTests
-    profile: BtnProfile
+    aboutme: BtnAboutme
+
+    @staticmethod
+    def next() -> Literal["""Вперёд"""]: ...
 
     @staticmethod
     def back() -> Literal["""Вернуться"""]: ...
+
+    @staticmethod
+    def skip() -> Literal["""Попустить"""]: ...
 
     @staticmethod
     def save() -> Literal["""Сохранить"""]: ...
@@ -126,7 +175,7 @@ class Btn:
     def ok() -> Literal["""Ok"""]: ...
 
     @staticmethod
-    def cancel() -> Literal["""Отменить"""]: ...
+    def cancel() -> Literal["""Отмена"""]: ...
 
 
 class BtnPsychology:
@@ -150,29 +199,31 @@ class BtnTestsStart:
     def dotest() -> Literal["""Пройти тест"""]: ...
 
 
-class BtnProfile:
-    start: BtnProfileStart
-    aboutme: BtnProfileAboutme
+class BtnAboutme:
+    profile: BtnAboutmeProfile
 
 
-class BtnProfileStart:
+class BtnAboutmeProfile:
     @staticmethod
-    def aboutme() -> Literal["""О себе"""]: ...
+    def __call__() -> Literal["""О себе"""]: ...
 
-
-class BtnProfileAboutme:
     @staticmethod
     def name() -> Literal["""Меня зовут:"""]: ...
 
     @staticmethod
-    def mail() -> Literal["""[М ]"""]: ...
+    def mail() -> Literal["""М"""]: ...
 
     @staticmethod
-    def femail() -> Literal["""[Ж ]"""]: ...
+    def femail() -> Literal["""Ж"""]: ...
 
     @staticmethod
     def age() -> Literal["""Мне лет:"""]: ...
 
     @staticmethod
-    def status() -> Literal["""Как я себя чуствую?"""]: ...
+    def state() -> Literal["""Моё состояние"""]: ...
+
+
+class Srv:
+    @staticmethod
+    def checkname() -> Literal["""^[а-яА-ЯёЁ ]+"""]: ...
 

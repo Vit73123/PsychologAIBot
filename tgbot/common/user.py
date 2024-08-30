@@ -23,4 +23,4 @@ async def set_user(tg_user: types.User, **kwargs) -> None:
         user = await repo.user.insert_user(tg_user)
     await state.update_data({'username': user.name})
 
-    log.info(" state: %s", await state.get_data())
+    log.info(" Start handler: state: %s", await state.get_data())

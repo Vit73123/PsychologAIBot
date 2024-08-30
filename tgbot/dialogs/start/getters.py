@@ -18,10 +18,10 @@ async def get_start(
         state: FSMContext,
         **kwargs
 ) -> dict[str, str]:
-    log.info(" state: %s", await state.get_data())
+    log.info(" Start dialog: get: state: %s", await state.get_data())
     state_data = await state.get_data()
 
     return {
-        'win_start_start': i18n.win.start.start(),
+        'win_start': i18n.win.start(),
         'username': state_data.get('username')
     }

@@ -6,7 +6,7 @@ from aiogram.types import Message
 from aiogram_dialog import DialogManager, StartMode
 
 from tgbot.common import set_user
-from tgbot.dialogs.states import Psychology, Tests, Profile, Start
+from tgbot.dialogs.states import Psychology, Tests, Aboutme, Start
 from tgbot.services.logger import get_logger_dev
 
 log = logging.getLogger(__name__)
@@ -38,4 +38,4 @@ async def cmd_tests(message: Message, dialog_manager: DialogManager, **kwargs):
 @router.message(Command(commands='profile'))
 async def cmd_profile(message: Message, dialog_manager: DialogManager, **kwargs):
     log.debug(' /profile')
-    await dialog_manager.start(state=Profile.start, mode=StartMode.RESET_STACK)
+    await dialog_manager.start(state=Aboutme.start, mode=StartMode.RESET_STACK)
