@@ -7,9 +7,8 @@ from aiogram.types import Message
 from aiogram_dialog import DialogManager, StartMode
 
 from tests.dialogs.states import Start
-from tgbot.db import DbDTO
-from tgbot.db.repo.db import DbRepo
-from tgbot.services.logger import get_logger_dev
+from tgbot.services import DbService
+from tgbot.utils.logger import get_logger_dev
 
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -29,13 +28,13 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, **kwargs):
 
 
 @router.message(Command(commands='c'))
-async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, db: DbDTO, **kwargs):
+async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, db: DbService, **kwargs):
     log.info(' /c: create tables')
     await db.create_tables()
 
 
 @router.message(Command(commands='a'))
-async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, db: DbDTO, **kwargs):
+async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, db: DbService, **kwargs):
     log.info(' /a: insert user: %s', message.from_user)
 
     # await db.user.insert_user(message.from_user)

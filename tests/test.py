@@ -1,7 +1,7 @@
 from logging import getLogger
 
 from tgbot.db import DbRepo
-from tgbot.services.logger import get_logger_dev
+from tgbot.utils.logger import get_logger_dev
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)

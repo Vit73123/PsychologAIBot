@@ -1,7 +1,7 @@
 import logging
 from logging import Logger
 
-from tgbot.services.colors import Colors as c
+from tgbot.utils.colors import Colors as c
 
 FORMAT = ("#%(levelname)-8s "
           "[%(asctime)s] "

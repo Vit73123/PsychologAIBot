@@ -16,10 +16,10 @@ from tests.handlers import (
     root_router,
 )
 from tgbot.config.config import Config, load_config
-from tgbot.db import create_db
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
-from tgbot.services.i18n import create_translator_hub
-from tgbot.services.logger import LoggerFormatter, FORMAT
+from tgbot.services import create_db
+from tgbot.services.locales.i18n import create_translator_hub
+from tgbot.utils.logger import LoggerFormatter, FORMAT
 
 # Конфигурация логирования
 logging.basicConfig(
@@ -30,6 +30,11 @@ logging.getLogger().handlers[0].setFormatter(LoggerFormatter())
 logging.getLogger().handlers[1].setFormatter(logging.Formatter(FORMAT))
 
 log = logging.getLogger(__name__)
+
+# Отключить дублирование логирования SQLAlchemy
+from sqlalchemy import log as sqlalchemy_log
+
+sqlalchemy_log._add_default_handler = lambda x: None
 
 
 async def main():
@@ -72,7 +77,7 @@ async def main():
     # Инициализация aiogram-dialog
     setup_dialogs(dp)
 
-    # from tests.services.utils import on_startup
+    # from tests.utils.utils import on_startup
     # dp.startup.register(await on_startup(bot))
 
     # Запуск бота

@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram_dialog import DialogManager
 from fluentogram import TranslatorRunner
 
-from tgbot.services.logger import get_logger_dev
+from tgbot.utils.logger import get_logger_dev
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner

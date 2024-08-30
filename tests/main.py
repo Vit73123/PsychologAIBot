@@ -4,7 +4,7 @@ import logging
 from tests.test import run_db_tests
 from tgbot.config.config import Config, load_config
 from tgbot.db import create_repo
-from tgbot.services.logger import LoggerFormatter, FORMAT
+from tgbot.utils.logger import LoggerFormatter, FORMAT
 
 # Конфигурация логирования
 logging.basicConfig(

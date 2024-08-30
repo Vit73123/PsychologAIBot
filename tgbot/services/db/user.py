@@ -6,13 +6,13 @@ from aiogram.types import User as BotUser
 
 from tgbot.db.models import User
 from tgbot.db.repo.user import UserRepo
-from tgbot.services.logger import get_logger_dev
+from tgbot.utils.logger import get_logger_dev
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 
-class UserDTO:
+class UserService:
     _repo: UserRepo
 
     def __init__(self, repo: UserRepo):

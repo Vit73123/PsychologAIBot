@@ -2,7 +2,7 @@ from logging import getLogger
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from tgbot.services.logger import get_logger_dev
+from tgbot.utils.logger import get_logger_dev
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)

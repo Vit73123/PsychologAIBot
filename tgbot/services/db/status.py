@@ -1,7 +1,7 @@
 from tgbot.db.repo.status import StatusRepo
 
 
-class StatusDTO:
+class StatusService:
     _repo: StatusRepo
 
     def __init__(self, repo: StatusRepo):

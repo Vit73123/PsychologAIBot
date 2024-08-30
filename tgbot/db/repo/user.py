@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from tgbot.db.models import User
-from tgbot.services.logger import get_logger_dev
+from tgbot.utils.logger import get_logger_dev
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
