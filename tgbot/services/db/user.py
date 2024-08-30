@@ -18,8 +18,15 @@ class UserService:
     def __init__(self, repo: UserRepo):
         self._repo = repo
 
+    async def insert_user(self, bot_user: types.User):
+        log_dev.info(" insert bot_user: %s", bot_user)
+
+        user: User = self.from_bot_user(bot_user)
+        log_dev.info(" to user: %s", user)
+
+
     async def create_user(self, bot_user: types.User, **kwargs) -> None:
-        log.info(" Set new user: %s", bot_user)
+        log.info(" set new user: %s", bot_user)
 
         state: FSMContext = kwargs.get('state')
         data = await state.get_data()
@@ -29,9 +36,9 @@ class UserService:
             user = await self._repo.insert_user(bot_user)
         await state.update_data({'username': user.name})
 
-        log.info(" Start handler: state: %s", await state.get_data())
+        log.info(" start handler: state: %s", await state.get_data())
 
-    def get_from_bot_user(self, bot_user: BotUser):
+    def from_bot_user(self, bot_user: BotUser):
         return User(
             user_id=bot_user.id,
             username=bot_user.username,

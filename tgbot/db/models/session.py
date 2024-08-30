@@ -13,6 +13,12 @@ class Session(Base):
         Index("sessions_created_at_user_id_index", "created_at", "user_id", unique=True),
     )
 
+    def __repr__(self):
+        return (f"user_id={self.user_id} "
+                f"review={self.review} "
+                f"created_at={self.created_at} "
+                f"updated_at={self.updated_at}")
+
     def __eq__(self, __value):
         first = (self.review, self.user_id)
         second = (__value.review, __value.user_id)

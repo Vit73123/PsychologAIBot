@@ -35,6 +35,6 @@ async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, db: DbSe
 
 @router.message(Command(commands='a'))
 async def cmd_dialog_1(message: Message, dialog_manager: DialogManager, db: DbService, **kwargs):
-    log.info(' /a: insert user: %s', message.from_user)
+    log.info(' /a: insert bot user')
 
-    # await db.user.insert_user(message.from_user)
+    await db.user.insert_user(message.from_user)
