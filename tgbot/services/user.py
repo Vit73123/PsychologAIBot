@@ -4,7 +4,7 @@ from aiogram import types
 from aiogram.fsm.context import FSMContext
 from aiogram.types import User as BotUser
 
-from tgbot.db import Repo
+from tgbot.db import DbRepo
 from tgbot.db.models import User
 from tgbot.services.logger import get_logger_dev
 
@@ -12,16 +12,16 @@ log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 
-async def create_user(tg_user: types.User, **kwargs) -> None:
-    log.info(" Set new user: %s", tg_user)
+async def create_user(bot_user: types.User, **kwargs) -> None:
+    log.info(" Set new user: %s", bot_user)
 
-    repo: Repo = kwargs.get('repo')
+    repo: DbRepo = kwargs.get('repo')
     state: FSMContext = kwargs.get('state')
     data = await state.get_data()
 
-    user = await repo.user.get_user_by_user_id(tg_user.id)
+    user = await repo.user.get_user_by_user_id(bot_user.id)
     if not user:
-        user = await repo.user.insert_user(tg_user)
+        user = await repo.user.insert_user(bot_user)
     await state.update_data({'username': user.name})
 
     log.info(" Start handler: state: %s", await state.get_data())

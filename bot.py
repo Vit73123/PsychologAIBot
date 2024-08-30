@@ -9,7 +9,7 @@ from aiogram_dialog import setup_dialogs
 from fluentogram import TranslatorHub
 
 from tgbot.config.config import Config, load_config
-from tgbot.db import create_repo
+from tgbot.db import create_db
 from tgbot.dialogs import (start_dialog,
                            psychology_dialog,
                            tests_dialog,
@@ -41,12 +41,12 @@ async def main():
     # Инициализация конфигурации бота
     config: Config = load_config()
 
-    # Подключение к базе данных и создание репозитория
-    repo = create_repo(config.db)
+    # Подключение к базе данных
+    db = create_db(config.db)
 
     # Создание таблиц
     if config.db.create_tables:
-        await repo.create_tables()
+        await db.create_tables()
 
     # Инициализация бота
     bot = Bot(
@@ -58,7 +58,7 @@ async def main():
     storage = MemoryStorage()
 
     # Инициализация диспетчера
-    dp = Dispatcher(storage=storage, repo=repo)
+    dp = Dispatcher(storage=storage, db=db)
 
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()

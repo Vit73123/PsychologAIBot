@@ -1,6 +1,12 @@
 from tgbot.config.config import DBConfig
-from .repo.repo import Repo
+from .dto.db import DbDTO
+from .repo.db import DbRepo
+
+
+def create_db(db_config: DBConfig):
+    repo = create_repo(db_config)
+    return DbDTO(repo)
 
 
 def create_repo(db_config: DBConfig):
-    return Repo(db_config)
+    return DbRepo(db_config)

@@ -21,6 +21,7 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMC
     log.info(' /start')
 
     data = state.get_state()
-    await create_user(message.from_user, **kwargs)
+    # TODO: state from handler arguments
+    # await create_user(message.from_user, **kwargs)
 
     await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)

@@ -6,9 +6,17 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from tgbot.config.config import DBConfig
+from tgbot.db.models.base import Base
+from .session import SessionRepo
+from .status import StatusRepo
+from .user import UserRepo
 
 
-class BaseRepo:
+class DbRepo:
+    user: UserRepo
+    session: SessionRepo
+    status: StatusRepo
+
     engine: AsyncEngine
     pool: async_sessionmaker[AsyncSession]
     db_config: DBConfig
@@ -24,3 +32,14 @@ class BaseRepo:
             class_=AsyncSession,
             expire_on_commit=False
         )
+
+        self.user = UserRepo(self.pool)
+        self.session = SessionRepo(self.pool)
+        self.status = StatusRepo(self.pool)
+
+    async def create_tables(self):
+        async with self.engine.begin() as conn:
+            self.engine.echo = False
+            await conn.run_sync(Base.metadata.drop_all)
+            await conn.run_sync(Base.metadata.create_all)
+            self.engine.echo = self.db_config.is_echo
