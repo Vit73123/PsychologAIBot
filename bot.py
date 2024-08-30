@@ -10,20 +10,11 @@ from fluentogram import TranslatorHub
 
 from tgbot.config.config import Config, load_config
 from tgbot.db import create_repo
-from tgbot.dialogs import (
-    start_dialog,
-    psychology_dialog,
-    tests_dialog,
-    profile_dialog,
-
-    mytest_start_dialog,
-    mytest_1_dialog,
-)
-from tgbot.handlers import (
-    user_router,
-
-    mytest_router,
-)
+from tgbot.dialogs import (start_dialog,
+                           psychology_dialog,
+                           tests_dialog,
+                           profile_dialog, )
+from tgbot.handlers import user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.services.i18n import create_translator_hub
 from tgbot.services.logger import LoggerFormatter, FORMAT
@@ -31,7 +22,7 @@ from tgbot.services.logger import LoggerFormatter, FORMAT
 # Конфигурация логирования
 logging.basicConfig(
     level=logging.INFO,
-    handlers=[logging.StreamHandler(), logging.FileHandler('resources/log/my_log.log', 'w')]
+    handlers=[logging.StreamHandler(), logging.FileHandler('resources/log/bot.log', 'w')]
 )
 logging.getLogger().handlers[0].setFormatter(LoggerFormatter())
 logging.getLogger().handlers[1].setFormatter(logging.Formatter(FORMAT))
@@ -75,17 +66,12 @@ async def main():
     # Регистрация роутеров
     dp.include_routers(  # Роутеры хэндлеров
         user_router,
-
-        mytest_router,
     )
     dp.include_routers(  # Роутеры диалогов
         start_dialog,
         psychology_dialog,
         tests_dialog,
         profile_dialog,
-
-        mytest_start_dialog,
-        mytest_1_dialog,
     )
 
     # Регистрация миддлварей

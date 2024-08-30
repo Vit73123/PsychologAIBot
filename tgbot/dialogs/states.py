@@ -24,11 +24,3 @@ class Aboutme(StatesGroup):
     status = State()
     state = State()
     grade = State()
-
-
-class MyTest(StatesGroup):
-    start = State()
-
-
-class MyTest1(StatesGroup):
-    start = State()

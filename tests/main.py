@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from tests.test_db import run_db_tests
+from tests.test import run_db_tests
 from tgbot.config.config import Config, load_config
 from tgbot.db import create_repo
 from tgbot.services.logger import LoggerFormatter, FORMAT
@@ -10,7 +10,7 @@ from tgbot.services.logger import LoggerFormatter, FORMAT
 logging.basicConfig(
     # level=logging.DEBUG,
     level=logging.INFO,
-    handlers=[logging.StreamHandler(), logging.FileHandler('tgbot/log/my_test_log.log', 'w')]
+    handlers=[logging.StreamHandler(), logging.FileHandler('resources/log/rest.log', 'w')]
 )
 logging.getLogger().handlers[0].setFormatter(LoggerFormatter())
 logging.getLogger().handlers[1].setFormatter(logging.Formatter(FORMAT))

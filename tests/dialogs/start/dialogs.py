@@ -1,21 +1,24 @@
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
+from aiogram_dialog.widgets.kbd import Start
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const
 
+from tests.dialogs import states
 # from .callbacks import *
 from .getters import *
 
-mytest_start_dialog = Dialog(
+start_dialog = Dialog(
 
-    # Мой тест
+    # Start
     Window(
-        Const('<b>Мой тест</b>'),
+        Const('<b>Start</b>'),
         StaticMedia(
             path='resources/images/profile_psycho.jpg',
             type=ContentType.PHOTO
         ),
-        getter=get_mytest,
-        state=MyTest.start,
+        Start(Const('Вперёд'), id='next', state=states.Dialog_1.dialog_1),
+        getter=get_start,
+        state=states.Start.start,
     ),
 )
