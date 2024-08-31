@@ -9,7 +9,7 @@ from aiogram_dialog.widgets.kbd import Button, Radio
 from fluentogram import TranslatorRunner
 
 from tgbot.dialogs.states import Start, Aboutme
-from tgbot.utils.logger import get_logger_dev
+from tgbot.tools.logger import get_logger_dev
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner

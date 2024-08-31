@@ -6,10 +6,13 @@ from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
+from sqlalchemy.ext.asyncio import AsyncEngine
 
-from tgbot.db.models import User
-from tgbot.services import DbService
-from tgbot.utils.logger import get_logger_dev
+from tgbot.config.config import Config
+from tgbot.db.factory import create_tables
+from tgbot.db.repo import Repo
+from tgbot.tools.logger import get_logger_dev
+from tgbot.utils.user_utils import create_from_bot_user
 
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -18,72 +21,95 @@ router = Router()
 
 
 @router.message(CommandStart())
-async def cmd_start(message: Message, dialog_manager: DialogManager, **kwargs):
-    log.info(' /start')
-    state: FSMContext = kwargs.get("state")
-    data = await state.get_data()
-    log.info(' state: %s', data)
-    # pprint(kwargs)                  # Вывести весь контекст бота
+async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMContext, repo: Repo, **kwargs):
+    log.debug(' /start')
 
-    # await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)
+    data = await state.get_data()
+    if not data:
+        user = create_from_bot_user(message.from_user)
+        user = await repo.user.set(user)
+        await state.set_data({'user_id': user.id})
+
+    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)
 
 
 @router.message(Command(commands='s'))
-async def cmd_start(message: Message, dialog_manager: DialogManager, db: DbService, state: FSMContext, **kwargs):
-    log.info(' /s: start')
+async def cmd_start_test(message: Message, dialog_manager: DialogManager, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /s: start from_user: %s', message.from_user)
+    log.debug(' /s: state data: %s', await state.get_data())
+
     data = await state.get_data()
 
     if not data:
-        user = await db.user.set(message.from_user)
-        await state.set_data({'user_id': user.id})
+        user = create_from_bot_user(message.from_user)
+
+        log.debug(' /s: bot start: user: %s', user)
+
+        user = await repo.user.set(user)
+        await state.set_data({'user_id': user.user_id})
+        log.debug(' /s: user: %s', user)
+
+    log.debug(' /s: state: %s', await state.get_data())
 
 
 @router.message(Command(commands='g'))
-async def cmd_get(message: Message, db: DbService, state: FSMContext, **kwargs):
-    log.info(' /g: get by user id')
+async def cmd_get_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /g: get user: state: %s', await state.get_data())
 
     data = await state.get_data()
     id_ = data['user_id']
-    user = await db.user.get(id_)
-    log.debug(' user: %s', user)
+
+    log.debug(' /g: user id: %s', id_)
+
+    user = await repo.user.get(id_)
+
+    log.debug(' /g: user: %s', user)
 
 
 @router.message(Command(commands='gg'))
-async def cmd_get(message: Message, db: DbService, **kwargs):
-    log.info(' /gg: get by bot user id')
+async def cmd_get_by_user_id_test(message: Message, repo: Repo, **kwargs):
+    log.debug(' /gg: get user: from user_id=%s', message.from_user.id)
 
-    user = await db.user._get_by_bot_user_id(message.from_user.id)
-    log_dev.info(' user: %s', user)
+    user = await repo.user.get_by_bot_user_id(message.from_user.id)
+
+    log.debug(' /gg: user: %s', user)
 
 
 @router.message(Command(commands='a'))
-async def cmd_insert(message: Message, db: DbService, **kwargs):
-    log.info(' /a: add by bot user')
+async def cmd_add_test(message: Message, repo: Repo, **kwargs):
+    log.debug(' /a: add user: from_user: %s', message.from_user)
 
-    await db.user.add(message.from_user)
+    user = create_from_bot_user(message.from_user)
+    await repo.user.add(user)
 
 
 @router.message(Command(commands='u'))
-async def cmd_update(message: Message, db: DbService, **kwargs):
-    log.info(' /u: update by user')
+async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
+    log_dev.debug(' /u: update: from_user: %s', message.from_user)
+    user = create_from_bot_user(message.from_user)
+    log_dev.debug(' /u: user id=%s name=%s', user.id, user.name)
 
-    user = User()
     user.name = "Vladimir"
-    await db.user.update(user)
+    data = await state.get_data()
+    user.id = data['user_id']
+    log_dev.debug(' /u: user id=%s name=%s', user.id, user.name)
+
+    await repo.user.update(user)
+    log_dev.debug(' /u: user: %s', await repo.user.get(user.id))
 
 
 @router.message(Command(commands='ct'))
-async def cmd_dialog_1(message: Message, db: DbService, **kwargs):
-    log.info(' /ct: create tables')
-    await db.create_tables()
+async def cmd_create_tables_test(message: Message, engine: AsyncEngine, config: Config, **kwargs):
+    log.debug(' /ct: create tables')
+    await create_tables(engine, config.db)
 
 
-@router.message(Command(commands='dt'))
-async def cmd_update(message: Message, state: FSMContext, **kwargs):
-    log.info(' /dt: state data (state.get_data): %s', await state.get_data())
+@router.message(Command(commands='st'))
+async def cmd_state_test(message: Message, state: FSMContext, **kwargs):
+    log.debug(' /st: state: %s', await state.get_data())
 
 
 @router.message(Command(commands='kw'))
-async def cmd_update(message: Message, **kwargs):
-    log.info(' /kw: context (kwargs): %s')
+async def cmd_kwargs_test(message: Message, **kwargs):
+    log.debug(' /kw: context: %s')
     pprint(kwargs)

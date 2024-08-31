@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from tgbot.db.models import User
-from tgbot.utils.logger import get_logger_dev
+from tgbot.tools.logger import get_logger_dev
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -21,23 +21,35 @@ class UserRepo:
 
         async with self.pool() as session:
             user = await session.get(User, id_)
+        log.debug(" Repo: get user: %s", user)
         return user
 
     async def add(self, user: User) -> User:
-        log_dev.debug(" Repo: add user: %s", user)
+        log.debug(" Repo: add user: %s", user)
 
         async with self.pool() as session:
             session.add(user)
             await session.commit()
-            return user
+        return user
 
     async def update(self, user: User) -> None:
         log_dev.debug(" Repo: update user: %s", user)
 
         async with self.pool() as session:
-            user = session.get(user.id)
+            user = session.get(User, user.id)
             await session.commit()
             log_dev.debug(" Repo: user: %s", user)
+
+    async def set(self, user: User) -> User:
+        log.debug(" Repo: set user: %s", user)
+
+        db_user = await self.get_by_bot_user_id(user.user_id)
+        if not db_user:
+            db_user = await self.add(user)
+        elif user != db_user:
+            log_dev.error(" Repo: set user error: Corrupted user: should be updated!")
+        log.debug(" Repo: user: %s", db_user)
+        return db_user
 
     async def get_by_bot_user_id(self, user_id: int) -> User | None:
         log.debug(" Repo: get user by user_id: user_id=%s", user_id)
@@ -45,7 +57,7 @@ class UserRepo:
         async with self.pool() as session:
             query = (
                 select(User)
-                .filter(User.user_id == user_id)    # Idea: должен быть столбец bool, а не выражение. Можно игнорировать
+                .filter(User.user_id == user_id)  # Idea: должен быть столбец bool, а не выражение. Можно игнорировать
             )
             result_ = await session.execute(query)
             result = result_.scalars().one_or_none()

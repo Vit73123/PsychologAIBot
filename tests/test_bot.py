@@ -8,18 +8,17 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 from fluentogram import TranslatorHub
 
-from tests.dialogs import (
-    start_dialog,
-    dialog_1_dialog,
-)
-from tests.handlers import (
-    root_router,
-)
-from tgbot.config.config import Config, load_config
+from tests.dialogs import (start_dialog,
+                           dialog_1_dialog)
+from tests.handlers import (root_router)
+from tgbot.config.config import (Config,
+                                 load_config)
+from tgbot.db.factory import (create_engine,
+                              create_repo)
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
-from tgbot.services import create_db
-from tgbot.services.locales.i18n import create_translator_hub
-from tgbot.utils.logger import LoggerFormatter, FORMAT
+from tgbot.tools.i18n import create_translator_hub
+from tgbot.tools.logger import (LoggerFormatter,
+                                FORMAT)
 
 # Конфигурация логирования
 logging.basicConfig(
@@ -38,13 +37,14 @@ sqlalchemy_log._add_default_handler = lambda x: None
 
 
 async def main():
-    log.debug('Bot init...')
+    log.info('Bot init...')
 
     # Инициализация конфигурации бота
     config: Config = load_config()
 
     # Подключение к базе данных и создание репозитория
-    db = create_db(config.db)
+    engine = create_engine(config.db)
+    repo = create_repo(engine)
 
     # Инициализация бота
     bot = Bot(
@@ -56,7 +56,8 @@ async def main():
     storage = MemoryStorage()
 
     # Инициализация диспетчера
-    dp = Dispatcher(storage=storage, db=db)
+    # dp = Dispatcher(storage=storage, repo=repo)
+    dp = Dispatcher(storage=storage, repo=repo, engine=engine, config=config)
 
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()
@@ -77,7 +78,7 @@ async def main():
     # Инициализация aiogram-dialog
     setup_dialogs(dp)
 
-    # from tests.utils.utils import on_startup
+    # from tests.tools.tools import on_startup
     # dp.startup.register(await on_startup(bot))
 
     # Запуск бота

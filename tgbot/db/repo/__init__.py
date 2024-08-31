@@ -1,1 +1,1 @@
-from .db import DbRepo
+from .repo import Repo
