@@ -13,3 +13,4 @@ class StatusRepo:
 
     def __init__(self, pool: async_sessionmaker[AsyncSession]):
         self.pool = pool
+

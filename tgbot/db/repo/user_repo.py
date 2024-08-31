@@ -21,7 +21,7 @@ class UserRepo:
 
         async with self.pool() as session:
             user = await session.get(User, id_)
-        log.debug(" Repo: get user: %s", user)
+            log.debug(" Repo: get user: %s", user)
         return user
 
     async def add(self, user: User) -> User:
@@ -32,13 +32,32 @@ class UserRepo:
             await session.commit()
         return user
 
-    async def update(self, user: User) -> None:
-        log_dev.debug(" Repo: update user: %s", user)
+    async def delete(self, id_: int) -> None:
+        log.debug(" Repo: delete user id=%s", id_)
 
         async with self.pool() as session:
-            user = session.get(User, user.id)
+            user = await session.get(User, id_)
+            await session.delete(user)
             await session.commit()
-            log_dev.debug(" Repo: user: %s", user)
+
+    async def update(self, user: User) -> None:
+        log.debug(" Repo: update user: %s", user)
+
+        async with self.pool() as session:
+            db_user = await session.get(User, user.id)
+
+            log.debug(" Repo: update db user: %s", db_user)
+
+            db_user.user_id = user.user_id
+            db_user.username = user.username
+            db_user.first_name = user.first_name
+            db_user.last_name = user.last_name
+            db_user.name = user.name
+            db_user.gender = user.gender
+            db_user.age = user.age
+            await session.commit()
+
+            log.debug(" Repo: user: %s", db_user)
 
     async def set(self, user: User) -> User:
         log.debug(" Repo: set user: %s", user)
@@ -50,6 +69,9 @@ class UserRepo:
             log_dev.error(" Repo: set user error: Corrupted user: should be updated!")
         log.debug(" Repo: user: %s", db_user)
         return db_user
+
+    async def get_with_statuses(self, id_: int):
+        log_dev.debug(" Repo: get user with statuses id=: %s", id_)
 
     async def get_by_bot_user_id(self, user_id: int) -> User | None:
         log.debug(" Repo: get user by user_id: user_id=%s", user_id)

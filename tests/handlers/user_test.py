@@ -16,66 +16,91 @@ log_dev = get_logger_dev(__name__, log.level)
 router = Router()
 
 
-@router.message(Command(commands='s'))
+@router.message(Command(commands='us'))
 async def cmd_start_test(message: Message, dialog_manager: DialogManager, repo: Repo, state: FSMContext, **kwargs):
-    log.debug(' /s: start from_user: %s', message.from_user)
-    log.debug(' /s: state data: %s', await state.get_data())
+    log.debug(' /us: start from_user: %s', message.from_user)
+    log.debug(' /us: state data: %s', await state.get_data())
 
     data = await state.get_data()
 
     if not data:
         user = create_from_bot_user(message.from_user)
 
-        log.debug(' /s: bot start: user: %s', user)
+        log.debug(' /us: bot start: user: %s', user)
 
         user = await repo.user.set(user)
-        await state.set_data({'user_id': user.user_id})
-        log.debug(' /s: user: %s', user)
+        await state.set_data({'user_id': user.id})
+        log.debug(' /us: user: %s', user)
 
-    log.debug(' /s: state: %s', await state.get_data())
+    log.debug(' /us: state: %s', await state.get_data())
 
 
-@router.message(Command(commands='g'))
+@router.message(Command(commands='ug'))
 async def cmd_get_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
-    log.debug(' /g: get user: state: %s', await state.get_data())
+    log.debug(' /ug: get user: state: %s', await state.get_data())
 
     data = await state.get_data()
     id_ = data['user_id']
 
-    log.debug(' /g: user id: %s', id_)
+    log.debug(' /ug: user id=%s', id_)
 
     user = await repo.user.get(id_)
 
-    log.debug(' /g: user: %s', user)
+    log.debug(' /ug: user: %s', user)
 
 
-@router.message(Command(commands='gg'))
+@router.message(Command(commands='ugg'))
 async def cmd_get_by_user_id_test(message: Message, repo: Repo, **kwargs):
-    log.debug(' /gg: get user: from user_id=%s', message.from_user.id)
+    log.debug(' /ugg: get user: from user_id=%s', message.from_user.id)
 
     user = await repo.user.get_by_bot_user_id(message.from_user.id)
 
-    log.debug(' /gg: user: %s', user)
+    log.debug(' /ugg: user: %s', user)
 
 
-@router.message(Command(commands='a'))
+@router.message(Command(commands='ua'))
 async def cmd_add_test(message: Message, repo: Repo, **kwargs):
-    log.debug(' /a: add user: from_user: %s', message.from_user)
+    log.debug(' /ua: add user: from_user: %s', message.from_user)
 
     user = create_from_bot_user(message.from_user)
     await repo.user.add(user)
 
 
-@router.message(Command(commands='u'))
-async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
-    log.debug(' /u: update: from_user: %s', message.from_user)
-    user = create_from_bot_user(message.from_user)
-    log.debug(' /u: user id=%s name=%s', user.id, user.name)
+@router.message(Command(commands='ud'))
+async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /ud: delete user: from_user: %s', message.from_user)
 
-    user.name = "Vladimir"
+    data = await state.get_data()
+    id_ = data['user_id']
+    await repo.user.delete(id_)
+
+
+@router.message(Command(commands='uu'))
+async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
+    log.debug(' /uu: update: from_user: %s', message.from_user)
+
+    user = create_from_bot_user(message.from_user)
+    log.debug(' /uu: user id=%s name=%s', user.id, user.name)
+
     data = await state.get_data()
     user.id = data['user_id']
-    log.debug(' /u: user id=%s name=%s', user.id, user.name)
+
+    user.name = "Vladimir"
+    log.debug(' /uu: user id=%s name=%s', user.id, user.name)
 
     await repo.user.update(user)
-    log.debug(' /u: user: %s', await repo.user.get(user.id))
+    log.debug(' /uu: user: %s', await repo.user.get(user.id))
+
+
+@router.message(Command(commands='ugs'))
+async def cmd_get_with_statuses_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
+    log_dev.debug(' /ugs: get with statuses: from_user: %s', message.from_user)
+
+    data = await state.get_data()
+    id_ = data['user_id']
+
+    log_dev.debug(' /ugs: user id=%s', id_)
+
+    user_statuses = repo.user.get_with_statuses(id_)
+
+    log_dev.debug(' /ugs: user statuses: %s', user_statuses)
