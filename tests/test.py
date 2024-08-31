@@ -12,7 +12,7 @@ log_dev.debug("Save me God!")
 async def get_user_test(repo: DbRepo, user_id: int):
     log_dev.info(" Get user: id=%s", user_id)
 
-    user = await repo.user.get_user(user_id)
+    user = await repo.user.get(user_id)
     log_dev.info(" user: %s", user)
 
 
