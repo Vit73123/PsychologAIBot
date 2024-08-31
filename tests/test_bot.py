@@ -10,7 +10,9 @@ from fluentogram import TranslatorHub
 
 from tests.dialogs import (start_dialog,
                            dialog_1_dialog)
-from tests.handlers import (root_router)
+from tests.handlers import (start_test_router,
+                            user_test_router,
+                            status_test_router, )
 from tgbot.config.config import (Config,
                                  load_config)
 from tgbot.db.factory import (create_engine,
@@ -64,7 +66,9 @@ async def main():
 
     # Регистрация роутеров
     dp.include_routers(  # Роутеры хэндлеров
-        root_router,
+        start_test_router,
+        user_test_router,
+        status_test_router,
     )
     dp.include_routers(  # Роутеры диалогов
         start_dialog,
