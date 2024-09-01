@@ -16,7 +16,7 @@ log_dev = get_logger_dev(__name__, log.level)
 router = Router()
 
 
-@router.message(Command(commands='us'))
+@router.message(Command(commands='user-start'))
 async def cmd_start_test(message: Message, dialog_manager: DialogManager, repo: Repo, state: FSMContext, **kwargs):
     log.debug(' /us: start from_user: %s', message.from_user)
     log.debug(' /us: state data: %s', await state.get_data())
@@ -35,7 +35,7 @@ async def cmd_start_test(message: Message, dialog_manager: DialogManager, repo: 
     log.debug(' /us: state: %s', await state.get_data())
 
 
-@router.message(Command(commands='ug'))
+@router.message(Command(commands='user-g'))
 async def cmd_get_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
     log.debug(' /ug: get user: state: %s', await state.get_data())
 
@@ -49,7 +49,7 @@ async def cmd_get_test(message: Message, repo: Repo, state: FSMContext, **kwargs
     log.debug(' /ug: user: %s', user)
 
 
-@router.message(Command(commands='ugg'))
+@router.message(Command(commands='user-gg'))
 async def cmd_get_by_user_id_test(message: Message, repo: Repo, **kwargs):
     log.debug(' /ugg: get user: from user_id=%s', message.from_user.id)
 
@@ -58,7 +58,7 @@ async def cmd_get_by_user_id_test(message: Message, repo: Repo, **kwargs):
     log.debug(' /ugg: user: %s', user)
 
 
-@router.message(Command(commands='ua'))
+@router.message(Command(commands='user-a'))
 async def cmd_add_test(message: Message, repo: Repo, **kwargs):
     log.debug(' /ua: add user: from_user: %s', message.from_user)
 
@@ -66,7 +66,7 @@ async def cmd_add_test(message: Message, repo: Repo, **kwargs):
     await repo.user.add(user)
 
 
-@router.message(Command(commands='ud'))
+@router.message(Command(commands='user-d'))
 async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
     log.debug(' /ud: delete user: from_user: %s', message.from_user)
 
@@ -75,7 +75,7 @@ async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwa
     await repo.user.delete(id_)
 
 
-@router.message(Command(commands='uu'))
+@router.message(Command(commands='user-u'))
 async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
     log.debug(' /uu: update: from_user: %s', message.from_user)
 
@@ -92,7 +92,7 @@ async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwa
     log.debug(' /uu: user: %s', await repo.user.get(user.id))
 
 
-@router.message(Command(commands='ugs'))
+@router.message(Command(commands='user-gs'))
 async def cmd_get_with_statuses_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
     log_dev.debug(' /ugs: get with statuses: from_user: %s', message.from_user)
 
