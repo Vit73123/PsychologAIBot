@@ -101,6 +101,6 @@ async def cmd_get_with_statuses_test(message: Message, state: FSMContext, repo: 
 
     log_dev.debug(' /ugs: user id=%s', id_)
 
-    user_statuses = repo.user.get_with_statuses(id_)
+    user_statuses = await repo.user.get_with_statuses(id_)
 
     log_dev.debug(' /ugs: user statuses: %s', user_statuses)

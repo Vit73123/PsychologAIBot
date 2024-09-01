@@ -1,4 +1,5 @@
 from sqlalchemy import Index, CheckConstraint
+from sqlalchemy.orm import relationship
 
 from .base import *
 
@@ -14,17 +15,22 @@ class Status(Base):
         Index("status_created_at_user_id_index", "created_at", "user_id", unique=True),
     )
 
+    user: Mapped["User"] = relationship(
+        back_populates="statuses"
+    )
+
     def __repr__(self):
-        return (f"user_id={self.user_id} "
+        return (f"id={self.id} "
+                f"user_id={self.user_id} "
                 f"text={self.text} "
                 f"grade={self.grade} "
                 f"created_at={self.created_at} "
                 f"updated_at={self.updated_at}")
 
     def __eq__(self, __value):
-        first = (self.text, self.grade, self.user_id)
-        second = (__value.text, __value.grade, __value.user_id)
+        first = (self.id, self.text, self.grade, self.user_id)
+        second = (__value.user_id, __value.text, __value.grade)
         return first == second
 
     def __hash__(self):
-        hash((self.id, self.created_at, self.updated_at, self.text, self.grade, self.user_id))
+        hash((self.id, self.text, self.grade, self.user_id, self.created_at, self.updated_at))

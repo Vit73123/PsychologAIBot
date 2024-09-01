@@ -1,4 +1,5 @@
 from sqlalchemy import CheckConstraint
+from sqlalchemy.orm import relationship
 
 from .base import *
 
@@ -13,6 +14,14 @@ class User(Base):
     name: Mapped[str | None]
     gender: Mapped[str | None] = mapped_column(String(1, collation='NOCASE'), CheckConstraint("gender in ('м', 'ж')"))
     age: Mapped[int | None] = mapped_column(CheckConstraint("age >= 5 and age <= 150"))
+
+    statuses: Mapped[list["Status"]] = relationship(
+        back_populates="user"
+    )
+
+    sessions: Mapped[list["Session"]] = relationship(
+        back_populates="user"
+    )
 
     def __repr__(self):
         return (f"id={self.id} "

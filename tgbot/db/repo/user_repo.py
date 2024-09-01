@@ -2,7 +2,9 @@ from logging import getLogger
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from sqlalchemy.orm import joinedload, selectinload
 
+from tgbot.db import Status
 from tgbot.db.models import User
 from tgbot.tools.logger import get_logger_dev
 
@@ -70,9 +72,6 @@ class UserRepo:
         log.debug(" Repo: user: %s", db_user)
         return db_user
 
-    async def get_with_statuses(self, id_: int):
-        log_dev.debug(" Repo: get user with statuses id=: %s", id_)
-
     async def get_by_bot_user_id(self, user_id: int) -> User | None:
         log.debug(" Repo: get user by user_id: user_id=%s", user_id)
 
@@ -84,3 +83,17 @@ class UserRepo:
             result_ = await session.execute(query)
             result = result_.scalars().one_or_none()
             return result
+
+    async def get_with_statuses(self, id_: int):
+        log_dev.debug(" Repo: get user with statuses id=: %s", id_)
+
+        async with self.pool() as session:
+            result = await session.scalars(
+                select(User)
+                .options(selectinload(User.statuses))
+                .where(User.id == id_)
+            )
+            user = result.first()
+
+            log_dev.debug(" Repo: user: %s", user)
+            log_dev.debug(" Repo: status: %s", user.statuses[-1])
