@@ -16,11 +16,15 @@ class User(Base):
     age: Mapped[int | None] = mapped_column(CheckConstraint("age >= 5 and age <= 150"))
 
     statuses: Mapped[list["Status"]] = relationship(
-        back_populates="user"
+        back_populates="user",
+        order_by="Status.updated_at.desc()",
+        cascade='save-update, merge, delete'
     )
 
     sessions: Mapped[list["Session"]] = relationship(
-        back_populates="user"
+        back_populates="user",
+        order_by = "Session.updated_at.desc()",
+        cascade='save-update, merge, delete'
     )
 
     def __repr__(self):
@@ -36,8 +40,8 @@ class User(Base):
                 f"updated_at={self.updated_at}")
 
     def __eq__(self, __value):
-        first = (self.user_id, self.username, self.first_name, self.last_name)
-        second = (__value.user_id, __value.username, __value.first_name, __value.last_name)
+        first = (self.username, self.first_name, self.last_name)
+        second = (__value.username, __value.first_name, __value.last_name)
         return first == second
 
     def __hash__(self):

@@ -13,10 +13,11 @@ from tests.dialogs import (start_dialog,
 from tests.handlers import (start_test_router,
                             user_test_router,
                             status_test_router, )
-from tgbot.config.config import (Config,
-                                 load_config)
+from tgbot.config import (Config,
+                          load_config)
 from tgbot.db.factory import (create_engine,
                               create_repo)
+from tgbot.filters import IsAdmin
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.tools.i18n import create_translator_hub
 from tgbot.tools.logger import (LoggerFormatter,
@@ -78,6 +79,9 @@ async def main():
     # Регистрация миддлварей
     dp.update.middleware(TranslatorRunnerMiddleware())  # i18n
     # dp.update.middleware(MyMiddleware(repo))
+
+    # Фильтр IsAdmin()
+    IsAdmin.admin_ids = config.tg_bot.admin_ids
 
     # Инициализация aiogram-dialog
     setup_dialogs(dp)

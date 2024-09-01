@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS statuses;
 DROP TABLE IF EXISTS sessions;
 
 DROP INDEX IF EXISTS users_username_idx;
-DROP INDEX IF EXISTS statuses_created_at_user_id_idx;
+DROP INDEX IF EXISTS statuses_user_id_created_at_idx;
 
 CREATE TABLE users
 (
@@ -28,12 +28,13 @@ CREATE TABLE statuses
     text       TEXT,
     grade      INTEGER CHECK (grade >= -5 AND grade <= 5) NOT NULL,
     created_at DATETIME DEFAULT (DATETIME('now'))         NOT NULL,
+    updated_at DATETIME DEFAULT (DATETIME('now'))         NOT NULL,
     user_id    INTEGER                                    NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-CREATE UNIQUE INDEX statuses_created_at_user_id_idx ON statuses (created_at, user_id);
+CREATE UNIQUE INDEX statuses_user_id_created_at_idx ON statuses (user_id, created_at);
 
 CREATE TABLE sessions
 
@@ -43,8 +44,8 @@ CREATE TABLE sessions
     created_at DATETIME DEFAULT (DATETIME('now')) NOT NULL,
     user_id    INTEGER                            NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 
 );
 
-CREATE UNIQUE INDEX sessions_created_at_user_id_idx ON statuses (created_at, user_id);
+CREATE UNIQUE INDEX sessions_created_at_user_id_idx ON statuses (user_id, created_at);

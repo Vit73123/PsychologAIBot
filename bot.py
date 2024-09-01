@@ -8,7 +8,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 from fluentogram import TranslatorHub
 
-from tgbot.config.config import Config, load_config
+from tgbot.config import Config, load_config
 from tgbot.db.factory import (create_engine,
                               create_repo,
                               create_tables, )
@@ -16,6 +16,7 @@ from tgbot.dialogs import (start_dialog,
                            psychology_dialog,
                            tests_dialog,
                            profile_dialog, )
+from tgbot.filters import IsAdmin
 from tgbot.handlers import user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.tools.i18n import create_translator_hub
@@ -76,6 +77,9 @@ async def main():
         tests_dialog,
         profile_dialog,
     )
+
+    # Фильтр IsAdmin
+    IsAdmin.admin_ids = config.tg_bot.admin_ids
 
     # Регистрация миддлварей
     dp.update.middleware(TranslatorRunnerMiddleware())  # i18n

@@ -7,6 +7,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped
 from sqlalchemy.orm import mapped_column
 
 intpk = Annotated[int, mapped_column(primary_key=True)]
+# userfk = Annotated[int, mapped_column(ForeignKey("users.id", ondelete='CASCADE'))]
 userfk = Annotated[int, mapped_column(ForeignKey("users.id", ondelete='CASCADE'))]
 date_time_now = Annotated[datetime, mapped_column(server_default=text("(DATETIME('now'))"))]  # date time in UTC
 date_time_now_upd = Annotated[datetime, mapped_column(server_default=text("(DATETIME('now'))"),
