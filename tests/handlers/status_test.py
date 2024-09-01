@@ -42,6 +42,20 @@ async def cmd_get_last_test(message: Message, repo: Repo, state: FSMContext, **k
     log.debug(' /status_gl: status: %s', status)
 
 
+@router.message(Command(commands='status_ga'), IsAdmin())
+async def cmd_get_all_by_user_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /status_ga: get all statuses: from_user: %s', message.from_user)
+
+    # data = state.get_data()
+    # user_id = data['user_id']
+    user_id = 1
+
+    # Получить все состояния данного пользователя по его user_id в базе данных
+    statuses = await repo.status.get_all_by_user_id(user_id)
+
+    log.debug(' /status_ga: statuses: %s', statuses)
+
+
 @router.message(Command(commands='status_a'), IsAdmin())
 async def cmd_add_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
     log_dev.debug(' /status_a: add status: from_user: %s', message.from_user)
@@ -76,6 +90,7 @@ async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwa
     status.text = "Updated status"
     status.grade = -5
 
+    # Изменить состояние
     await repo.status.update(status)
     log_dev.debug(' /status_u: status: %s', await repo.status.get_last_by_user_id(user_id))
 
@@ -88,4 +103,30 @@ async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwa
     # status_id = data['status_id']
     status_id = 1
 
+    # Удалить состояние
     await repo.status.delete(status_id)
+
+
+
+@router.message(Command(commands='status_dl'))
+async def cmd_delete_last_by_user_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /status_dl: delete last: from_user: %s', message.from_user)
+
+    # data = await state.get_data()
+    # status_id = data['status_id']
+    user_id = 1
+
+    # Удалить последнее состояние данного пользователя по его user_id в базе данных
+    await repo.status.delete_last_by_user_id(user_id)
+
+
+@router.message(Command(commands='status_da'))
+async def cmd_delete_all_by_user_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /status_da: delete all: from_user: %s', message.from_user)
+
+    # data = await state.get_data()
+    # status_id = data['status_id']
+    user_id = 1
+
+    # Удалить все состояния данного пользователя по его user_id
+    await repo.status.delete_all_by_user(user_id)

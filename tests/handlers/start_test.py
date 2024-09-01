@@ -50,19 +50,23 @@ async def cmd_start(message: Message, state: FSMContext, **kwargs):
     /st       - bot state data
     /kw       - bot context (kwargs)
     
-    /user_start - start bot: регистрация пользователя
+    /user_set - set user bot_id=xxxxxxxxxx: Регистрация пользователя Запуск бота
     /user_g   - get user id=1
-    /user_gg  - get user by bot user bot_id=XXX
-    /user_a   - add user id=1
-    /user_d   - delete user id=1
+    /user_gg  - get user by bot user bot_id=1111111111
+    /user_gl  - get user id=1 with last status
+    /user_ga  - get user id=1 with all statuses
+    /user_a   - add user bot_id=9999999999
     /user_u   - update user id=1
-    /user_s   - get user with all statuses id=1 
+    /user_d   - delete user id=1
     
     /status_g  - get status id=1
     /status_gl - get last status by user_id=1
+    /status_ga - get all statuses by user_id=1
     /status_a  - add status id=1
-    /status_d  - delete status id=1
     /status_u  - update status id=1
+    /status_d  - delete status id=1
+    /status_dl - delete last status by user_id=1
+    /status_da - delete all statuses by user_id=1
     """)
 
 

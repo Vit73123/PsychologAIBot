@@ -16,9 +16,9 @@ log_dev = get_logger_dev(__name__, log.level)
 router = Router()
 
 
-@router.message(Command(commands='user_start'), IsAdmin())
-async def cmd_start_test(message: Message, dialog_manager: DialogManager, repo: Repo, state: FSMContext, **kwargs):
-    log.debug(' /user_start: start from_user: %s', message.from_user)
+@router.message(Command(commands='user_set'), IsAdmin())
+async def cmd_set_test(message: Message, dialog_manager: DialogManager, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /user_set: set user: state: %s, from_user: %s', await state.get_data(), message.from_user)
 
     data = await state.get_data()
 
@@ -31,7 +31,7 @@ async def cmd_start_test(message: Message, dialog_manager: DialogManager, repo: 
         # Сохранить в общий контекст локальный id пользователя из базы данных
         await state.set_data({'user_id': user.id})
 
-    log.debug(' /user_start: state: %s', await state.get_data())
+        log.debug(' /user_set: state: %s, user: %s', await state.get_data(), user)
 
 
 @router.message(Command(commands='user_g'), IsAdmin())
@@ -50,39 +50,67 @@ async def cmd_get_test(message: Message, repo: Repo, state: FSMContext, **kwargs
 
 @router.message(Command(commands='user_gg'), IsAdmin())
 async def cmd_get_by_bot_user_id_test(message: Message, repo: Repo, **kwargs):
-    log.debug(' /user_gg: get user: bot_user_id=%s', message.from_user.id)
+    log.debug(' /user_gg: get user: bot_user_id=1111111111')
+
+    user_id = 1111111111
 
     # Получить пользователя по user_id телеграмма
-    user = await repo.user.get_by_bot_user_id(message.from_user.id)
+    user = await repo.user.get_by_bot_user_id(user_id)
 
     log.debug(' /user_gg: user: %s', user)
 
 
-@router.message(Command(commands='user_a'), IsAdmin())
-async def cmd_add_test(message: Message, repo: Repo, **kwargs):
-    log.debug(' /user_a: add bot user: %s', message.from_user)
-
-    user = create_from_bot_user(message.from_user)
-
-    # Добавить нового пользователя
-    await repo.user.add(user)
-
-
-@router.message(Command(commands='user_d'), IsAdmin())
-async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
-    log.debug(' /user_d: delete bot user: %s', message.from_user)
+@router.message(Command(commands='user_gl'), IsAdmin())
+async def cmd_get_with_last_status_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /user_gl: get with last status by user id=1: from_user: %s', message.from_user)
 
     # data = await state.get_data()
     # user_id = data['user_id']
     user_id = 1
 
-    # Удалить пользователя
-    await repo.user.delete(user_id)
+    # Получить пользователя по его id и его последнее состояние
+    user, status = await repo.user.get_with_last_status(message.from_user.id)
+
+    log.debug(' /user_ga: user: %s', user)
+    log.debug(' /user_ga: status: %s', status)
+
+
+@router.message(Command(commands='user_ga'), IsAdmin())
+async def cmd_get_with_all_statuses_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
+    log.debug(' /user_ga: get with all statuses by user id=1: from_user: %s', message.from_user)
+
+    # data = await state.get_data()
+    # user_id = data['user_id']
+    user_id = 1
+
+    # Получить пользователя и все его статусы, отсортированные по убыванию даты
+    user, statuses = await repo.user.get_with_all_statuses(user_id)
+
+    log.debug(' /user_ga: user: %s', user)
+    log.debug(' /user_ga: statuses: %s', statuses)
+
+
+@router.message(Command(commands='user_a'), IsAdmin())
+async def cmd_add_test(message: Message, repo: Repo, **kwargs):
+    log.debug(" /user_a: add user "
+              "user_id=9999999999 "
+              "username='New user name' "
+              "first_name='New first name' "
+              "last_name='New last name'")
+
+    user = User()
+    user.user_id = 9999999999
+    user.username = 'New user name'
+    user.first_name = 'New first name'
+    user.last_name = 'New last name'
+
+    # Добавить нового пользователя
+    await repo.user.add(user)
 
 
 @router.message(Command(commands='user_u'), IsAdmin())
 async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
-    log.debug(' /user_u: update bot user: %s', message.from_user)
+    log.debug(' /user_u: update user id=1, name=Vladimir')
 
     user = create_from_bot_user(message.from_user)
 
@@ -97,18 +125,13 @@ async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwa
     log.debug(' /user_u: user: %s', await repo.user.get(user.id))
 
 
-@router.message(Command(commands='user_s'), IsAdmin())
-async def cmd_get_with_all_statuses_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
-    log.debug(' /user_s: get with all statuses: from user: %s', message.from_user)
+@router.message(Command(commands='user_d'), IsAdmin())
+async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
+    log.debug(' /user_d: delete user id=1: from_user: %s', message.from_user)
 
     # data = await state.get_data()
     # user_id = data['user_id']
     user_id = 1
 
-    log.debug(' /user_ls: user id=%s', user_id)
-
-    # Получить пользователя и все его статусы, отсортированные по убыванию даты
-    user = await repo.user.get_with_all_statuses(user_id)
-
-    log.debug(' /user_ls: user: %s', user)
-    log.debug(' /user_ls: statuses: %s', user.statuses)
+    # Удалить пользователя
+    await repo.user.delete(user_id)
