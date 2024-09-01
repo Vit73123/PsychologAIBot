@@ -19,21 +19,17 @@ router = Router()
 @router.message(Command(commands='user_start'), IsAdmin())
 async def cmd_start_test(message: Message, dialog_manager: DialogManager, repo: Repo, state: FSMContext, **kwargs):
     log.debug(' /user_start: start from_user: %s', message.from_user)
-    log.debug(' /user_start: state data: %s', await state.get_data())
 
     data = await state.get_data()
 
     if not data:
         user = create_from_bot_user(message.from_user)
 
-        log.debug(' /user_start: bot start: user: %s', user)
-
         # Регистрация пользователя
-        user = await repo.user.set(user, message.from_user.id)
+        user = await repo.user.set(user)
 
         # Сохранить в общий контекст локальный id пользователя из базы данных
         await state.set_data({'user_id': user.id})
-        log.debug(' /user_start: user: %s', user)
 
     log.debug(' /user_start: state: %s', await state.get_data())
 
@@ -43,22 +39,20 @@ async def cmd_get_test(message: Message, repo: Repo, state: FSMContext, **kwargs
     log.debug(' /user_g: get user: state: %s', await state.get_data())
 
     # data = await state.get_data()
-    # id_ = data['user_id']
-    id_ = 1
-
-    log.debug(' /user_g: user id=%s', id_)
+    # user_id = data['user_id']
+    user_id = 1
 
     # Получить пользователя по id базы данных (из общего контекста бота)
-    user = await repo.user.get(id_, message.from_user.id)
+    user = await repo.user.get(user_id)
 
     log.debug(' /user_g: user: %s', user)
 
 
 @router.message(Command(commands='user_gg'), IsAdmin())
-async def cmd_get_by_user_id_test(message: Message, repo: Repo, **kwargs):
-    log.debug(' /user_gg: get user: from user_id=%s', message.from_user.id)
+async def cmd_get_by_bot_user_id_test(message: Message, repo: Repo, **kwargs):
+    log.debug(' /user_gg: get user: bot_user_id=%s', message.from_user.id)
 
-    # Получить пользователя по id телеграмма
+    # Получить пользователя по user_id телеграмма
     user = await repo.user.get_by_bot_user_id(message.from_user.id)
 
     log.debug(' /user_gg: user: %s', user)
@@ -66,38 +60,36 @@ async def cmd_get_by_user_id_test(message: Message, repo: Repo, **kwargs):
 
 @router.message(Command(commands='user_a'), IsAdmin())
 async def cmd_add_test(message: Message, repo: Repo, **kwargs):
-    log.debug(' /user_a: add user: from_user: %s', message.from_user)
+    log.debug(' /user_a: add bot user: %s', message.from_user)
 
     user = create_from_bot_user(message.from_user)
 
     # Добавить нового пользователя
-    await repo.user.add(user, message.from_user.id)
+    await repo.user.add(user)
 
 
 @router.message(Command(commands='user_d'), IsAdmin())
 async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwargs):
-    log.debug(' /user_d: delete user: from_user: %s', message.from_user)
+    log.debug(' /user_d: delete bot user: %s', message.from_user)
 
     # data = await state.get_data()
-    # id_ = data['user_id']
-    id_ = 1
+    # user_id = data['user_id']
+    user_id = 1
 
     # Удалить пользователя
-    await repo.user.delete(id_, message.from_user.id)
+    await repo.user.delete(user_id)
 
 
 @router.message(Command(commands='user_u'), IsAdmin())
 async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
-    log.debug(' /user_u: update: from_user: %s', message.from_user)
+    log.debug(' /user_u: update bot user: %s', message.from_user)
 
     user = create_from_bot_user(message.from_user)
-    log.debug(' /user_u: user id=%s name=%s', user.id, user.name)
 
-    data = await state.get_data()
-    user.id = data['user_id']
-
+    # data = await state.get_data()
+    # user.id = data['user_id']
+    user.id = 1
     user.name = "Vladimir"
-    log.debug(' /user_u: user id=%s name=%s', user.id, user.name)
 
     # Изменить пользователя
     await repo.user.update(user)
@@ -110,13 +102,13 @@ async def cmd_get_with_all_statuses_test(message: Message, state: FSMContext, re
     log.debug(' /user_s: get with all statuses: from user: %s', message.from_user)
 
     # data = await state.get_data()
-    # id_ = data['user_id']
-    id_ = 1
+    # user_id = data['user_id']
+    user_id = 1
 
-    log.debug(' /user_ls: user id=%s', id_)
+    log.debug(' /user_ls: user id=%s', user_id)
 
     # Получить пользователя и все его статусы, отсортированные по убыванию даты
-    user = await repo.user.get_with_all_statuses(id_, message.from_user.id)
+    user = await repo.user.get_with_all_statuses(user_id)
 
     log.debug(' /user_ls: user: %s', user)
     log.debug(' /user_ls: statuses: %s', user.statuses)

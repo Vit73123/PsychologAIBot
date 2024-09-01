@@ -23,7 +23,7 @@ class User(Base):
 
     sessions: Mapped[list["Session"]] = relationship(
         back_populates="user",
-        order_by = "Session.updated_at.desc()",
+        order_by="Session.updated_at.desc()",
         cascade='save-update, merge, delete'
     )
 

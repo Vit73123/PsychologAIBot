@@ -42,6 +42,7 @@ CREATE TABLE sessions
     id         INTEGER                            NOT NULL,
     review     TEXT,
     created_at DATETIME DEFAULT (DATETIME('now')) NOT NULL,
+    updated_at DATETIME DEFAULT (DATETIME('now')) NOT NULL,
     user_id    INTEGER                            NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE

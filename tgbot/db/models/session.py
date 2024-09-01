@@ -19,7 +19,7 @@ class Session(Base):
     )
 
     def __repr__(self):
-        return (f"user_id={self.id} "
+        return (f"id={self.id} "
                 f"user_id={self.user_id} "
                 f"review={self.review} "
                 f"created_at={self.created_at} "
