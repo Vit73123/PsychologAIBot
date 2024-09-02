@@ -23,7 +23,7 @@ async def cmd_set_test(message: Message, dialog_manager: DialogManager, repo: Re
     data = await state.get_data()
 
     if not data:
-        user = create_from_bot_user(message.from_user)
+        user = create_user_from_bot(message.from_user)
 
         # Регистрация пользователя
         user = await repo.user.set(user)
@@ -112,7 +112,7 @@ async def cmd_add_test(message: Message, repo: Repo, **kwargs):
 async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
     log.debug(' /user_u: update user id=1, name=Vladimir')
 
-    user = create_from_bot_user(message.from_user)
+    user = create_user_from_bot(message.from_user)
 
     # data = await state.get_data()
     # user.id = data['user_id']

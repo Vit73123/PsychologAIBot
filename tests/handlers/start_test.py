@@ -29,7 +29,7 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMC
 
     # Регистрация пользователя: добавить в общий контекст бота его id из базы данных
     if not data:
-        user = create_from_bot_user(message.from_user)
+        user = create_user_from_bot(message.from_user)
         user = await repo.user.set(user)
         await state.set_data({'user_id': user.id})
 

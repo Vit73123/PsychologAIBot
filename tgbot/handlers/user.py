@@ -9,7 +9,7 @@ from aiogram_dialog import DialogManager, StartMode
 from tgbot.db import Repo
 from tgbot.dialogs.states import Start
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils.user_utils import create_from_bot_user
+from tgbot.utils.user_utils import create_user_from_bot
 
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -23,7 +23,7 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, repo: Repo,
 
     data = await state.get_data()
     if not data:
-        user = create_from_bot_user(message.from_user)
+        user = create_user_from_bot(message.from_user)
         user = await repo.user.set(user)
         await state.set_data({'user_id': user.id})
 
