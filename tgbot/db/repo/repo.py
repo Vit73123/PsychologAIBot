@@ -8,11 +8,6 @@ from .user_repo import UserRepo
 
 
 class Repo:
-    user: UserRepo
-    session: SessionRepo
-    status: StatusRepo
-
-    pool: async_sessionmaker
 
     def __init__(self, pool: async_sessionmaker):
         self.pool = pool
