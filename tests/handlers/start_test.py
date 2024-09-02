@@ -30,7 +30,7 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMC
     # Регистрация пользователя: добавить в общий контекст бота его id из базы данных
     if not data:
         user = create_user_from_bot(message.from_user)
-        user = await repo.user.set(user)
+        user = await repo.user.register(user)
         await state.set_data({'user_id': user.id})
 
     await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)
@@ -52,10 +52,9 @@ async def cmd_start(message: Message, state: FSMContext, **kwargs):
     /st       - bot state data
     /kw       - bot context (kwargs)
     
-    /user_set - set user bot_id=xxxxxxxxxx: Регистрация пользователя Запуск бота
+    /user_reg - set user bot_id=xxxxxxxxxx: Регистрация пользователя Запуск бота
     /user_g   - get user id=1
     /user_gg  - get user by bot user bot_id=1111111111
-    /user_gl  - get user id=1 with last status
     /user_ga  - get user id=1 with all statuses
     /user_a   - add user bot_id=9999999999
     /user_u   - update user id=1

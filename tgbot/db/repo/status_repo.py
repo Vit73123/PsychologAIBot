@@ -3,8 +3,10 @@ from logging import getLogger
 from sqlalchemy import select, and_, delete
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from tgbot.db import Status
+from tgbot.db.dao import StatusDAO
+from tgbot.db.models import Status
 from tgbot.tools.logger import get_logger_dev
+from tgbot.utils.status_utils import create_status_from_dao, create_status_to_dao
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -17,17 +19,17 @@ class StatusRepo:
         self.pool = pool
 
     # Получить состояние пользователя по id состояния
-    async def get(self, id_: int) -> Status | None:
+    async def get(self, id_: int) -> StatusDAO | None:
         log.debug(" Repo: get status: id=%s", id_)
 
         async with self.pool() as session:
             status = await session.get(Status, id_)
 
             log.debug(" Repo: get status: %s", status)
-        return status
+        return create_status_to_dao(status)
 
     # Получить последнее состояние данного пользователя по его user_id в базе данных
-    async def get_last_by_user_id(self, user_id: int) -> Status | None:
+    async def get_last_by_user_id(self, user_id: int) -> StatusDAO | None:
         log.debug(" Repo: get last status by db_user_id=%s", user_id)
 
         async with self.pool() as session:
@@ -40,10 +42,10 @@ class StatusRepo:
             )
             status = result.one_or_none()
 
-            return status
+            return create_status_to_dao(status)
 
     # Получить все состояния данного пользователя по его user_id в базе данных
-    async def get_all_by_user_id(self, user_id: int):
+    async def get_all_by_user_id(self, user_id: int) -> list[StatusDAO]:
         log.debug(" Repo: get all statuses by db_user_id=%s", user_id)
 
         async with self.pool() as session:
@@ -58,31 +60,33 @@ class StatusRepo:
 
             log.debug(" Repo: statuses: %s", statuses)
 
-        return statuses
+            statuses_list = list(map(create_status_to_dao, statuses))
+        return statuses_list
 
     # Добавить состояние для данного пользователя по его user_id
-    async def add(self, status: Status) -> Status:
-        log.debug(" Repo: add status: %s", status)
+    async def add(self, status_dao: StatusDAO) -> StatusDAO | None:
+        log.debug(" Repo: add status: %s", status_dao)
+        status = create_status_from_dao(status_dao)
 
         async with self.pool() as session:
             session.add(status)
             await session.commit()
-        return status
+        return create_status_to_dao(status)
 
     # Изменить состояние
-    async def update(self, status: Status) -> None:
-        log.debug(" Repo: update status: %s", status)
+    async def update(self, status_dao: StatusDAO) -> None:
+        log.debug(" Repo: update status: %s", status_dao)
+        status = create_status_from_dao(status_dao)
 
         async with self.pool() as session:
-            db_status = await session.get(Status, status.id)
+            status = await session.get(Status, status.id)
 
-            db_status.user_id = status.user_id
-            db_status.text = status.text
-            db_status.grade = status.grade
+            status.text = status_dao.text
+            status.grade = status_dao.grade
 
             await session.commit()
 
-            log.debug(" Repo: status: %s", db_status)
+            log.debug(" Repo: status: %s", status)
 
     # Удалить состояние
     async def delete(self, status_id: int) -> None:

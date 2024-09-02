@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from tgbot.db import Status
+from tgbot.db.dao import StatusDAO
 from tgbot.db.repo import Repo
 from tgbot.filters import *
 from tgbot.tools.logger import get_logger_dev
@@ -23,7 +23,7 @@ async def cmd_get_test(message: Message, repo: Repo, state: FSMContext, **kwargs
     status_id = 1
 
     # Получить состояние пользователя по id состояния
-    status = await repo.status.get(status_id)
+    status: StatusDAO = await repo.status.get(status_id)
 
     log.debug(' /status_g: status: %s', status)
 
@@ -37,7 +37,7 @@ async def cmd_get_last_test(message: Message, repo: Repo, state: FSMContext, **k
     user_id = 1
 
     # Получить последнее состояние данного пользователя по его user_id в базе данных
-    status = await repo.status.get_last_by_user_id(user_id)
+    status: StatusDAO = await repo.status.get_last_by_user_id(user_id)
 
     log.debug(' /status_gl: status: %s', status)
 
@@ -51,7 +51,7 @@ async def cmd_get_all_by_user_test(message: Message, repo: Repo, state: FSMConte
     user_id = 1
 
     # Получить все состояния данного пользователя по его user_id в базе данных
-    statuses = await repo.status.get_all_by_user_id(user_id)
+    statuses: list[StatusDAO] = await repo.status.get_all_by_user_id(user_id)
 
     log.debug(' /status_ga: statuses: %s', statuses)
 
@@ -64,13 +64,15 @@ async def cmd_add_test(message: Message, repo: Repo, state: FSMContext, **kwargs
     # user_id = data['user_id']
     user_id = 1
 
-    status = Status()
-    status.user_id = user_id
-    status.text = "New status"
-    status.grade = 5
+    status = StatusDAO(
+        status_id=1,
+        text="New status",
+        grade=5,
+        user_id=user_id
+    )
 
     # Добавить состояние для данного пользователя по его user_id
-    await repo.status.add(status)
+    await repo.status._add(status)
 
     db_status = await repo.status.get_last_by_user_id(user_id)
     log_dev.debug(' /status_a: status: %s', db_status)
@@ -84,11 +86,12 @@ async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwa
     # user_id = data['user_id']
     user_id = 1
 
-    status = Status()
-    status.id = 1
-    status.user_id = user_id
-    status.text = "Updated status"
-    status.grade = -5
+    status = StatusDAO(
+        status_id=1,
+        user_id=user_id,
+        text="Updated status",
+        grade=-5
+    )
 
     # Изменить состояние
     await repo.status.update(status)
@@ -105,7 +108,6 @@ async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwa
 
     # Удалить состояние
     await repo.status.delete(status_id)
-
 
 
 @router.message(Command(commands='status_dl'))

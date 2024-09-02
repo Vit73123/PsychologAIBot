@@ -24,7 +24,7 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, repo: Repo,
     data = await state.get_data()
     if not data:
         user = create_user_from_bot(message.from_user)
-        user = await repo.user.set(user)
+        user = await repo.user.register(user)
         await state.set_data({'user_id': user.id})
 
     await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)

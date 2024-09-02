@@ -28,16 +28,16 @@ class User(Base):
     )
 
     def __repr__(self):
-        return (f"{self.id=} "
-                f"{self.user_id=} "
-                f"{self.username=} "
-                f"{self.first_name=} "
-                f"{self.last_name=} "
-                f"{self.name=} "
-                f"{self.gender=} "
-                f"{self.age=} "
-                f"{self.created_at=} "
-                f"{self.updated_at=}")
+        return (f"id={self.id} "
+                f"user_id={self.user_id} "
+                f"username={self.username} "
+                f"first_name={self.first_name} "
+                f"last_name={self.last_name} "
+                f"name={self.name} "
+                f"gender={self.gender} "
+                f"age={self.age} "
+                f"created_at={self.created_at} "
+                f"updated_at={self.updated_at}")
 
     def __eq__(self, __value):
         first = (self.username, self.first_name, self.last_name)

@@ -20,12 +20,12 @@ class Status(Base):
     )
 
     def __repr__(self):
-        return (f"{self.id=} "
-                f"{self.user_id=} "
-                f"{self.text=} "
-                f"{self.grade=} "
-                f"{self.created_at=} "
-                f"{self.updated_at=}")
+        return (f"id={self.id} "
+                f"user_id={self.user_id} "
+                f"text={self.text} "
+                f"grade={self.grade} "
+                f"created_at={self.created_at} "
+                f"updated_at={self.updated_at}")
 
     def __eq__(self, __value):
         first = (self.id, self.text, self.grade, self.user_id)

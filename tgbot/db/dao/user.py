@@ -5,3 +5,9 @@ class UserDAO:
         self.name = name
         self.gender = gender
         self.age = age
+
+    def __repr__(self):
+        return (f"id={self.id} "
+                f"name={self.name} "
+                f"gender={self.gender} "
+                f"age={self.age}")
