@@ -46,6 +46,8 @@ async def cmd_start(message: Message, state: FSMContext, **kwargs):
     /start    - start bot: Регистрация Диалог start
     /start_   - это сообщение
     
+    /test     - any test
+    
     /ct       - create tables
     /st       - bot state data
     /kw       - bot context (kwargs)
@@ -67,6 +69,8 @@ async def cmd_start(message: Message, state: FSMContext, **kwargs):
     /status_d  - delete status id=1
     /status_dl - delete last status by user_id=1
     /status_da - delete all statuses by user_id=1
+    
+    /session
     """)
 
 

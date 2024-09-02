@@ -15,7 +15,7 @@ log_dev = get_logger_dev(__name__, log.level)
 router = Router()
 
 
-@router.message(Command(commands='session'))
+@router.message(Command(commands='test'))
 async def cmd_any_test(message: Message, dialog_manager: DialogManager, repo: Repo, state: FSMContext, **kwargs):
-    log.debug(' /session: from_user: %s', message.from_user)
-    log.debug(' /session: state data: %s', await state.get_data())
+    log.debug(' /test')
+
