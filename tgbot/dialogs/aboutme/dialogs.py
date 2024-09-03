@@ -31,55 +31,57 @@ aboutme_dialog = Dialog(
 
     # Профиль
     Window(
-        Format('{win_profile_h_state}'),
-        Format(
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quo ratione, adipisci ducimus commodi eligendi dolorum maxime molestias ad debitis architecto cumque molestiae numquam, aperiam qui odit perferendis repellat velit!'
-        ),
-        Format('\n{win_profile_h_grade}'),
-        Format(
-            '+3 🙂'
-        ),
-        Row(
-            Button(
-                text=Format('{btn_profile_name}'),
-                id='btn_profile_name',
-                on_click=btn_profile_name_clicked,
-            ),
-        ),
-        Row(
-            Radio(
-                checked_text=Format('[✔ {item[0]} ]'),
-                unchecked_text=Format('[ {item[0]} ]'),
-                id='radio_gender',
-                item_id_getter=operator.itemgetter(1),
-                items='radio_gender',
-                on_click=radio_gender_clicked
-            ),
-            Button(
-                text=Format('{btn_profile_age}'),
-                id='btn_profile_age',
-                on_click=btn_profile_age_clicked,
-            ),
-        ),
-        Row(
-            Button(
-                text=Format('{btn_profile_state}'),
-                id='btn_profile_state',
-                on_click=btn_profile_state_clicked,
-            ),
-        ),
-        Row(
-            Button(
-                text=Format('{btn_profile_save}'),
-                id='btn_profile_save',
-                on_click=btn_profile_save_clicked,
-            ),
-            Button(
-                text=Format('{btn_profile_back}'),
-                id='btn_profile_back',
-                on_click=btn_profile_back_clicked,
-            ),
-        ),
+
+        Format('{win_profile_aboutme}'),
+        # Format('{win_profile_h_state}'),
+        # Format(
+        #     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quo ratione, adipisci ducimus commodi eligendi dolorum maxime molestias ad debitis architecto cumque molestiae numquam, aperiam qui odit perferendis repellat velit!'
+        # ),
+        # Format('\n{win_profile_h_grade}'),
+        # Format(
+        #     '+3 🙂'
+        # ),
+        # Row(
+        #     Button(
+        #         text=Format('{btn_profile_name}'),
+        #         id='btn_profile_name',
+        #         on_click=btn_profile_name_clicked,
+        #     ),
+        # ),
+        # Row(
+        #     Radio(
+        #         checked_text=Format('[✔ {item[0]} ]'),
+        #         unchecked_text=Format('[ {item[0]} ]'),
+        #         id='radio_gender',
+        #         item_id_getter=operator.itemgetter(1),
+        #         items='radio_gender',
+        #         on_click=radio_gender_clicked
+        #     ),
+        #     Button(
+        #         text=Format('{btn_profile_age}'),
+        #         id='btn_profile_age',
+        #         on_click=btn_profile_age_clicked,
+        #     ),
+        # ),
+        # Row(
+        #     Button(
+        #         text=Format('{btn_profile_state}'),
+        #         id='btn_profile_state',
+        #         on_click=btn_profile_state_clicked,
+        #     ),
+        # ),
+        # Row(
+        #     Button(
+        #         text=Format('{btn_profile_save}'),
+        #         id='btn_profile_save',
+        #         on_click=btn_profile_save_clicked,
+        #     ),
+        #     Button(
+        #         text=Format('{btn_profile_back}'),
+        #         id='btn_profile_back',
+        #         on_click=btn_profile_back_clicked,
+        #     ),
+        # ),
         getter=get_profile,
         state=Aboutme.profile,
     ),

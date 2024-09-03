@@ -11,7 +11,8 @@ from fluentogram import TranslatorRunner
 from tgbot.db import Repo
 from tgbot.dialogs.states import Start
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import create_user_from_bot, escape_text
+from tgbot.tools.jinja import escape_text
+from tgbot.utils import create_user_from_bot
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner

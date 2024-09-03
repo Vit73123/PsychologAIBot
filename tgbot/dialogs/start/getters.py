@@ -23,8 +23,11 @@ async def get_start(dialog_manager: DialogManager,
                     ) -> dict[str, str]:
     log.debug(" Start: get_start: context: %s", dialog_manager.current_context())
 
+    user = dialog_manager.start_data.get('user')
+    user['name'] = i18n.txt.name.anonim() if not user['name'] else user['name']
+
     return {
-        'user': dialog_manager.start_data.get('user'),
+        'user': user,
         'win_start': i18n.win.start(),
         'btn_psychology': i18n.btn.start.psychology(),
         'btn_tests': i18n.btn.start.tests(),

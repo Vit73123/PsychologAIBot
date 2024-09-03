@@ -46,3 +46,4 @@ class User(Base):
 
     def __hash__(self):
         hash((self.id, self.created_at, self.updated_at, self.user_id, self.username, self.first_name, self.last_name))
+

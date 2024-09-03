@@ -7,16 +7,13 @@ from fluentogram import TranslatorRunner
 from tgbot.db import Repo
 from tgbot.db.dao import UserDAO
 from tgbot.tools.logger import get_logger_dev
+from tgbot.utils import create_aboutme_string
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
-
-user: UserDAO
-user_new: UserDAO
-user_changed: bool
 
 
 # О себе
@@ -26,15 +23,16 @@ async def get_aboutme(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    log_dev.debug(" About me: get_aboutme: context: %s", dialog_manager.current_context())
+    log.debug(" About me: get_aboutme: context: %s", dialog_manager.current_context())
 
-    user = await repo.user.get(dialog_manager.start_data['user']['id'])
-    user_new = UserDAO(user.id)
+    user: UserDAO = await repo.user.get(dialog_manager.start_data['user']['id'])
+    user_upd: UserDAO = UserDAO(user.id)
+    dialog_manager.dialog_data.update({'user': user, 'user_upd': user_upd})
 
     return {
-        "win_aboutme": i18n.win.aboutme(),
-        "btn_aboutme_profile": i18n.btn.aboutme.profile(),
-        "btn_back_start": i18n.btn.back.start(),
+        "win_aboutme": str(i18n.win.aboutme()),
+        "btn_aboutme_profile": str(i18n.btn.aboutme.profile()),
+        "btn_back_start": str(i18n.btn.back.start()),
     }
 
 
@@ -44,19 +42,23 @@ async def get_profile(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    gender = [
-        (i18n.btn.aboutme.profile.mail(), '1'),
-        (i18n.btn.aboutme.profile.femail(), '2'),
-    ]
+    log_dev.debug(" Profile: get_profile: context: %s", dialog_manager.current_context())
+
+    user: UserDAO = dialog_manager.dialog_data.get('user')
+    user_upd: UserDAO = dialog_manager.dialog_data.get('user_upd')
+    user_upd.age = 1
+
+    aboutme_string = create_aboutme_string(user=user, user_upd=user_upd, i18n=i18n)
+
     return {
-        "win_profile_h_state": i18n.win.aboutme.profile.h.state(),
-        "win_profile_h_grade": i18n.win.aboutme.profile.h.grade(),
-        "btn_profile_name": i18n.btn.aboutme.profile.name(),
-        "btn_profile_age": i18n.btn.aboutme.profile.age(),
-        "btn_profile_state": i18n.btn.aboutme.profile.state(),
-        "btn_profile_save": i18n.btn.save(),
-        "btn_profile_back": i18n.btn.back(),
-        "radio_gender": gender,
+        "win_profile_aboutme": aboutme_string,
+        "win_profile_h_state": str(i18n.win.aboutme.profile.h.state()),
+        "win_profile_h_grade": str(i18n.win.aboutme.profile.h.grade()),
+        "btn_profile_name": str(i18n.btn.aboutme.profile.name()),
+        "btn_profile_age": str(i18n.btn.aboutme.profile.age()),
+        "btn_profile_state": str(i18n.btn.aboutme.profile.state()),
+        "btn_profile_save": str(i18n.btn.save()),
+        "btn_profile_back": str(i18n.btn.back()),
     }
 
 
