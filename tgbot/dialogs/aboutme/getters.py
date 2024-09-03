@@ -1,7 +1,15 @@
+from logging import getLogger
 from typing import TYPE_CHECKING
 
 from aiogram_dialog import DialogManager
 from fluentogram import TranslatorRunner
+
+from tgbot.db import Repo
+from tgbot.db.dao import UserDAO
+from tgbot.tools.logger import get_logger_dev
+
+log = getLogger(__name__)
+log_dev = get_logger_dev(__name__, log.level)
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
@@ -10,9 +18,18 @@ if TYPE_CHECKING:
 # О себе
 async def get_aboutme(
         dialog_manager: DialogManager,
+        repo: Repo,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
+    log_dev.debug(" About me: get_aboutme: context: %s", dialog_manager.current_context())
+
+    user: UserDAO = await repo.user.get(
+        dialog_manager.start_data['user']['id']
+    )
+
+    print(user)
+
     return {
         "win_aboutme": i18n.win.aboutme(),
         "btn_aboutme_profile": i18n.btn.aboutme.profile(),

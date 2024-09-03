@@ -13,7 +13,8 @@ from tgbot.config.config import Config
 from tgbot.db.factory import create_tables
 from tgbot.db.repo import Repo
 from tgbot.filters import IsAdmin
-from tgbot.utils.user_utils import *
+from tgbot.tools.logger import get_logger_dev
+from tgbot.utils import create_user_from_bot, escape_text
 
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -25,17 +26,22 @@ router = Router()
 async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMContext, repo: Repo, **kwargs):
     log.debug(' /start')
 
-    start_data = await state.get_data()
+    data = await state.get_data()
 
-    # Регистрация пользователя: добавить в общий контекст бота его id из базы данных
-    if not start_data:
-        user = create_user_from_bot(message.from_user)
-        user = await repo.user.register(user)
-        start_data = {'user_id': user.id}
+    if not data:
+        # Регистрация пользователя: добавить в общий контекст бота его id из базы данных
+        user_db = create_user_from_bot(message.from_user)
+        user = await repo.user.register(user_db)
 
-    await state.set_data(start_data)
-    log_dev.debug(' state: %s', start_data)
-    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK, data=start_data)
+        user_name = escape_text(user.name) if user.name else user.name
+
+        data = {'user': {
+            'id': user.id,
+            'name': user_name
+        }}
+        await state.set_data(data)
+
+    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK, data={'user': data['user']})
 
 
 @router.message(Command(commands='start_'), IsAdmin())

@@ -59,8 +59,9 @@ class Win:
 
 Выбирайте:
 📌 &lt;b&gt;Сеанс с психологом&lt;/b&gt; - пообщайтесь с психологом
-📌 &lt;b&gt;Тесты&lt;/b&gt; - пройдите тесты и узнайте больше о себе
-📌 &lt;b&gt;О себе&lt;/b&gt; - добавьте информацию о себе и составьте свой психологический профиль"""]: ...
+📌 &lt;b&gt;Тесты&lt;/b&gt; - &lt;i&gt;пройдите тесты и узнайте больше о себе [new ❌]&lt;/i&gt;
+📌 &lt;b&gt;О себе&lt;/b&gt; - добавьте информацию о себе,
+&lt;i&gt;составьте свой психологический профиль [new ❌]&lt;/i&gt;"""]: ...
 
     @staticmethod
     def psychology() -> Literal["""&lt;b&gt;Мой личный психолог&lt;/b&gt;
@@ -155,6 +156,7 @@ class WinAboutmeProfileAge:
 
 
 class Btn:
+    back: BtnBack
     start: BtnStart
     psychology: BtnPsychology
     tests: BtnTests
@@ -162,9 +164,6 @@ class Btn:
 
     @staticmethod
     def next() -> Literal["""Вперёд"""]: ...
-
-    @staticmethod
-    def back() -> Literal["""Вернуться"""]: ...
 
     @staticmethod
     def skip() -> Literal["""Попустить"""]: ...
@@ -177,6 +176,14 @@ class Btn:
 
     @staticmethod
     def cancel() -> Literal["""Отмена"""]: ...
+
+
+class BtnBack:
+    @staticmethod
+    def __call__() -> Literal["""Вернуться"""]: ...
+
+    @staticmethod
+    def start() -> Literal["""Главное меню"""]: ...
 
 
 class BtnStart:
@@ -238,4 +245,7 @@ class BtnAboutmeProfile:
 class Srv:
     @staticmethod
     def checkname() -> Literal["""^[а-яА-ЯёЁ ]+"""]: ...
+
+    @staticmethod
+    def anonimname() -> Literal["""Новый пользователь"""]: ...
 

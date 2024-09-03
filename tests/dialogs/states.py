@@ -6,4 +6,4 @@ class Start(StatesGroup):
 
 
 class Dialog_1(StatesGroup):
-    dialog_1 = State()
+    start = State()

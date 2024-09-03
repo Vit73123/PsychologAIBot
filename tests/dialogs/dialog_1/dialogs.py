@@ -13,6 +13,6 @@ dialog_1_dialog = Dialog(
         Const('<b>Диалог 1</b>'),
         Cancel(Const('Назад'), id='back'),
         getter=get_dialog_1,
-        state=states.Dialog_1.dialog_1,
+        state=states.Dialog_1.start,
     ),
 )

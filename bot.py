@@ -15,7 +15,7 @@ from tgbot.db.factory import (create_engine,
 from tgbot.dialogs import (start_dialog,
                            psychology_dialog,
                            tests_dialog,
-                           profile_dialog, )
+                           aboutme_dialog, )
 from tgbot.filters import IsAdmin
 from tgbot.handlers import user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
@@ -75,7 +75,7 @@ async def main():
         start_dialog,
         psychology_dialog,
         tests_dialog,
-        profile_dialog,
+        aboutme_dialog,
     )
 
     # Фильтр IsAdmin
