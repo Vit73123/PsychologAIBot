@@ -114,9 +114,9 @@ gpt-name-anonim = Человек не хочет называть своего �
 txt-name-anonim = Новый пользователь
 
 txt-name-before = Меня зовут
-txt-age-before = Мне
+txt-age-before = мне
 txt-age-after = лет
-txt-gender-before = Я
+txt-gender-before = я
 
 txt-yearsstring1 = год
 txt-yearsstring2 = года

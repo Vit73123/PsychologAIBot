@@ -22,11 +22,16 @@ def create_aboutme_string(user: UserDAO, user_upd: UserDAO, i18n: TranslatorRunn
     name = ' '.join([i18n.txt.name.before(), '<b>' + name_ + '</b>']) if name_ else ''
     age: str = ' '.join(
         [i18n.txt.age.before(), '<b>' + str(age_) + '</b>', _after_years_string(years=age_, i18n=i18n)]) if age_ else ''
-    gender: str = ' '.join([i18n.txt.gender.before(), '<b>' + get_gender_string(gender_) + '</b>']) if gender_ else ''
+    gender: str = ' '.join(
+        ['и ' + i18n.txt.gender.before() + ' -',
+         '<b>' + get_gender_string(gender=gender_, i18n=i18n) + '</b>']) if gender_ else ''
+
+    age = age.capitalize() if age and not name else age
+    gender = gender.capitalize() if not name and not age else gender
 
     str_list = [s for s in [name, age, gender] if s]
 
-    return ' '.join(str_list)
+    return ', '.join(str_list)
 
 
 def _after_years_string(years: int, i18n: TranslatorRunner) -> str:
@@ -39,7 +44,7 @@ def _after_years_string(years: int, i18n: TranslatorRunner) -> str:
 
 
 def get_gender_string(gender: Gender, i18n: TranslatorRunner) -> str:
-    if Gender.male:
+    if gender == Gender.male:
         return i18n.txt.gender.male()
     else:
         return i18n.txt.gender.femail()

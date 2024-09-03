@@ -6,6 +6,7 @@ from fluentogram import TranslatorRunner
 
 from tgbot.db import Repo
 from tgbot.db.dao import UserDAO
+from tgbot.db.models.user import Gender
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils import create_aboutme_string
 
@@ -46,7 +47,9 @@ async def get_profile(
 
     user: UserDAO = dialog_manager.dialog_data.get('user')
     user_upd: UserDAO = dialog_manager.dialog_data.get('user_upd')
+    user.name = None
     user_upd.age = 1
+    user_upd.gender = Gender.male
 
     aboutme_string = create_aboutme_string(user=user, user_upd=user_upd, i18n=i18n)
 
