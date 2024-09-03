@@ -91,6 +91,10 @@ btn-save = Сохранить
 btn-ok = Ok
 btn-cancel = Отмена
 
+btn-start-psychology = Сеанс с психологом
+btn-start-tests = Тесты
+btn-start-aboutme = О себе
+
 btn-psychology-start-session = Начать сеанс
 
 btn-tests-start-choosetest = Выбрать тест

@@ -33,6 +33,9 @@ async def get_start(dialog_manager: DialogManager,
     dialog_manager.dialog_data.update(user=user)
 
     return {
+        'user': dialog_manager.dialog_data.get('user'),
         'win_start': i18n.win.start(),
-        'user': dialog_manager.dialog_data.get('user')
+        'btn_psychology': i18n.btn.start.psychology(),
+        'btn_tests': i18n.btn.start.tests(),
+        'btn_aboutme': i18n.btn.start.aboutme(),
     }
