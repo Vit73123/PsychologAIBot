@@ -1,7 +1,14 @@
+import enum
+
 from sqlalchemy import CheckConstraint
 from sqlalchemy.orm import relationship
 
 from .base import *
+
+
+class Gender(enum.Enum):
+    male = "male"
+    female = "female"
 
 
 class User(Base):
@@ -12,7 +19,8 @@ class User(Base):
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
     name: Mapped[str | None]
-    gender: Mapped[str | None] = mapped_column(String(1, collation='NOCASE'), CheckConstraint("gender in ('м', 'ж')"))
+    gender: Mapped[Gender | None]
+    # gender: Mapped[str | None] = mapped_column(String(1, collation='NOCASE'), CheckConstraint("gender in ('м', 'ж')"))
     age: Mapped[int | None] = mapped_column(CheckConstraint("age >= 5 and age <= 150"))
 
     statuses: Mapped[list["Status"]] = relationship(
@@ -46,4 +54,3 @@ class User(Base):
 
     def __hash__(self):
         hash((self.id, self.created_at, self.updated_at, self.user_id, self.username, self.first_name, self.last_name))
-

@@ -13,8 +13,9 @@ from tgbot.config.config import Config
 from tgbot.db.factory import create_tables
 from tgbot.db.repo import Repo
 from tgbot.filters import IsAdmin
+from tgbot.tools.jinja import escape_text
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import create_user_from_bot, escape_text
+from tgbot.utils import create_user_from_bot
 
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)

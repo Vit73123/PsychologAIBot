@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
+from tgbot.db.models.user import Gender
 from tgbot.db.repo import Repo
 from tgbot.filters import IsAdmin
 from tgbot.utils.user_utils import *
@@ -101,7 +102,8 @@ async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwa
     # user.id = data['user_id']
     user = UserDAO(
         user_id=1,
-        name="Vladimir"
+        name="Vladimir",
+        gender=Gender.male,
     )
 
     # Изменить пользователя
