@@ -24,7 +24,7 @@ from tgbot.tools.logger import LoggerFormatter, FORMAT
 
 # Конфигурация логирования
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     handlers=[logging.StreamHandler(), logging.FileHandler('resources/log/bot.log', 'w')]
 )
 logging.getLogger().handlers[0].setFormatter(LoggerFormatter())

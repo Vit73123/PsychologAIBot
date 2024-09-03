@@ -25,15 +25,17 @@ router = Router()
 async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMContext, repo: Repo, **kwargs):
     log.debug(' /start')
 
-    data = await state.get_data()
+    start_data = await state.get_data()
 
     # Регистрация пользователя: добавить в общий контекст бота его id из базы данных
-    if not data:
+    if not start_data:
         user = create_user_from_bot(message.from_user)
         user = await repo.user.register(user)
-        await state.set_data({'user_id': user.id})
+        start_data = {'user_id': user.id}
 
-    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK)
+    await state.set_data(start_data)
+    log_dev.debug(' state: %s', start_data)
+    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK, data=start_data)
 
 
 @router.message(Command(commands='start_'), IsAdmin())
