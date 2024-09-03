@@ -1,5 +1,6 @@
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
+from aiogram_dialog.widgets.kbd import Row
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Format
 
@@ -16,8 +17,10 @@ start_dialog = Dialog(
             path='resources/images/start.png',
             type=ContentType.PHOTO
         ),
-        Button(Format('{btn_psychology}'), id='btn_psychology', on_click=btn_psychology_click),
-        Button(Format('{btn_tests}'), id='btn_tests', on_click=btn_tests_click),
+        Row(
+            Button(Format('{btn_psychology}'), id='btn_psychology', on_click=btn_psychology_click),
+            Button(Format('{btn_tests}'), id='btn_tests', on_click=btn_tests_click),
+        ),
         Button(Format('{btn_aboutme}'), id='btn_aboutme', on_click=btn_aboutme_click),
         getter=get_start,
         state=states.Start.start,

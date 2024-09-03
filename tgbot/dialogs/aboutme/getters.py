@@ -14,6 +14,10 @@ log_dev = get_logger_dev(__name__, log.level)
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
 
+user: UserDAO
+user_new: UserDAO
+user_changed: bool
+
 
 # О себе
 async def get_aboutme(
@@ -24,16 +28,13 @@ async def get_aboutme(
 ) -> dict[str, str]:
     log_dev.debug(" About me: get_aboutme: context: %s", dialog_manager.current_context())
 
-    user: UserDAO = await repo.user.get(
-        dialog_manager.start_data['user']['id']
-    )
-
-    print(user)
+    user = await repo.user.get(dialog_manager.start_data['user']['id'])
+    user_new = UserDAO(user.id)
 
     return {
         "win_aboutme": i18n.win.aboutme(),
         "btn_aboutme_profile": i18n.btn.aboutme.profile(),
-        "btn_aboutme_back": i18n.btn.back(),
+        "btn_back_start": i18n.btn.back.start(),
     }
 
 
