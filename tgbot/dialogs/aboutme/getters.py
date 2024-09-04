@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING
 from aiogram_dialog import DialogManager
 from fluentogram import TranslatorRunner
 
+from tgbot.config import Config
 from tgbot.db import Repo
-from tgbot.db.dao import UserDAO
-from tgbot.db.models.user import Gender
+from tgbot.db.dao import UserDAO, StatusDAO
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import create_aboutme_string
+from tgbot.utils import create_aboutme_string, load_status_grades, get_grade_string
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -40,6 +40,8 @@ async def get_aboutme(
 # Профиль
 async def get_profile(
         dialog_manager: DialogManager,
+        repo: Repo,
+        config: Config,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
@@ -47,21 +49,36 @@ async def get_profile(
 
     user: UserDAO = dialog_manager.dialog_data.get('user')
     user_upd: UserDAO = dialog_manager.dialog_data.get('user_upd')
-    user.name = None
-    user_upd.age = 1
-    user_upd.gender = Gender.male
 
-    aboutme_string = create_aboutme_string(user=user, user_upd=user_upd, i18n=i18n)
+    aboutme_txt = create_aboutme_string(user=user, user_upd=user_upd, i18n=i18n)
+
+    status: StatusDAO = await repo.status.get_last_by_user_id(user.id)
+    status_upd = StatusDAO(status.id)
+
+    status_txt = status.text if not status_upd.text else status.text
+
+    status_grades: dict = load_status_grades(config.root_path / 'resources' / 'emoji')
+    dialog_manager.dialog_data.update({'status_grades': status_grades})
+
+    log_dev.debug(" Profile: get_profile: context: %s", dialog_manager.current_context())
+
+    grade_txt = get_grade_string(status.grade, status_grades) if not status_upd.grade else get_grade_string(
+        status_upd.grade, status_grades)
+
+    log_dev.debug(" Profile: grade_txt %s", grade_txt)
 
     return {
-        "win_profile_aboutme": aboutme_string,
-        "win_profile_h_state": str(i18n.win.aboutme.profile.h.state()),
+        "win_profile_aboutme": aboutme_txt,
+        "win_profile_h_status": str(i18n.win.aboutme.profile.h.status()),
+        "win_profile_status": status_txt,
         "win_profile_h_grade": str(i18n.win.aboutme.profile.h.grade()),
-        "btn_profile_name": str(i18n.btn.aboutme.profile.name()),
-        "btn_profile_age": str(i18n.btn.aboutme.profile.age()),
-        "btn_profile_state": str(i18n.btn.aboutme.profile.state()),
-        "btn_profile_save": str(i18n.btn.save()),
-        "btn_profile_back": str(i18n.btn.back()),
+        "win_profile_grade": grade_txt,
+
+        # "btn_profile_name": str(i18n.btn.aboutme.profile.name()),
+        # "btn_profile_age": str(i18n.btn.aboutme.profile.age()),
+        # "btn_profile_state": str(i18n.btn.aboutme.profile.state()),
+        # "btn_profile_save": str(i18n.btn.save()),
+        # "btn_profile_back": str(i18n.btn.back()),
     }
 
 

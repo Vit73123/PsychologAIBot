@@ -1,4 +1,6 @@
+import sys
 from dataclasses import dataclass
+from pathlib import Path
 
 from environs import Env
 
@@ -27,6 +29,7 @@ class Config:
     tg_bot: TgBot
     gpt: GPT
     db: DBConfig
+    root_path: Path
 
 
 def load_config(path: str | None = None) -> Config:
@@ -46,5 +49,6 @@ def load_config(path: str | None = None) -> Config:
             dsn=env('DB_DSN'),
             is_echo=True if env('DB_IS_ECHO') == 'yes' else False,
             create_tables=True if env('DB_CREATE_TABLES') == 'yes' else False
-        )
+        ),
+        root_path=Path(__file__).resolve().parents[2]
     )

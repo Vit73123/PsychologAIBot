@@ -32,12 +32,54 @@ aboutme_dialog = Dialog(
     # Профиль
     Window(
 
-        Format('{win_profile_aboutme}'),
-        # Format('{win_profile_h_state}'),
-        # Format(
-        #     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis quo ratione, adipisci ducimus commodi eligendi dolorum maxime molestias ad debitis architecto cumque molestiae numquam, aperiam qui odit perferendis repellat velit!'
-        # ),
-        # Format('\n{win_profile_h_grade}'),
+        Format('{win_profile_aboutme}\n'),
+        Format('{win_profile_h_status}'),
+        Format('{win_profile_status}\n'),
+        Format('{win_profile_h_grade}'),
+        Format('{win_profile_grade}'),
+        Row(
+            Button(
+                text=Const('Имя 🤠'),
+                id='btn_aboutme_name',
+            ),
+            Button(
+                text=Const('Возраст 👨🏻'),
+                id='btn_aboutme_age',
+            ),
+            Button(
+                text=Const('Пол ♂'),
+                id='btn_aboutme_gender',
+            ),
+        ),
+        Row(
+            Button(
+                text=Const('Сейчас важно ❤️‍🔥!'),
+                id='btn_aboutme_status',
+            ),
+            Button(
+                text=Const('Оценка состояния 📶'),
+                id='btn_aboutme_grade',
+            ),
+        ),
+        Row(
+            Button(
+                text=Const('Ok ✅'),
+                id='btn_aboutme_Ok',
+            ),
+            Button(
+                text=Const('Сброс ❌'),
+                id='btn_aboutme_clear',
+            ),
+            Button(
+                text=Const('Вернуть ↪'),
+                id='btn_aboutme_return',
+            ),
+            Button(
+                text=Const('Отмена ✖'),
+                id='btn_aboutme_cancel',
+            ),
+        ),
+
         # Format(
         #     '+3 🙂'
         # ),

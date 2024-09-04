@@ -62,7 +62,7 @@ async def main():
     storage = MemoryStorage()
 
     # Инициализация диспетчера
-    dp = Dispatcher(storage=storage, repo=repo)
+    dp = Dispatcher(storage=storage, repo=repo, config=config)
 
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()
