@@ -22,6 +22,6 @@ async def get_start(
 
     return {
         "win_tests": i18n.win.tests(),
-        "btn_tests_start_dotest": i18n.btn.tests.start.dotest(),
-        "btn_back_start": i18n.btn.back.start(),
+        "btn_tests_dotest": i18n.btn.tests.start.dotest(),
+        "btn_tests_getback_home": i18n.btn.getback.home(),
     }

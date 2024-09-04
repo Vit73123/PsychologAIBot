@@ -6,7 +6,7 @@ from aiogram_dialog.widgets.text import Format
 
 from tgbot.dialogs.states import Tests
 from .callbacks import (
-    btn_start_dotest_clicked,
+    btn_tests_dotest_clicked,
 )
 from .getters import get_start
 
@@ -19,11 +19,11 @@ tests_dialog = Dialog(
             type=ContentType.PHOTO
         ),
         Button(
-            text=Format('{btn_tests_start_dotest}'),
-            id='btn_start_dotest',
-            on_click=btn_start_dotest_clicked,
+            text=Format('{btn_tests_dotest}'),
+            id='btn_tests_dotest',
+            on_click=btn_tests_dotest_clicked,
         ),
-        Cancel(Format('{btn_back_start}'), id='btn_back_start'),
+        Cancel(Format('{btn_tests_getback_home}'), id='btn_tests_getback_home'),
         getter=get_start,
         state=Tests.start,
     )

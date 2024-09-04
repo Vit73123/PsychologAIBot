@@ -31,9 +31,9 @@ async def get_aboutme(
     dialog_manager.dialog_data.update({'user': user, 'user_upd': user_upd})
 
     return {
-        "win_aboutme": str(i18n.win.aboutme()),
-        "btn_aboutme_profile": str(i18n.btn.aboutme.profile()),
-        "btn_back_start": str(i18n.btn.back.start()),
+        "win_aboutme": i18n.win.aboutme(),
+        "btn_aboutme_profile": i18n.btn.aboutme.profile(),
+        "btn_aboutme_getback_home": i18n.btn.getback.home(),
     }
 
 
@@ -69,16 +69,19 @@ async def get_profile(
 
     return {
         "win_profile_aboutme": aboutme_txt,
-        "win_profile_h_status": str(i18n.win.aboutme.profile.h.status()),
+        "win_profile_h_status": i18n.win.aboutme.profile.h.status(),
         "win_profile_status": status_txt,
-        "win_profile_h_grade": str(i18n.win.aboutme.profile.h.grade()),
+        "win_profile_h_grade": i18n.win.aboutme.profile.h.grade(),
         "win_profile_grade": grade_txt,
-
-        # "btn_profile_name": str(i18n.btn.aboutme.profile.name()),
-        # "btn_profile_age": str(i18n.btn.aboutme.profile.age()),
-        # "btn_profile_state": str(i18n.btn.aboutme.profile.state()),
-        # "btn_profile_save": str(i18n.btn.save()),
-        # "btn_profile_back": str(i18n.btn.back()),
+        "btn_profile_name": i18n.btn.aboutme.profile.name(),
+        "btn_profile_age": i18n.btn.aboutme.profile.age(),
+        "btn_profile_gender": i18n.btn.aboutme.profile.gender(),
+        "btn_profile_status": i18n.btn.aboutme.profile.status(),
+        "btn_profile_grade": i18n.btn.aboutme.profile.grade(),
+        "btn_profile_ok": i18n.btn.ok(),
+        "btn_profile_setback": i18n.btn.setback(),
+        "btn_profile_clear": i18n.btn.clear(),
+        "btn_profile_getback": i18n.btn.getback(),
     }
 
 
@@ -107,15 +110,15 @@ async def get_age(
 
 
 # Состояние
-async def get_state(
+async def get_status(
         dialog_manager: DialogManager,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
     return {
-        "win_state": i18n.win.aboutme.profile.state(),
-        "btn_state_skip": i18n.btn.skip(),
-        "btn_state_back": i18n.btn.back(),
+        "win_status": i18n.win.aboutme.profile.status(),
+        "btn_status_skip": i18n.btn.skip(),
+        "btn_status_back": i18n.btn.back(),
     }
 
 

@@ -3,12 +3,12 @@ import re
 from typing import TYPE_CHECKING
 
 from aiogram.types import CallbackQuery, Message
-from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button, Radio
 from fluentogram import TranslatorRunner
 
-from tgbot.dialogs.states import Start, Aboutme
+from tgbot.dialogs.states import Aboutme
 from tgbot.tools.logger import get_logger_dev
 
 if TYPE_CHECKING:
@@ -26,28 +26,42 @@ async def btn_aboutme_profile_clicked(callback: CallbackQuery, button: Button, d
 
 # Профиль
 async def btn_profile_name_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Profile: button clicked: name")
+    log_dev.debug(" Profile: button clicked: name: to Name")
     await dialog_manager.next()
-    # await dialog_manager.switch_to(state=Aboutme.name)
+    await dialog_manager.switch_to(state=Aboutme.name)
 
 
 async def btn_profile_age_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Profile: button clicked: age")
+    log_dev.debug(" Profile: button clicked: age: to Age")
     await dialog_manager.switch_to(state=Aboutme.age)
 
 
-async def btn_profile_save_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Profile: button clicked: save")
+async def btn_profile_gender_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Profile: button clicked: gender: to Gender")
+    await dialog_manager.switch_to(state=Aboutme.gender)
 
 
-async def btn_profile_state_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Profile: button clicked: next: to Status")
-    await dialog_manager.switch_to(state=Aboutme.state)
+async def btn_profile_status_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Profile: button clicked: status: to Status")
+    await dialog_manager.switch_to(state=Aboutme.status)
 
 
-async def btn_profile_back_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Profile: button clicked: cancel")
+async def btn_profile_grade_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Profile: button clicked: grade: to Grade")
+    await dialog_manager.switch_to(state=Aboutme.grade)
+
+
+async def btn_profile_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Profile: button clicked: ok: to Aboutme")
     await dialog_manager.back()
+
+
+async def btn_profile_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Profile: button clicked: setback")
+
+
+async def btn_profile_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Profile: button clicked: clear")
 
 
 # Пол
@@ -130,22 +144,22 @@ async def inp_age_error(message: Message, widget: ManagedTextInput, dialog_manag
 
 
 # Состояние
-async def btn_state_skip_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+async def btn_status_skip_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" State: button clicked: skip: to State")
     await dialog_manager.next()
 
 
-async def btn_state_back_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+async def btn_status_back_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" State: button clicked: back: to Profile")
     await dialog_manager.back()
 
 
-async def inp_state_check(text: str) -> str:
+async def inp_status_check(text: str) -> str:
     log_dev.debug(" State: Input text: check")
     return text
 
 
-async def inp_state_success(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
+async def inp_status_success(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
                             text: str) -> None:
     log_dev.debug(" State: Input text: succeed")
     await dialog_manager.next()

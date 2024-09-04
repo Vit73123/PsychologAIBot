@@ -22,6 +22,6 @@ async def get_start(
 
     return {
         "win_psychology_start": i18n.win.psychology(),
-        "btn_psychology_start_session": i18n.btn.psychology.start.session(),
-        "btn_back_start": i18n.btn.back.start(),
+        "btn_psychology_startsession": i18n.btn.psychology.startsession(),
+        "btn_psychology_getback_home": i18n.btn.getback.home(),
     }

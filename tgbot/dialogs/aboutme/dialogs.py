@@ -3,7 +3,7 @@ import operator
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Row, Group, Cancel
+from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Format, Const
 
@@ -24,7 +24,7 @@ aboutme_dialog = Dialog(
             id='btn_aboutme_profile',
             on_click=btn_aboutme_profile_clicked,
         ),
-        Cancel(Format('{btn_back_start}'), id='btn_back_start'),
+        Cancel(Format('{btn_aboutme_getback_home}'), id='btn_aboutme_getback_home'),
         getter=get_aboutme,
         state=Aboutme.start,
     ),
@@ -39,91 +39,51 @@ aboutme_dialog = Dialog(
         Format('{win_profile_grade}'),
         Row(
             Button(
-                text=Const('Имя 🤠'),
-                id='btn_aboutme_name',
+                text=Format('{btn_profile_name}'),
+                id='btn_profile_name',
+                on_click=btn_profile_name_clicked
             ),
             Button(
-                text=Const('Возраст 👨🏻'),
-                id='btn_aboutme_age',
+                text=Format('{btn_profile_age}'),
+                id='btn_profile_age',
+                on_click=btn_profile_age_clicked
             ),
             Button(
-                text=Const('Пол ♂'),
-                id='btn_aboutme_gender',
+                text=Format('{btn_profile_gender}'),
+                id='btn_profile_gender',
+                on_click=btn_profile_gender_clicked
             ),
         ),
         Row(
             Button(
-                text=Const('Сейчас важно ❤️‍🔥!'),
-                id='btn_aboutme_status',
+                text=Format('{btn_profile_status}'),
+                id='btn_profile_status',
+                on_click=btn_profile_status_clicked
             ),
             Button(
-                text=Const('Оценка состояния 📶'),
-                id='btn_aboutme_grade',
+                text=Format('{btn_profile_grade}'),
+                id='btn_profile_grade',
+                on_click=btn_profile_grade_clicked
             ),
         ),
         Row(
             Button(
-                text=Const('Ok ✅'),
-                id='btn_aboutme_Ok',
+                text=Format('{btn_profile_ok}'),
+                id='btn_profile_ok',
+                on_click=btn_profile_ok_clicked
             ),
             Button(
-                text=Const('Сброс ❌'),
-                id='btn_aboutme_clear',
+                text=Format('{btn_profile_setback}'),
+                id='btn_profile_setback',
+                on_click=btn_profile_setback_clicked
             ),
             Button(
-                text=Const('Вернуть ↪'),
-                id='btn_aboutme_return',
+                text=Format('{btn_profile_clear}'),
+                id='btn_profile_clear',
+                on_click=btn_profile_clear_clicked
             ),
-            Button(
-                text=Const('Отмена ✖'),
-                id='btn_aboutme_cancel',
-            ),
+            Back(Format('{btn_profile_getback}'), id='btn_profile_getback'),
         ),
-
-        # Format(
-        #     '+3 🙂'
-        # ),
-        # Row(
-        #     Button(
-        #         text=Format('{btn_profile_name}'),
-        #         id='btn_profile_name',
-        #         on_click=btn_profile_name_clicked,
-        #     ),
-        # ),
-        # Row(
-        #     Radio(
-        #         checked_text=Format('[✔ {item[0]} ]'),
-        #         unchecked_text=Format('[ {item[0]} ]'),
-        #         id='radio_gender',
-        #         item_id_getter=operator.itemgetter(1),
-        #         items='radio_gender',
-        #         on_click=radio_gender_clicked
-        #     ),
-        #     Button(
-        #         text=Format('{btn_profile_age}'),
-        #         id='btn_profile_age',
-        #         on_click=btn_profile_age_clicked,
-        #     ),
-        # ),
-        # Row(
-        #     Button(
-        #         text=Format('{btn_profile_state}'),
-        #         id='btn_profile_state',
-        #         on_click=btn_profile_state_clicked,
-        #     ),
-        # ),
-        # Row(
-        #     Button(
-        #         text=Format('{btn_profile_save}'),
-        #         id='btn_profile_save',
-        #         on_click=btn_profile_save_clicked,
-        #     ),
-        #     Button(
-        #         text=Format('{btn_profile_back}'),
-        #         id='btn_profile_back',
-        #         on_click=btn_profile_back_clicked,
-        #     ),
-        # ),
         getter=get_profile,
         state=Aboutme.profile,
     ),
@@ -170,27 +130,27 @@ aboutme_dialog = Dialog(
 
     # Состояние
     Window(
-        Format("{win_state}"),
+        Format("{win_status}"),
         TextInput(
-            id="inp_state",
-            type_factory=inp_state_check,
-            on_success=inp_state_success,
+            id="inp_status",
+            type_factory=inp_status_check,
+            on_success=inp_status_success,
             on_error=inp_age_error,
         ),
         Row(
             Button(
-                text=Format('{btn_state_skip}'),
-                id='btn_state_skip',
-                on_click=btn_state_skip_clicked,
+                text=Format('{btn_status_skip}'),
+                id='btn_status_skip',
+                on_click=btn_status_skip_clicked,
             ),
             Button(
-                text=Format('{btn_state_back}'),
-                id='btn_state_back',
-                on_click=btn_state_back_clicked,
+                text=Format('{btn_status_back}'),
+                id='btn_status_back',
+                on_click=btn_status_back_clicked,
             ),
         ),
-        getter=get_state,
-        state=Aboutme.state,
+        getter=get_status,
+        state=Aboutme.status,
     ),
 
     # Оценка состояния

@@ -21,6 +21,6 @@ class Aboutme(StatesGroup):
     profile = State()
     name = State()
     age = State()
+    gender = State()
     status = State()
-    state = State()
     grade = State()
