@@ -59,6 +59,4 @@ def load_status_grades(path: Path) -> dict:
 
 
 def get_grade_string(grade: int, status_grades: dict) -> str:
-    log_dev.debug(status_grades)
-    # return {}
     return f"{grade:+} {status_grades[str(grade)]}"

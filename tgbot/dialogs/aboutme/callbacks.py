@@ -8,6 +8,7 @@ from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button, Radio
 from fluentogram import TranslatorRunner
 
+from tgbot.db.dao import UserDAO
 from tgbot.dialogs.states import Aboutme
 from tgbot.tools.logger import get_logger_dev
 
@@ -20,29 +21,35 @@ log_dev = get_logger_dev(__name__, log.level)
 
 # О себе
 async def btn_aboutme_profile_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" About me: button clicked: next: to Profile")
+    log.debug(" About me: button clicked: next: to Profile")
     await dialog_manager.next()
 
 
 # Профиль
 async def btn_profile_name_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: name: to Name")
-    await dialog_manager.next()
-    await dialog_manager.switch_to(state=Aboutme.name)
+
+    dialog_manager.dialog_data.update({'input_data': 'name'})
+    await dialog_manager.switch_to(state=Aboutme.data)
 
 
 async def btn_profile_age_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: age: to Age")
+
+    dialog_manager.dialog_data.update({'input_data': 'age'})
     await dialog_manager.switch_to(state=Aboutme.age)
 
 
 async def btn_profile_gender_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: gender: to Gender")
+
     await dialog_manager.switch_to(state=Aboutme.gender)
 
 
 async def btn_profile_status_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: status: to Status")
+
+    dialog_manager.dialog_data.update({'input_data': 'status'})
     await dialog_manager.switch_to(state=Aboutme.status)
 
 
@@ -64,22 +71,14 @@ async def btn_profile_clear_clicked(callback: CallbackQuery, button: Button, dia
     log_dev.debug(" Profile: button clicked: clear")
 
 
-# Пол
-async def radio_gender_clicked(event: CallbackQuery, radio: Radio, dialog_manager: DialogManager, item_id: str):
-    log_dev.debug(" Gender: item selected: %s", item_id)
-
+# =============================================================================================================
 
 # Имя
-async def btn_name_skip_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Name: button clicked: skip")
-    await dialog_manager.back()
-
-
 def inp_name_check(text: str) -> str:
     log_dev.debug(" Name: input text: check")
     pattern = re.compile("^[a-zA-Zа-яА-ЯёЁ ]+$")
     if pattern.search(text):
-        return text
+        return text.strip()
     else:
         raise ValueError
 
@@ -90,9 +89,10 @@ async def inp_name_success(message: Message, widget: ManagedTextInput, dialog_ma
     log_dev.debug(" Name: state: %s", dialog_manager.dialog_data.get('aboutme'))
     log_dev.debug(" Name: context: %s", dialog_manager.current_context())
 
-    dialog_manager.dialog_data.update(
-        {'name': text}
-    )
+    user_upd: UserDAO = dialog_manager.dialog_data.get('user_upd')
+    user_upd.name = text
+    dialog_manager.dialog_data.update({'user_upd': user_upd})
+
     log_dev.debug(" Name: state: %s", dialog_manager.dialog_data.get('aboutme'))
     log_dev.debug(" Name: context: %s", dialog_manager.current_context())
     await dialog_manager.switch_to(state=Aboutme.profile)
@@ -143,6 +143,11 @@ async def inp_age_error(message: Message, widget: ManagedTextInput, dialog_manag
     )
 
 
+# Пол
+async def radio_gender_clicked(event: CallbackQuery, radio: Radio, dialog_manager: DialogManager, item_id: str):
+    log_dev.debug(" Gender: item selected: %s", item_id)
+
+
 # Состояние
 async def btn_status_skip_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" State: button clicked: skip: to State")
@@ -160,7 +165,7 @@ async def inp_status_check(text: str) -> str:
 
 
 async def inp_status_success(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
-                            text: str) -> None:
+                             text: str) -> None:
     log_dev.debug(" State: Input text: succeed")
     await dialog_manager.next()
 

@@ -194,8 +194,8 @@ class WinAboutme:
 
 
 class WinAboutmeProfile:
-    h: WinAboutmeProfileH
     name: WinAboutmeProfileName
+    h: WinAboutmeProfileH
     age: WinAboutmeProfileAge
 
     @staticmethod
@@ -211,14 +211,6 @@ class WinAboutmeProfile:
     def grade() -> Literal["""Как я оценил бы уровень своего эмоционального состояния?"""]: ...
 
 
-class WinAboutmeProfileH:
-    @staticmethod
-    def status() -> Literal["""&lt;b&gt;Для меня сейчас важно: ❤️‍🔥&lt;/b&gt;"""]: ...
-
-    @staticmethod
-    def grade() -> Literal["""&lt;b&gt;Моё состояние: 📶&lt;/b&gt;"""]: ...
-
-
 class WinAboutmeProfileName:
     @staticmethod
     def __call__() -> Literal["""&lt;b&gt;Моё имя: 🙋&lt;/b&gt;
@@ -230,6 +222,14 @@ class WinAboutmeProfileName:
 
 ✅ В имени не должно быть ничего лишнего:
 цифры, знаки и т.п., 🤷"""]: ...
+
+
+class WinAboutmeProfileH:
+    @staticmethod
+    def status() -> Literal["""&lt;b&gt;Для меня сейчас важно: ❤️‍🔥&lt;/b&gt;"""]: ...
+
+    @staticmethod
+    def grade() -> Literal["""&lt;b&gt;Моё состояние: 📶&lt;/b&gt;"""]: ...
 
 
 class WinAboutmeProfileAge:
@@ -282,7 +282,7 @@ class Btn:
 
 class BtnGetback:
     @staticmethod
-    def __call__() -> Literal["""Вернуться ⤴️"""]: ...
+    def __call__() -> Literal["""Назад ⤴️"""]: ...
 
     @staticmethod
     def home() -> Literal["""Вернуться в главное меню 🏠"""]: ...

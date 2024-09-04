@@ -87,9 +87,11 @@ win-aboutme-profile-h-status = <b>Для меня сейчас важно: { emo
 
 win-aboutme-profile-h-grade = <b>Моё состояние: { emoji-grade }</b>
 
-win-aboutme-profile-name = <b>Моё имя: { emoji-i-hi }</b>
+win-aboutme-profile-name = <b>Теперь моё имя: { emoji-iam } { emoji-i-hi }</b>
 
     ✅ Ко мне будут обращаться так, как я представлюсь.
+
+    <i>Отправьте пустое сообщение, чтобы очистить данные</i>
 
 win-aboutme-profile-name-error = <b>Я ошибся: { emoji-i-wrong }</b>
 
@@ -99,6 +101,8 @@ win-aboutme-profile-name-error = <b>Я ошибся: { emoji-i-wrong }</b>
 win-aboutme-profile-age = <b>Солько мне лет: { emoji-i-hi }</b>
 
     ✅ Возраст всегда присутствует в общении.
+
+    <i>Отправьте пустое сообщение, чтобы очистить данные</i>
 
 win-aboutme-profile-age-error = <b>Я ошибся: { emoji-i-wrong }</b>
 

@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from logging import getLogger
 from typing import TYPE_CHECKING
 
@@ -26,9 +27,13 @@ async def get_aboutme(
 ) -> dict[str, str]:
     log.debug(" About me: get_aboutme: context: %s", dialog_manager.current_context())
 
-    user: UserDAO = await repo.user.get(dialog_manager.start_data['user']['id'])
-    user_upd: UserDAO = UserDAO(user.id)
-    dialog_manager.dialog_data.update({'user': user, 'user_upd': user_upd})
+    user = await repo.user.get(dialog_manager.start_data['user']['id'])
+    dialog_manager.dialog_data.update({'user': user, 'user_upd': {}})
+    user_: UserDAO = dialog_manager.dialog_data.get('user')
+
+    print(type(user_))
+
+    log_dev.debug(" About me: get_aboutme: context: %s", dialog_manager.current_context())
 
     return {
         "win_aboutme": i18n.win.aboutme(),
@@ -45,7 +50,7 @@ async def get_profile(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    log_dev.debug(" Profile: get_profile: context: %s", dialog_manager.current_context())
+    log.debug(" Profile: get_profile: context: %s", dialog_manager.current_context())
 
     user: UserDAO = dialog_manager.dialog_data.get('user')
     user_upd: UserDAO = dialog_manager.dialog_data.get('user_upd')
@@ -60,12 +65,8 @@ async def get_profile(
     status_grades: dict = load_status_grades(config.root_path / 'resources' / 'emoji')
     dialog_manager.dialog_data.update({'status_grades': status_grades})
 
-    log_dev.debug(" Profile: get_profile: context: %s", dialog_manager.current_context())
-
     grade_txt = get_grade_string(status.grade, status_grades) if not status_upd.grade else get_grade_string(
         status_upd.grade, status_grades)
-
-    log_dev.debug(" Profile: grade_txt %s", grade_txt)
 
     return {
         "win_profile_aboutme": aboutme_txt,
@@ -91,9 +92,10 @@ async def get_name(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
+    log.debug(" Name: get_name: context: %s", dialog_manager.current_context())
+
     return {
         "win_name": i18n.win.aboutme.profile.name(),
-        "btn_name_skip": i18n.btn.skip(),
     }
 
 
@@ -105,7 +107,6 @@ async def get_age(
 ) -> dict[str, str]:
     return {
         "win_age": i18n.win.aboutme.profile.age(),
-        "btn_age_skip": i18n.btn.skip(),
     }
 
 
@@ -117,8 +118,6 @@ async def get_status(
 ) -> dict[str, str]:
     return {
         "win_status": i18n.win.aboutme.profile.status(),
-        "btn_status_skip": i18n.btn.skip(),
-        "btn_status_back": i18n.btn.back(),
     }
 
 

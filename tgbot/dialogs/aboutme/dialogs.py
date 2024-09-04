@@ -5,7 +5,7 @@ from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back
 from aiogram_dialog.widgets.media import StaticMedia
-from aiogram_dialog.widgets.text import Format, Const
+from aiogram_dialog.widgets.text import Format, Const, Case
 
 from .callbacks import *
 from .getters import *
@@ -97,13 +97,6 @@ aboutme_dialog = Dialog(
             on_success=inp_name_success,
             on_error=inp_name_error,
         ),
-        Row(
-            Button(
-                text=Format('{btn_name_skip}'),
-                id='btn_name_skip',
-                on_click=btn_name_skip_clicked,
-            ),
-        ),
         getter=get_name,
         state=Aboutme.name,
     ),
@@ -116,13 +109,6 @@ aboutme_dialog = Dialog(
             type_factory=inp_age_check,
             on_success=inp_age_success,
             on_error=inp_age_error,
-        ),
-        Row(
-            Button(
-                text=Format('{btn_age_skip}'),
-                id='btn_age_skip',
-                on_click=btn_age_skip_clicked,
-            ),
         ),
         getter=get_age,
         state=Aboutme.age,
@@ -137,25 +123,13 @@ aboutme_dialog = Dialog(
             on_success=inp_status_success,
             on_error=inp_age_error,
         ),
-        Row(
-            Button(
-                text=Format('{btn_status_skip}'),
-                id='btn_status_skip',
-                on_click=btn_status_skip_clicked,
-            ),
-            Button(
-                text=Format('{btn_status_back}'),
-                id='btn_status_back',
-                on_click=btn_status_back_clicked,
-            ),
-        ),
         getter=get_status,
         state=Aboutme.status,
     ),
 
     # Оценка состояния
     Window(
-        Const("{win_grade}}"),
+        Format("{win_grade}}"),
         Group(
             Row(
                 Radio(
