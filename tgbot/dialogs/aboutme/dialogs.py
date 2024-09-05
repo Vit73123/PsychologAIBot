@@ -107,7 +107,7 @@ aboutme_dialog = Dialog(
                 id='btn_name_clear',
                 on_click=btn_name_clear_clicked
             ),
-            Back(Format('{btn_profile_cancel}'), id='btn_profile_cancel'),
+            Back(Format('{btn_name_cancel}'), id='btn_name_cancel'),
         ),
         getter=get_name,
         state=Aboutme.name,

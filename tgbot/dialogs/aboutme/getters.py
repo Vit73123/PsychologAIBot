@@ -116,9 +116,9 @@ async def get_age(
 ) -> dict[str, str]:
     return {
         "win_age": i18n.win.aboutme.profile.age(),
-        "btn_name_setback": i18n.btn.setback(),
-        "btn_name_clear": i18n.btn.clear(),
-        "btn_name_cancel": i18n.btn.cancel.getback(),
+        "btn_age_setback": i18n.btn.setback(),
+        "btn_age_clear": i18n.btn.clear(),
+        "btn_age_cancel": i18n.btn.cancel.getback(),
     }
 
 
@@ -179,9 +179,9 @@ def _create_aboutme_text(user: UserDAO, dialog_manager: DialogManager, i18n: Tra
                          new_line: bool = True) -> str:
     updated_items: set = dialog_manager.dialog_data.get('updated_items')
 
-    inp_name: TextInput = dialog_manager.find('inp_name') if 'inp_name' in updated_items else None
-    inp_age: TextInput = dialog_manager.find('inp_age') if 'inp_age' in updated_items else None
-    radio_gender: Radio = dialog_manager.find('radio_gender') if 'radio_gender' in updated_items else None
+    inp_name: TextInput = dialog_manager.find('inp_name') if 'name' in updated_items else None
+    inp_age: TextInput = dialog_manager.find('inp_age') if 'age' in updated_items else None
+    radio_gender: Radio = dialog_manager.find('radio_gender') if 'gender' in updated_items else None
 
     name_value: str = inp_name.get_value() if inp_name else user.name
     name_value = name_value if name_value else dialog_manager.start_data.get('user_name')
@@ -189,9 +189,6 @@ def _create_aboutme_text(user: UserDAO, dialog_manager: DialogManager, i18n: Tra
     age_value: int = inp_age.get_value() if inp_age else user.age
     gender_checked: Gender = radio_gender.get_checked() if radio_gender else None
     gender_value = gender_checked if gender_checked != 0 else None
-
-    # log_dev.debug(" gender_value=%s", gender_value)
-    # log_dev.debug(" gender_value=%s", Gender(gender_value).name)
 
     name: str = ' '.join([i18n.txt.name.before(), '<b>' + name_value + '</b>']) if name_value else ''
     age: str = ' '.join(
@@ -238,7 +235,9 @@ def _create_grade_text(status: StatusDAO, dialog_manager: DialogManager, grades:
     else:
         return None
 
+
 # Reset data ==================================================================================================
 
-def _reset_all():
-    pass
+def _reset_all(dialog_manager: DialogManager):
+    dialog_manager.dialog_data.clear()
+    dialog_manager.current_context().widget_data.clear()

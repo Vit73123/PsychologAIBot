@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
-from aiogram_dialog.widgets.input import ManagedTextInput
+from aiogram_dialog.widgets.input import ManagedTextInput, TextInput
 from aiogram_dialog.widgets.kbd import Button, Radio
 from fluentogram import TranslatorRunner
 
@@ -67,6 +67,9 @@ async def btn_profile_ok_clicked(callback: CallbackQuery, button: Button, dialog
 async def btn_profile_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: setback")
     # TODO: Восстановить первоначальные данные диалога: сбросить FSMContext user_upd
+    dialog_manager.current_context().dialog_data.clear()
+    dialog_manager.current_context().widget_data.clear()
+    dialog_manager.dialog_data.update({'updated_items': set()})
 
 
 async def btn_profile_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -111,16 +114,22 @@ async def inp_name_error(message: Message, widget: ManagedTextInput, dialog_mana
 async def btn_name_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Name: button clicked: setback")
 
-    # inp_name: Radio = dialog_manager.find('radio_gender')
-    # await radio_gender.set_checked(
-    #     dialog_manager.dialog_data.pop('radio_gender')
-    # )
+    updated_items: set = dialog_manager.dialog_data.get('updated_items')
+    updated_items.discard('name')
+    dialog_manager.dialog_data.update({'updated_items': updated_items})
 
     await dialog_manager.switch_to(state=Aboutme.profile)
 
 
 async def btn_name_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Name: button clicked: clear")
+
+    inp_name: TextInput = dialog_manager.find('inp_name')
+    inp_name.set_widget_data(manager=dialog_manager, value=None)
+
+    updated_items: set = dialog_manager.dialog_data.get('updated_items')
+    updated_items.add('name')
+    dialog_manager.dialog_data.update({'updated_items': updated_items})
     await dialog_manager.back()
 
 
