@@ -7,8 +7,8 @@ from .base import *
 
 
 class Gender(enum.Enum):
-    male = "male"
-    female = "female"
+    male = 1
+    female = 2
 
 
 class User(Base):

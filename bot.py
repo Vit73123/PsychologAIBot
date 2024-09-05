@@ -16,10 +16,10 @@ from tgbot.dialogs import (start_dialog,
                            psychology_dialog,
                            tests_dialog,
                            aboutme_dialog, )
-from tgbot.filters import IsAdmin
 from tgbot.handlers import user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.tools.i18n import create_translator_hub
+from tgbot.tools.emoji import load_emoji_grades
 from tgbot.tools.logger import LoggerFormatter, FORMAT
 
 # Конфигурация логирования
@@ -61,8 +61,14 @@ async def main():
     # Инициализация временного хранилища
     storage = MemoryStorage()
 
+    # Эмодзи шкалы настроения
+    grades: dict = load_emoji_grades(config.root_path / 'resources' / 'emoji')
+
     # Инициализация диспетчера
-    dp = Dispatcher(storage=storage, repo=repo, config=config)
+    dp = Dispatcher(storage=storage,
+                    repo=repo,
+                    config=config,
+                    grades=grades)
 
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()
@@ -79,11 +85,10 @@ async def main():
     )
 
     # Фильтр IsAdmin
-    IsAdmin.admin_ids = config.tg_bot.admin_ids
+    # IsAdmin.admin_ids = config.tg_bot.admin_ids
 
     # Регистрация миддлварей
     dp.update.middleware(TranslatorRunnerMiddleware())  # i18n
-    # dp.update.middleware(MyMiddleware(repo))
 
     # Инициализация aiogram-dialog
     setup_dialogs(dp)

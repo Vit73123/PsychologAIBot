@@ -64,6 +64,9 @@ class Emoji:
     def pin() -> Literal["""📌"""]: ...
 
     @staticmethod
+    def check() -> Literal["""✅"""]: ...
+
+    @staticmethod
     def soon() -> Literal["""✴"""]: ...
 
     @staticmethod
@@ -82,7 +85,7 @@ class Emoji:
     def clear() -> Literal["""🧹"""]: ...
 
     @staticmethod
-    def getback() -> Literal["""⤴️"""]: ...
+    def up() -> Literal["""⤴️"""]: ...
 
     @staticmethod
     def setback() -> Literal["""↪"""]: ...
@@ -117,7 +120,7 @@ class EmojiI:
     def profile() -> Literal["""👤"""]: ...
 
     @staticmethod
-    def am() -> Literal["""👩‍💼"""]: ...
+    def am() -> Literal["""🙎"""]: ...
 
     @staticmethod
     def wrong() -> Literal["""💁"""]: ...
@@ -198,6 +201,11 @@ class WinAboutmeProfile:
     age: WinAboutmeProfileAge
 
     @staticmethod
+    def gender() -> Literal["""&lt;b&gt;Мой пол: 🙋&lt;/b&gt;
+
+✅ Мне бы не хотелось, чтобы путали меня с тем, кем я не являюсь."""]: ...
+
+    @staticmethod
     def status() -> Literal["""&lt;b&gt;Хочу рассказать, что для меня сейчас важнее всего: ‼&lt;/b&gt;
 
 ✅ В настоящее время и в ближайщем будущем - лично для меня и моего самочувствия?
@@ -220,11 +228,9 @@ class WinAboutmeProfileH:
 
 class WinAboutmeProfileName:
     @staticmethod
-    def __call__() -> Literal["""&lt;b&gt;Теперь моё имя: 👩‍💼 🙋&lt;/b&gt;
+    def __call__() -> Literal["""&lt;b&gt;Моё имя: 🙋&lt;/b&gt;
 
-✅ Ко мне будут обращаться так, как я представлюсь.
-
-&lt;i&gt;Отправьте пустое сообщение, чтобы очистить данные&lt;/i&gt;"""]: ...
+✅ Теперь ко мне будут обращаться так, каким именем я представляюсь."""]: ...
 
     @staticmethod
     def error() -> Literal["""&lt;b&gt;Я ошибся: 💁&lt;/b&gt;
@@ -235,11 +241,9 @@ class WinAboutmeProfileName:
 
 class WinAboutmeProfileAge:
     @staticmethod
-    def __call__() -> Literal["""&lt;b&gt;Солько мне лет: 🙋&lt;/b&gt;
+    def __call__() -> Literal["""&lt;b&gt;Мой возраст: 🙋&lt;/b&gt;
 
-✅ Возраст всегда присутствует в общении.
-
-&lt;i&gt;Отправьте пустое сообщение, чтобы очистить данные&lt;/i&gt;"""]: ...
+✅ В общении люди всегда учитывают возраст собеседника."""]: ...
 
     @staticmethod
     def error() -> Literal["""&lt;b&gt;Я ошибся: 💁&lt;/b&gt;
@@ -250,6 +254,7 @@ class WinAboutmeProfileAge:
 
 class Btn:
     getback: BtnGetback
+    cancel: BtnCancel
     start: BtnStart
     psychology: BtnPsychology
     tests: BtnTests
@@ -279,9 +284,6 @@ class Btn:
     @staticmethod
     def ok() -> Literal["""Ok ☑️"""]: ...
 
-    @staticmethod
-    def cancel() -> Literal["""Отмена ✖"""]: ...
-
 
 class BtnGetback:
     @staticmethod
@@ -291,9 +293,17 @@ class BtnGetback:
     def home() -> Literal["""Вернуться в главное меню 🏠"""]: ...
 
 
+class BtnCancel:
+    @staticmethod
+    def __call__() -> Literal["""Отмена ✖"""]: ...
+
+    @staticmethod
+    def getback() -> Literal["""Отмена ⤴️"""]: ...
+
+
 class BtnStart:
     @staticmethod
-    def psychology() -> Literal["""Сеанс с психологом 🕵️‍♂️"""]: ...
+    def psychology() -> Literal["""Сеанс с психологом 🕵️‍♀️"""]: ...
 
     @staticmethod
     def tests() -> Literal["""Тесты 📝"""]: ...
@@ -330,10 +340,10 @@ class BtnAboutmeProfile:
     def __call__() -> Literal["""О себе 🙋"""]: ...
 
     @staticmethod
-    def name() -> Literal["""Имя 👩‍💼"""]: ...
+    def name() -> Literal["""Имя 🙎"""]: ...
 
     @staticmethod
-    def age() -> Literal["""Возраст 👩‍💼"""]: ...
+    def age() -> Literal["""Возраст 🙎"""]: ...
 
     @staticmethod
     def status() -> Literal["""Сейчас важно! ❤️‍🔥"""]: ...
@@ -344,7 +354,7 @@ class BtnAboutmeProfile:
 
 class BtnAboutmeProfileGender:
     @staticmethod
-    def __call__() -> Literal["""Пол 👩‍💼"""]: ...
+    def __call__() -> Literal["""Пол 🙎"""]: ...
 
     @staticmethod
     def male() -> Literal["""М ♂"""]: ...

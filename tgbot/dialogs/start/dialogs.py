@@ -11,7 +11,7 @@ from .getters import get_start
 # Старт
 start_dialog = Dialog(
     Window(
-        Format('<b>Дорогой друг, {user[name]}!</b>'),
+        Format('<b>Дорогой друг, {user_name}!</b>'),
         Format('{win_start}'),
         StaticMedia(
             path='resources/images/start.png',

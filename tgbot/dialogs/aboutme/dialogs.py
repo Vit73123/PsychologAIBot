@@ -2,10 +2,9 @@ import operator
 
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back
 from aiogram_dialog.widgets.media import StaticMedia
-from aiogram_dialog.widgets.text import Format, Const, Case
+from aiogram_dialog.widgets.text import Format
 
 from .callbacks import *
 from .getters import *
@@ -82,7 +81,7 @@ aboutme_dialog = Dialog(
                 id='btn_profile_clear',
                 on_click=btn_profile_clear_clicked
             ),
-            Back(Format('{btn_profile_getback}'), id='btn_profile_getback'),
+            Back(Format('{btn_profile_cancel}'), id='btn_profile_cancel'),
         ),
         getter=get_profile,
         state=Aboutme.profile,
@@ -97,6 +96,19 @@ aboutme_dialog = Dialog(
             on_success=inp_name_success,
             on_error=inp_name_error,
         ),
+        Row(
+            Button(
+                text=Format('{btn_name_setback}'),
+                id='btn_name_setback',
+                on_click=btn_name_setback_clicked
+            ),
+            Button(
+                text=Format('{btn_name_clear}'),
+                id='btn_name_clear',
+                on_click=btn_name_clear_clicked
+            ),
+            Back(Format('{btn_profile_cancel}'), id='btn_profile_cancel'),
+        ),
         getter=get_name,
         state=Aboutme.name,
     ),
@@ -110,8 +122,54 @@ aboutme_dialog = Dialog(
             on_success=inp_age_success,
             on_error=inp_age_error,
         ),
+        Row(
+            Button(
+                text=Format('{btn_age_setback}'),
+                id='btn_age_setback',
+                on_click=btn_age_setback_clicked
+            ),
+            Button(
+                text=Format('{btn_age_clear}'),
+                id='btn_age_clear',
+                on_click=btn_age_clear_clicked
+            ),
+            Back(Format('{btn_age_cancel}'), id='btn_age_cancel'),
+        ),
         getter=get_age,
         state=Aboutme.age,
+    ),
+
+    # Пол:
+    Window(
+        Format("{win_gender}"),
+        Row(
+            Radio(
+                checked_text=Format('[✔ {item[0]} ]'),
+                unchecked_text=Format('[ {item[0]} ]'),
+                id='radio_gender',
+                item_id_getter=operator.itemgetter(1),
+                items='radio_gender',
+            ),
+        ),
+        Row(
+            Button(
+                text=Format('{btn_gender_ok}'),
+                id='btn_gender_ok',
+                on_click=btn_gender_ok_clicked,
+            ),
+            Button(
+                text=Format('{btn_gender_clear}'),
+                id='btn_gender_clear',
+                on_click=btn_gender_clear_clicked,
+            ),
+            Button(
+                text=Format('{btn_gender_cancel}'),
+                id='btn_gender_cancel',
+                on_click=btn_gender_cancel_clicked,
+            ),
+        ),
+        getter=get_gender,
+        state=Aboutme.gender,
     ),
 
     # Состояние
@@ -122,6 +180,19 @@ aboutme_dialog = Dialog(
             type_factory=inp_status_check,
             on_success=inp_status_success,
             on_error=inp_age_error,
+        ),
+        Row(
+            Button(
+                text=Format('{btn_status_setback}'),
+                id='btn_status_setback',
+                on_click=btn_status_setback_clicked
+            ),
+            Button(
+                text=Format('{btn_status_clear}'),
+                id='btn_status_clear',
+                on_click=btn_status_clear_clicked
+            ),
+            Back(Format('{btn_status_cancel}'), id='btn_status_cancel'),
         ),
         getter=get_status,
         state=Aboutme.status,
@@ -144,15 +215,16 @@ aboutme_dialog = Dialog(
         ),
         Row(
             Button(
-                text=Format('{btn_grade_skip}'),
-                id='btn_grade_skip',
-                on_click=btn_grade_skip_clicked,
+                text=Format('{btn_grade_setback}'),
+                id='btn_grade_setback',
+                on_click=btn_grade_setback_clicked
             ),
             Button(
-                text=Format('{btn_grade_back}'),
-                id='btn_back',
-                on_click=btn_grade_back_clicked,
+                text=Format('{btn_grade_clear}'),
+                id='btn_grade_clear',
+                on_click=btn_grade_clear_clicked
             ),
+            Back(Format('{btn_grade_cancel}'), id='btn_grade_cancel'),
         ),
         getter=get_grade,
         state=Aboutme.grade,

@@ -8,7 +8,6 @@ from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button, Radio
 from fluentogram import TranslatorRunner
 
-from tgbot.db.dao import UserDAO
 from tgbot.dialogs.states import Aboutme
 from tgbot.tools.logger import get_logger_dev
 
@@ -29,8 +28,7 @@ async def btn_aboutme_profile_clicked(callback: CallbackQuery, button: Button, d
 async def btn_profile_name_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: name: to Name")
 
-    dialog_manager.dialog_data.update({'input_data': 'name'})
-    await dialog_manager.switch_to(state=Aboutme.data)
+    await dialog_manager.switch_to(state=Aboutme.name)
 
 
 async def btn_profile_age_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -43,6 +41,8 @@ async def btn_profile_age_clicked(callback: CallbackQuery, button: Button, dialo
 async def btn_profile_gender_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: gender: to Gender")
 
+    radio_gender: Radio = dialog_manager.find('radio_gender')
+    dialog_manager.dialog_data.update({'radio_gender': radio_gender.get_checked()})
     await dialog_manager.switch_to(state=Aboutme.gender)
 
 
@@ -60,20 +60,22 @@ async def btn_profile_grade_clicked(callback: CallbackQuery, button: Button, dia
 
 async def btn_profile_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: ok: to Aboutme")
+    # TODO: Сохранение в базе данных, если данные изменялись: user_upd,status_upd
     await dialog_manager.back()
 
 
 async def btn_profile_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: setback")
+    # TODO: Восстановить первоначальные данные диалога: сбросить FSMContext user_upd
 
 
 async def btn_profile_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: clear")
+    # TODO: Сбросить все данные диалога: сбросить FSMContext user
 
 
-# =============================================================================================================
+# Имя =========================================================================================================
 
-# Имя
 def inp_name_check(text: str) -> str:
     log_dev.debug(" Name: input text: check")
     pattern = re.compile("^[a-zA-Zа-яА-ЯёЁ ]+$")
@@ -86,15 +88,12 @@ def inp_name_check(text: str) -> str:
 async def inp_name_success(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
                            text: str) -> None:
     log_dev.debug(" Name: input text: succeed")
-    log_dev.debug(" Name: state: %s", dialog_manager.dialog_data.get('aboutme'))
-    log_dev.debug(" Name: context: %s", dialog_manager.current_context())
 
-    user_upd: UserDAO = dialog_manager.dialog_data.get('user_upd')
-    user_upd.name = text
-    dialog_manager.dialog_data.update({'user_upd': user_upd})
+    updated_items: set = dialog_manager.dialog_data.get('updated_items')
+    if 'name' not in updated_items:
+        updated_items.add('name')
+        dialog_manager.dialog_data.update({'updated_items': updated_items})
 
-    log_dev.debug(" Name: state: %s", dialog_manager.dialog_data.get('aboutme'))
-    log_dev.debug(" Name: context: %s", dialog_manager.current_context())
     await dialog_manager.switch_to(state=Aboutme.profile)
 
 
@@ -107,11 +106,30 @@ async def inp_name_error(message: Message, widget: ManagedTextInput, dialog_mana
     )
 
 
-# Возраст
-async def btn_age_skip_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Age: button clicked: skip")
+# -------------------------------------------------------------------------------------------------------------
+
+async def btn_name_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Name: button clicked: setback")
+
+    # inp_name: Radio = dialog_manager.find('radio_gender')
+    # await radio_gender.set_checked(
+    #     dialog_manager.dialog_data.pop('radio_gender')
+    # )
+
+    await dialog_manager.switch_to(state=Aboutme.profile)
+
+
+async def btn_name_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Name: button clicked: clear")
     await dialog_manager.back()
 
+
+async def btn_name_cancel_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Name: button clicked: cancel")
+    await dialog_manager.back()
+
+
+# Возраст =====================================================================================================
 
 def inp_age_check(text: str) -> int:
     log_dev.debug(" Age: input text: check")
@@ -123,14 +141,14 @@ def inp_age_check(text: str) -> int:
 
 async def inp_age_success(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager, text: str) -> None:
     log_dev.debug(" Age: input text: success")
-    log_dev.debug(" Age: state: %s", dialog_manager.dialog_data.get('aboutme'))
-    log_dev.debug(" Age: context: %s", dialog_manager.current_context())
+    # log_dev.debug(" Age: state: %s", dialog_manager.dialog_data.get('aboutme'))
+    # log_dev.debug(" Age: context: %s", dialog_manager.current_context())
 
-    dialog_manager.dialog_data.update(
-        {'age': int(text)}
-    )
-    log_dev.debug(" Age: state: %s", dialog_manager.dialog_data.get('aboutme'))
-    log_dev.debug(" Age: context: %s", dialog_manager.current_context())
+    # dialog_manager.dialog_data.update(
+    #     {'age': int(text)}
+    # )
+    # log_dev.debug(" Age: state: %s", dialog_manager.dialog_data.get('aboutme'))
+    # log_dev.debug(" Age: context: %s", dialog_manager.current_context())
     await dialog_manager.switch_to(state=Aboutme.profile)
 
 
@@ -143,39 +161,113 @@ async def inp_age_error(message: Message, widget: ManagedTextInput, dialog_manag
     )
 
 
-# Пол
-async def radio_gender_clicked(event: CallbackQuery, radio: Radio, dialog_manager: DialogManager, item_id: str):
-    log_dev.debug(" Gender: item selected: %s", item_id)
+# -------------------------------------------------------------------------------------------------------------
 
-
-# Состояние
-async def btn_status_skip_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" State: button clicked: skip: to State")
-    await dialog_manager.next()
-
-
-async def btn_status_back_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" State: button clicked: back: to Profile")
+async def btn_age_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Age: button clicked: setback")
     await dialog_manager.back()
 
 
+async def btn_age_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Age: button clicked: clear")
+    await dialog_manager.back()
+
+
+async def btn_age_cancel_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Age: button clicked: cancel")
+    await dialog_manager.back()
+
+
+# Пол =========================================================================================================
+
+async def btn_gender_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Gender: button clicked: ok")
+    log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
+
+    dialog_manager.dialog_data.pop('radio_gender')
+
+    log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
+    await dialog_manager.switch_to(state=Aboutme.profile)
+
+
+async def btn_gender_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Gender: button clicked: clear")
+    log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
+
+    radio_gender: Radio = dialog_manager.find('radio_gender')
+    await radio_gender.set_checked(0)
+
+
+async def btn_gender_cancel_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Gender: button clicked: ok")
+    log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
+
+    radio_gender: Radio = dialog_manager.find('radio_gender')
+    await radio_gender.set_checked(
+        dialog_manager.dialog_data.pop('radio_gender')
+    )
+
+    log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
+
+    await dialog_manager.switch_to(state=Aboutme.profile)
+
+
+# Состояние ===================================================================================================
+
+
 async def inp_status_check(text: str) -> str:
-    log_dev.debug(" State: Input text: check")
+    log_dev.debug(" Status: Input text: check")
     return text
 
 
 async def inp_status_success(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
                              text: str) -> None:
-    log_dev.debug(" State: Input text: succeed")
+    log_dev.debug(" Status: Input text: succeed")
     await dialog_manager.next()
 
 
-# Оценка
-async def btn_grade_skip_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Grade: button clicked: skip: to Profile")
+# -------------------------------------------------------------------------------------------------------------
+
+async def btn_status_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Status: button clicked: setback")
+    await dialog_manager.back()
+
+
+async def btn_status_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Status: button clicked: clear")
+    await dialog_manager.back()
+
+
+async def btn_status_cancel_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Status: button clicked: cancel")
+    await dialog_manager.back()
+
+
+# Оценка ======================================================================================================
+
+async def inp_grade_check(text: str) -> str:
+    log_dev.debug(" Grade: Input text: check")
+    return text
+
+
+async def inp_grade_success(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
+                            text: str) -> None:
+    log_dev.debug(" Grade: Input text: succeed")
     await dialog_manager.next()
 
 
-async def btn_grade_back_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Grade: button clicked: back: to State")
+# -------------------------------------------------------------------------------------------------------------
+
+async def btn_grade_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Grade: button clicked: setback")
+    await dialog_manager.back()
+
+
+async def btn_grade_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Grade: button clicked: clear")
+    await dialog_manager.back()
+
+
+async def btn_grade_cancel_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Grade: button clicked: cancel")
     await dialog_manager.back()

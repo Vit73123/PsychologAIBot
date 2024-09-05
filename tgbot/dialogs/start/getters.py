@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram_dialog import DialogManager
 from fluentogram import TranslatorRunner
 
-from tgbot.db import Repo
+from tgbot.dialogs.states import Start
 from tgbot.tools.logger import get_logger_dev
 
 if TYPE_CHECKING:
@@ -14,20 +14,34 @@ if TYPE_CHECKING:
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
+
 # Старт
 async def get_start(dialog_manager: DialogManager,
                     state: FSMContext,
-                    repo: Repo,
                     i18n: TranslatorRunner,
                     **kwargs
                     ) -> dict[str, str]:
-    log.debug(" Start: get_start: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Start: get_start: context: %s", dialog_manager.current_context())
 
-    user = dialog_manager.start_data.get('user')
-    user['name'] = i18n.txt.name.anonim() if not user['name'] else user['name']
+    # Очищаем контекст FSM, если переход из диалогов
+    # Не очищаем машину состояний FSM, если переход после запуска бота, т.е. регистрации пользователя,
+    # и переключаем состояние FSM по умолчанию
+    state_data = await state.get_data()
+    context = state_data.get('context')
+    if context['default_state']:
+        context['default_state'] = False
+    else:
+        await state.clear()
+        # Переключаем FSM в состояние не по умолчанию
+        await state.set_data({'context': context})
+
+    await state.set_state(Start.start)
+    log_dev.debug(" Start: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+
+    user_name = dialog_manager.start_data.get('user_name')
 
     return {
-        'user': user,
+        'user_name': user_name,
         'win_start': i18n.win.start(),
         'btn_psychology': i18n.btn.start.psychology(),
         'btn_tests': i18n.btn.start.tests(),

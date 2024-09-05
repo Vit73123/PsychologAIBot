@@ -13,20 +13,20 @@ log_dev = get_logger_dev(__name__, log.level)
 
 # Психология
 async def btn_psychology_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Start: btn_psychology_click: context: %s", dialog_manager.current_context())
+    log.debug(" Start: btn_psychology_click: context: %s", dialog_manager.current_context())
 
-    await dialog_manager.start(state=Psychology.start, data={'user': dialog_manager.start_data['user']})
+    await dialog_manager.start(state=Psychology.start, data=dialog_manager.start_data)
 
 
 # Тесты
 async def btn_tests_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Start: btn_tests_click: context: %s", dialog_manager.current_context())
+    log.debug(" Start: btn_tests_click: context: %s", dialog_manager.current_context())
 
-    await dialog_manager.start(state=Tests.start, data={'user': dialog_manager.start_data['user']})
+    await dialog_manager.start(state=Tests.start, data=dialog_manager.start_data)
 
 
 # О себе
 async def btn_aboutme_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Start: btn_aboutme_click: context: %s", dialog_manager.current_context())
+    log.debug(" Start: btn_aboutme_click: context: %s", dialog_manager.current_context())
 
-    await dialog_manager.start(state=Aboutme.start, data={'user': dialog_manager.start_data['user']})
+    await dialog_manager.start(state=Aboutme.start, data=dialog_manager.start_data)
