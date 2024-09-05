@@ -1,6 +1,5 @@
 from logging import getLogger
 
-from aiogram import types
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from sqlalchemy.orm import selectinload
@@ -21,13 +20,13 @@ class UserRepo:
         self.pool = pool
 
     # Регистрация пользователя
-    async def register(self, bot_user: types.User) -> UserDAO | None:
-        log.debug(" Repo: register bot user: %s", bot_user)
+    async def register(self, bot_user: User) -> UserDAO | None:
+        log_dev.debug(" Repo: register bot user: %s", bot_user)
 
         user = await self._get_by_bot_user_id_to_user(bot_user.user_id)
 
         if not user:
-            user = await self._add(user)
+            user = await self._add(bot_user)
         elif user != bot_user:
             log.warning(" Repo: set user error: User data changed and should be updated.")
         log.debug(" Repo: user: %s", user)
