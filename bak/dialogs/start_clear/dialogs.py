@@ -12,6 +12,25 @@ start_dialog = Dialog(
 
     # Start
     Window(
+        # Format("{win_gender}"),
+        # Format("{win_gender_text}"),
+        # Format("{win_gender_enum}"),
+        # Row(
+        #     Radio(
+        #         checked_text=Format('✔ {item[0]}'),
+        #         unchecked_text=Format('  {item[0]}'),
+        #         id='radio_gender',
+        #         item_id_getter=operator.itemgetter(1),
+        #         items='radio_gender',
+        #     ),
+        # ),
+        # Row(
+        #     Button(
+        #         text=Format('{btn_gender_clear}'),
+        #         id='btn_gender_clear',
+        #         on_click=btn_gender_clear_clicked
+        #     ),
+        # ),
         Const("Add / Clear"),
         Row(
             Button(

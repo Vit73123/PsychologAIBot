@@ -25,20 +25,20 @@ async def get_gender(
         (i18n.btn.aboutme.profile.gender.male(), '1'),
         (i18n.btn.aboutme.profile.gender.female(), '2'),
     ]
-    # widget_data = dialog_manager.current_context().widget_data
-    # dialog_data = dialog_manager.dialog_data
+    widget_data = dialog_manager.current_context().widget_data
+    dialog_data = dialog_manager.dialog_data
 
-    # radio: Radio = dialog_manager.find('radio_gender')
-    # text = radio.get_checked()
-    # gender_enum: Gender = text
+    radio: Radio = dialog_manager.find('radio_gender')
+    text = radio.get_checked()
+    gender_enum: Gender = text
 
     return {
-        # "win_gender": i18n.win.aboutme.profile.gender(),
-        # "win_gender_text": text,
-        # "win_gender_enum": gender_enum,
-        # "radio_gender": gender,
-        # "btn_gender_clear": i18n.btn.clear(),
-        # "btn_gender_cancel": i18n.btn.cancel(),
+        "win_gender": i18n.win.aboutme.profile.gender(),
+        "win_gender_text": text,
+        "win_gender_enum": gender_enum,
+        "radio_gender": gender,
+        "btn_gender_clear": i18n.btn.clear(),
+        "btn_gender_cancel": i18n.btn.cancel(),
     }
 
 
