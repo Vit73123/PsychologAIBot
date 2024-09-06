@@ -79,6 +79,14 @@ async def cmd_start(message: Message, state: FSMContext, **kwargs):
     /status_da - delete all statuses by user_id=1
     
     /session
+    /session_g  - get session id=1
+    /session_gl - get last session by user_id=1
+    /session_ga - get all sessiones by user_id=1
+    /session_a  - add session id=1
+    /session_u  - update session id=1
+    /session_d  - delete session id=1
+    /session_dl - delete last session by user_id=1
+    /session_da - delete all sessiones by user_id=1
     """)
 
 

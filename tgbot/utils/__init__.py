@@ -11,5 +11,9 @@ from .dialogs import (get_state_data,
                       create_aboutme_text,
                       create_name_text,
                       create_status_text,
-                      create_grade_text)
-from .services import get_prompt, create_prompt
+                      create_grade_text,
+                      create_prompt,
+                      create_prompt_text)
+from .services import (get_prompt,
+                       load_prompt_info,
+                       load_prompt)

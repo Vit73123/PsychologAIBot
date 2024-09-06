@@ -5,9 +5,11 @@ from aiogram.fsm.context import FSMContext
 from fluentogram import TranslatorRunner
 
 from tgbot.config import Config
+from tgbot.db import Repo
+from tgbot.db.dao import UserDAO, SessionDAO, StatusDAO
 from tgbot.services.gpt import ChatGptService
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import get_prompt, get_state_data
+from tgbot.utils import get_prompt, get_state_data, create_prompt
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -22,6 +24,7 @@ if TYPE_CHECKING:
 async def get_start(
         state: FSMContext,
         config: Config,
+        repo: Repo,
         gpt: ChatGptService,
         i18n: TranslatorRunner,
 
@@ -29,26 +32,25 @@ async def get_start(
 ) -> dict[str, str]:
     log.debug(" GPT: get_start: context: %s", await state.get_data())
 
-    prompt_info = config.gpt.prompts_info['psychology']
-    prompt_intro = get_prompt(prompt_info, config)
-    person_data = {
-        
-    }
+    user: UserDAO = repo.user.get(1)
+    status: StatusDAO = repo.status.get_last_by_user_id(1)
+    session: SessionDAO = repo.session.gget_last_by_user_id(1)
 
+    # prompt = create_prompt(person_data=)
 
-    prompt_intro = {
-        'role': 'system',
-        'text': get_prompt(prompt_itro, config)
-    }
-    gpt = {
-        'messages_list': [prompt_intro]
-    }
-    await state.update_data(gpt)
-
-    log.debug(" Start: get_start: context: %s", await state.get_data())
-
-    return {
-    }
+    # prompt_intro = {
+    #     'role': 'system',
+    #     'text': get_prompt(prompt_itro, config)
+    # }
+    # gpt = {
+    #     'messages_list': [prompt_intro]
+    # }
+    # await state.update_data(gpt)
+    #
+    # log.debug(" Start: get_start: context: %s", await state.get_data())
+    #
+    # return {
+    # }
 
 
 # Psychology
@@ -69,4 +71,3 @@ async def get_psychology(
     return {
         'gpt_text': gpt_text,
     }
-
