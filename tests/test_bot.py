@@ -76,6 +76,7 @@ async def main():
     dp = Dispatcher(
         storage=storage,
         grades=grades,
+        engine=engine,
         repo=repo,
         gpt=gpt,
         config=config,

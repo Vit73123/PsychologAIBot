@@ -1,8 +1,8 @@
 from fluentogram import TranslatorRunner
 
 from tgbot.config import Config
-from tgbot.utils import (get_prompt,
-                         load_prompt_info)
+from tgbot.utils.services.gpt_utils import (get_prompt,
+                                            load_prompt_info)
 
 
 def create_prompt(person_data: dict, config: Config, i18n: TranslatorRunner, prompt_info: dict = None) -> str:
