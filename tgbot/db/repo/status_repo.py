@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from tgbot.db.dao import StatusDAO
 from tgbot.db.models import Status
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import create_status_from_dao, create_status_to_dao
+from tgbot.utils import create_appointment_from_dao, create_status_to_dao
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -66,7 +66,7 @@ class StatusRepo:
     # Добавить состояние для данного пользователя по его user_id
     async def add(self, status_dao: StatusDAO) -> StatusDAO | None:
         log.debug(" Repo: add status: %s", status_dao)
-        status = create_status_from_dao(status_dao)
+        status = create_appointment_from_dao(status_dao)
 
         async with self.pool() as session:
             session.add(status)
@@ -76,7 +76,7 @@ class StatusRepo:
     # Изменить состояние
     async def update(self, status_dao: StatusDAO) -> None:
         log.debug(" Repo: update status: %s", status_dao)
-        status = create_status_from_dao(status_dao)
+        status = create_appointment_from_dao(status_dao)
 
         async with self.pool() as session:
             status = await session.get(Status, status.id)

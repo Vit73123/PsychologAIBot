@@ -6,7 +6,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
-from tgbot.db.models.user import Gender
+from tgbot.db.models.user import User, Gender
+from tgbot.db.dao.user import UserDAO
 from tgbot.db.repo import Repo
 from tgbot.filters import IsAdmin
 from tgbot.utils import *

@@ -312,7 +312,7 @@ class BtnStart:
 
 class BtnPsychology:
     @staticmethod
-    def startsession() -> Literal["""Начать сеанс"""]: ...
+    def startappointment() -> Literal["""Начать сеанс"""]: ...
 
 
 class BtnTests:

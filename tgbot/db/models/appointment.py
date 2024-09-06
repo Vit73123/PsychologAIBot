@@ -4,18 +4,18 @@ from sqlalchemy.orm import relationship
 from .base import *
 
 
-class Session(Base):
-    __tablename__ = "sessions"
+class Appointment(Base):
+    __tablename__ = "appointments"
 
     review: Mapped[str | None]
     user_id: Mapped[userfk]
 
     __table_args__ = (
-        Index("sessions_created_at_user_id_index", "created_at", "user_id", unique=True),
+        Index("appointments_created_at_user_id_index", "created_at", "user_id", unique=True),
     )
 
     user: Mapped["User"] = relationship(
-        back_populates="sessions"
+        back_populates="appointments"
     )
 
     def __repr__(self):

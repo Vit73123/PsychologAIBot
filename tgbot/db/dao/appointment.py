@@ -1,7 +1,7 @@
-class SessionDAO:
+class AppointmentDAO:
 
-    def __init__(self, session_id: int, review: str = None):
-        self.id = session_id
+    def __init__(self, appointment_id: int, review: str = None):
+        self.id = appointment_id
         self.review = review
 
     def __repr__(self):

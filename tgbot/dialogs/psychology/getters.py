@@ -21,7 +21,7 @@ async def get_start(
     log.debug(" Psychology: get_start: context: %s", dialog_manager.current_context())
 
     return {
-        "win_psychology_start": i18n.win.psychology(),
-        "btn_psychology_startsession": i18n.btn.psychology.startsession(),
-        "btn_psychology_getback_home": i18n.btn.getback.home(),
+        "win_psychology": i18n.win.psychology(),
+        "btn_startappointment": i18n.btn.psychology.startappointment(),
+        "btn_getback_home": i18n.btn.getback.home(),
     }

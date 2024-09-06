@@ -6,7 +6,7 @@ from fluentogram import TranslatorRunner
 
 from tgbot.config import Config
 from tgbot.db import Repo
-from tgbot.db.dao import UserDAO, SessionDAO, StatusDAO
+from tgbot.db.dao import UserDAO, AppointmentDAO, StatusDAO
 from tgbot.services.gpt import ChatGptService
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils import get_prompt, get_state_data, create_prompt
@@ -32,9 +32,9 @@ async def get_start(
 ) -> dict[str, str]:
     log.debug(" GPT: get_start: context: %s", await state.get_data())
 
-    user: UserDAO = repo.user.get(1)
-    status: StatusDAO = repo.status.get_last_by_user_id(1)
-    session: SessionDAO = repo.session.gget_last_by_user_id(1)
+    user: UserDAO = await repo.user.get(1)
+    status: StatusDAO = await repo.status.get_last_by_user_id(1)
+    # appointment: AppointmentDAO = await repo.appointment.get_last_by_user_id(1)
 
     # prompt = create_prompt(person_data=)
 
@@ -49,8 +49,8 @@ async def get_start(
     #
     # log.debug(" Start: get_start: context: %s", await state.get_data())
     #
-    # return {
-    # }
+    return {
+    }
 
 
 # Psychology

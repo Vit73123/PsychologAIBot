@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS statuses;
-DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS appointments;
 
 DROP INDEX IF EXISTS users_username_idx;
 DROP INDEX IF EXISTS statuses_user_id_created_at_idx;
-
+DROP INDEX IF EXISTS appointments_created_at_user_id_idx;
 CREATE TABLE users
 (
     id         INTEGER                            NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE statuses
 
 CREATE UNIQUE INDEX statuses_user_id_created_at_idx ON statuses (user_id, created_at);
 
-CREATE TABLE sessions
+CREATE TABLE appointments
 
 (
     id         INTEGER                            NOT NULL,
@@ -49,4 +49,4 @@ CREATE TABLE sessions
 
 );
 
-CREATE UNIQUE INDEX sessions_created_at_user_id_idx ON statuses (user_id, created_at);
+CREATE UNIQUE INDEX appointments_created_at_user_id_idx ON appointments (user_id, created_at);

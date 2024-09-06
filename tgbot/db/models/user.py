@@ -28,9 +28,9 @@ class User(Base):
         cascade='save-update, merge, delete'
     )
 
-    sessions: Mapped[list["Session"]] = relationship(
+    appointments: Mapped[list["Appointment"]] = relationship(
         back_populates="user",
-        order_by="Session.updated_at.desc()",
+        order_by="Appointment.updated_at.desc()",
         cascade='save-update, merge, delete'
     )
 

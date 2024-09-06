@@ -135,7 +135,7 @@ btn-start-psychology = Сеанс с психологом { emoji-psychologist-w
 btn-start-tests = Тесты { emoji-tests }
 btn-start-aboutme = О себе { emoji-i-profile }
 
-btn-psychology-startsession = Начать сеанс
+btn-psychology-startappointment = Начать сеанс
 
 btn-tests-start-choosetest = Выбрать тест
 btn-tests-start-dotest = Пройти тест

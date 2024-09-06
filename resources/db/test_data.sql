@@ -64,49 +64,49 @@ values ('status ooo', 1, 5, '2024-09-01 20:14:00', '2024-09-01 20:14:00');
 
 -- Сеансы
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review aaa', 1, '2024-09-01 20:00:00', '2024-09-01 20:00:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review bbb', 2, '2024-09-01 20:01:00', '2024-09-01 20:01:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review ccc', 1, '2024-09-01 20:02:00', '2024-09-01 20:02:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review ddd', 1, '2024-09-01 20:03:00', '2024-09-01 20:03:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review eee', 2, '2024-09-01 20:04:00', '2024-09-01 20:04:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review fff', 2, '2024-09-01 20:05:00', '2024-09-01 20:05:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review ggg', 2, '2024-09-01 20:06:00', '2024-09-01 20:06:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review hhh', 3, '2024-09-01 20:07:00', '2024-09-01 20:07:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review iii', 3, '2024-09-01 20:08:00', '2024-09-01 20:08:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review jjj', 3, '2024-09-01 20:09:00', '2024-09-01 20:09:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review kkk', 4, '2024-09-01 20:10:00', '2024-09-01 20:10:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review lll', 4, '2024-09-01 20:11:00', '2024-09-01 20:11:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review mmm', 2, '2024-09-01 20:12:00', '2024-09-01 20:12:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review nnn', 1, '2024-09-01 20:13:00', '2024-09-01 20:13:00');
 
-insert into sessions(review, user_id, created_at, updated_at)
+insert into appointments(review, user_id, created_at, updated_at)
 values ('review ooo', 5, '2024-09-01 20:14:00', '2024-09-01 20:14:00');
 
 -- insert into sessions(review, user_id, created_at)
