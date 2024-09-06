@@ -98,7 +98,7 @@ def create_grade_text(status: StatusDAO, dialog_manager: DialogManager, grades: 
     if status:
         updated_items: set = dialog_manager.dialog_data.get('updated_items')
         radio_grade: Radio = dialog_manager.dialog_data.get('radio_grade') if 'radio_grade' in updated_items else None
-        grade_checked: int = radio_grade.get_checked()
+        grade_checked: int = radio_grade.get_checked() if radio_grade else None
         grade: int = grade_checked if grade_checked else status.grade
         return f"{grade:+} {grades[str(grade)]}"
     else:
