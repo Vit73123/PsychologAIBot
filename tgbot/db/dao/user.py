@@ -3,7 +3,7 @@ from tgbot.db.models.user import Gender
 
 class UserDAO:
 
-    def __init__(self, user_id: int, name: str = None, gender: Gender = None, age: int = None):
+    def __init__(self, user_id: int = None, name: str = None, gender: Gender = None, age: int = None):
         self.id = user_id
         self.name = name
         self.gender = gender

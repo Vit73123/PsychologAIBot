@@ -15,4 +15,5 @@ def create_appointment_from_dao(appointment_dao: AppointmentDAO) -> Appointment 
         appointment = Appointment()
         appointment.id = appointment_dao.id
         appointment.review = appointment_dao.review
+        appointment.user_id = appointment_dao.user_id
         return appointment

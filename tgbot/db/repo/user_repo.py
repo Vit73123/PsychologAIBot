@@ -2,10 +2,10 @@ from logging import getLogger
 
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, aliased
 
 from tgbot.db.dao import UserDAO
-from tgbot.db.models import User
+from tgbot.db.models import User, Appointment, Status
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils import create_user_to_dao
 
@@ -60,6 +60,26 @@ class UserRepo:
             )
             user = result.one_or_none()
             return user
+
+    # Получить пользователя и его последние статус, сеанс
+    async def get_with_last_status_appointment(self, user_id: int) -> []:
+        log.debug(" Repo: get user with last status id=: %s", user_id)
+
+        async with self.pool() as session:
+            u = aliased(User)
+            s = aliased(Status)
+            a = aliased(Appointment)
+
+            query = (
+                select(u.id, u.name, u.age, u.gender, s.text, s.grade, a.review)
+                .join(s, and_(u.id == s.user_id))
+                .join(a, and_(u.id == a.user_id))
+                .order_by(s.updated_at, a.updated_at)
+                .limit(1)
+                .where(and_(u.id == user_id))
+            )
+            result = await session.execute(query)
+        return result.all()
 
     # Получить пользователя и все его статусы, отсортированные по убыванию даты
     async def _get_with_all_statuses_to_user(self, user_id: int) -> User | None:

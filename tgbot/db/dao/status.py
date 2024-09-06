@@ -1,6 +1,6 @@
 class StatusDAO:
 
-    def __init__(self, status_id: int, text: str = None, grade: int = None, user_id: int = None):
+    def __init__(self, status_id: int = None, text: str = None, grade: int = None, user_id: int = None):
         self.id = status_id
         self.text = text
         self.grade = grade

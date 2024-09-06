@@ -1,4 +1,5 @@
 import logging
+from pprint import pprint
 
 from aiogram import Router
 from aiogram.filters import Command
@@ -6,12 +7,12 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
-from tgbot.db.models.user import User, Gender
 from tgbot.db.dao.user import UserDAO
+from tgbot.db.models.user import User, Gender
 from tgbot.db.repo import Repo
 from tgbot.filters import IsAdmin
-from tgbot.utils import *
 from tgbot.tools.logger import get_logger_dev
+from tgbot.utils import *
 
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -124,3 +125,19 @@ async def cmd_delete_test(message: Message, repo: Repo, state: FSMContext, **kwa
 
     # Удалить пользователя
     await repo.user.delete(user_id)
+
+
+@router.message(Command(commands='user_gl'), IsAdmin())
+async def cmd_get_with_last_status_test(message: Message, state: FSMContext, repo: Repo, **kwargs):
+    log.debug(' /user_gl: get with last status by user id=1: from_user: %s', message.from_user)
+
+    # data = await state.get_data()
+    # user_id = data['user_id']
+    user_id = 1
+
+    # Получить пользователя и его последний статус, отсортированный по убыванию даты
+    user = await repo.user._get_with_last_status(user_id)
+
+    # log_dev.debug(' /user_ga: user: %s', user)
+    pprint(user)
+    # log.debug(' /user_ga: status: %s', user.status)

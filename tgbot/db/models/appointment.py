@@ -11,7 +11,7 @@ class Appointment(Base):
     user_id: Mapped[userfk]
 
     __table_args__ = (
-        Index("appointments_created_at_user_id_index", "created_at", "user_id", unique=True),
+        Index("appointments_user_id_created_at_index", "user_id", "created_at", unique=True),
     )
 
     user: Mapped["User"] = relationship(

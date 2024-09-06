@@ -65,14 +65,13 @@ async def cmd_add_test(message: Message, repo: Repo, state: FSMContext, **kwargs
     user_id = 1
 
     status = StatusDAO(
-        status_id=1,
         text="New status",
         grade=5,
         user_id=user_id
     )
 
     # Добавить состояние для данного пользователя по его user_id
-    await repo.status._add(status)
+    await repo.status.add(status)
 
     db_status = await repo.status.get_last_by_user_id(user_id)
     log_dev.debug(' /status_a: status: %s', db_status)

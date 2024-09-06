@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS appointments;
 
 DROP INDEX IF EXISTS users_username_idx;
 DROP INDEX IF EXISTS statuses_user_id_created_at_idx;
-DROP INDEX IF EXISTS appointments_created_at_user_id_idx;
+DROP INDEX IF EXISTS appointments_user_id_created_at_idx;
 CREATE TABLE users
 (
     id         INTEGER                            NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE statuses
 (
     id         INTEGER                                    NOT NULL,
     text       TEXT,
-    grade      INTEGER CHECK (grade >= -5 AND grade <= 5) NOT NULL,
+    grade      INTEGER CHECK (grade >= -5 AND grade <= 5),
     created_at DATETIME DEFAULT (DATETIME('now'))         NOT NULL,
     updated_at DATETIME DEFAULT (DATETIME('now'))         NOT NULL,
     user_id    INTEGER                                    NOT NULL,
@@ -49,4 +49,4 @@ CREATE TABLE appointments
 
 );
 
-CREATE UNIQUE INDEX appointments_created_at_user_id_idx ON appointments (user_id, created_at);
+CREATE UNIQUE INDEX appointments_user_id_created_at_idx ON appointments (user_id, created_at);
