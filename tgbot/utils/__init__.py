@@ -1,4 +1,4 @@
-from .common import (create_gender_string,
+from .common import (get_gender_string,
                      create_after_years_string,
                      get_state_data)
 from .session_utils import (create_session_to_dao,

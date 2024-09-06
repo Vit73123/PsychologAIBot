@@ -22,3 +22,4 @@ yarl==1.9.4
 fluentogram~=1.1.7
 aiogram_dialog~=2.2.0a5
 SQLAlchemy~=2.0.32
+openai~=1.43.1

@@ -89,7 +89,8 @@ aboutme_dialog = Dialog(
 
     # Имя:
     Window(
-        Format("{win_name}"),
+        Format("{win_name_h}"),
+        Format("{win_name_txt}"),
         TextInput(
             id="inp_name",
             type_factory=inp_name_check,

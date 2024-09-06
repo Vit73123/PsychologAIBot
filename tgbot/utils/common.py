@@ -20,7 +20,7 @@ def create_after_years_string(years: int, i18n: TranslatorRunner) -> str:
         return i18n.txt.yearsstring3()
 
 
-def create_gender_string(gender: Gender, i18n: TranslatorRunner) -> str:
+def get_gender_string(gender: Gender, i18n: TranslatorRunner) -> str:
     if gender == Gender.male:
         return i18n.txt.gender.male()
     else:
