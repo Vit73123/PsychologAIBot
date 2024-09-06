@@ -21,7 +21,10 @@ from tgbot.db.factory import (create_engine,
                               create_repo)
 from tgbot.filters import IsAdmin
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
+from tgbot.services.gpt import ChatGptService
+from tgbot.tools.emoji import load_emoji_grades
 from tgbot.tools.i18n import create_translator_hub
+from tgbot.tools.json import load_json
 from tgbot.tools.logger import (LoggerFormatter,
                                 FORMAT)
 
@@ -60,9 +63,23 @@ async def main():
     # Инициализация временного хранилища
     storage = MemoryStorage()
 
+    # Эмодзи шкалы настроения
+    grades: dict = load_emoji_grades(config.root_path / 'resources' / 'emoji')
+
+    # ChatGPT
+    prompts_info = load_json(config.root_path / 'tgbot' / 'config' / 'prompts_info.json')
+    config.gpt.prompts_info = prompts_info
+
+    gpt = ChatGptService(token=config.gpt.token, url=config.gpt.url)
+
     # Инициализация диспетчера
-    # dp = Dispatcher(storage=storage, repo=repo)
-    dp = Dispatcher(storage=storage, repo=repo, engine=engine, config=config)
+    dp = Dispatcher(
+        storage=storage,
+        grades=grades,
+        repo=repo,
+        gpt=gpt,
+        config=config,
+    )
 
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()

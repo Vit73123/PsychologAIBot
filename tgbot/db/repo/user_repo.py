@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 from tgbot.db.dao import UserDAO
 from tgbot.db.models import User
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils.user_utils import create_user_to_dao
+from tgbot.utils import create_user_to_dao
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)

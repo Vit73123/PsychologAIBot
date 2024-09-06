@@ -362,16 +362,54 @@ class BtnAboutmeProfileGender:
 
 
 class Gpt:
-    prompt: GptPrompt
+    pmt: GptPmt
 
 
-class GptPrompt:
-    name: GptPromptName
+class GptPmt:
+    psycholog: GptPmtPsycholog
 
 
-class GptPromptName:
+class GptPmtPsycholog:
+    person: GptPmtPsychologPerson
+
+
+class GptPmtPsychologPerson:
+    name: GptPmtPsychologPersonName
+    age: GptPmtPsychologPersonAge
+    gender: GptPmtPsychologPersonGender
+
     @staticmethod
-    def anonim() -> Literal["""Человек не хочет называть своего имени"""]: ...
+    def data() -> Literal["""Учитывайте следующие данные о человеке:"""]: ...
+
+    @staticmethod
+    def status() -> Literal["""Человек говорит, что в настоящее время особую важность для него представляет следующее:"""]: ...
+
+    @staticmethod
+    def review() -> Literal["""Ваши выводы из последнего сеанса общения с человеком следующие:"""]: ...
+
+
+class GptPmtPsychologPersonName:
+    @staticmethod
+    def __call__() -> Literal["""имя человека"""]: ...
+
+    @staticmethod
+    def anonin() -> Literal["""человек не хочет называть своего имени"""]: ...
+
+
+class GptPmtPsychologPersonAge:
+    @staticmethod
+    def __call__() -> Literal["""возраст человека"""]: ...
+
+    @staticmethod
+    def anonim() -> Literal["""возраст человека неизвестен"""]: ...
+
+
+class GptPmtPsychologPersonGender:
+    @staticmethod
+    def __call__() -> Literal["""пол человека"""]: ...
+
+    @staticmethod
+    def anonim() -> Literal["""пол человека неизвестен"""]: ...
 
 
 class Txt:

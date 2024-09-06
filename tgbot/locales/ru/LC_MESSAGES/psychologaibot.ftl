@@ -151,7 +151,15 @@ btn-aboutme-profile-age = Возраст { emoji-i-am }
 btn-aboutme-profile-status = Сейчас важно! { emoji-me-important }
 btn-aboutme-profile-grade = Оценка состояния { emoji-grade }
 
-gpt-prompt-name-anonim = Человек не хочет называть своего имени
+gpt-pmt-psycholog-person-data = Учитывайте следующие данные о человеке:
+gpt-pmt-psycholog-person-name = имя человека
+gpt-pmt-psycholog-person-name-anonin = человек не хочет называть своего имени
+gpt-pmt-psycholog-person-age = возраст человека
+gpt-pmt-psycholog-person-age-anonim = возраст человека неизвестен
+gpt-pmt-psycholog-person-gender = пол человека
+gpt-pmt-psycholog-person-gender-anonim = пол человека неизвестен
+gpt-pmt-psycholog-person-status = Человек говорит, что в настоящее время особую важность для него представляет следующее:
+gpt-pmt-psycholog-person-review = Ваши выводы из последнего сеанса общения с человеком следующие:
 
 txt-name-anonim = Новый пользователь
 

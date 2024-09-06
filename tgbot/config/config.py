@@ -1,4 +1,3 @@
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -16,6 +15,7 @@ class DBConfig:
 class GPT:
     token: str  # Токен для доступа к GPT
     url: str  # URL-адрес для запросов к GPT
+    prompts_info: dict  # Описания промптов GPT
 
 
 @dataclass
@@ -43,7 +43,8 @@ def load_config(path: str | None = None) -> Config:
         ),
         gpt=GPT(
             token=env('GPT_TOKEN'),
-            url=env('GPT_URL')
+            url=env('GPT_URL'),
+            prompts_info={}
         ),
         db=DBConfig(
             dsn=env('DB_DSN'),

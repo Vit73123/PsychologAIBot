@@ -9,7 +9,8 @@ from aiogram_dialog import DialogManager
 from tgbot.db.models.user import Gender
 from tgbot.db.repo import Repo
 from tgbot.filters import IsAdmin
-from tgbot.utils.user_utils import *
+from tgbot.utils import *
+from tgbot.tools.logger import get_logger_dev
 
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)

@@ -18,9 +18,11 @@ from tgbot.dialogs import (start_dialog,
                            aboutme_dialog, )
 from tgbot.handlers import user_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
-from tgbot.tools.i18n import create_translator_hub
+from tgbot.services.gpt import ChatGptService
 from tgbot.tools.emoji import load_emoji_grades
-from tgbot.tools.logger import LoggerFormatter, FORMAT
+from tgbot.tools.i18n import create_translator_hub
+from tgbot.tools.json import load_json
+from tgbot.tools.logger import LoggerFormatter, FORMAT, get_logger_dev
 
 # Конфигурация логирования
 logging.basicConfig(
@@ -31,6 +33,7 @@ logging.getLogger().handlers[0].setFormatter(LoggerFormatter())
 logging.getLogger().handlers[1].setFormatter(logging.Formatter(FORMAT))
 
 log = logging.getLogger(__name__)
+log_dev = get_logger_dev(__name__, log.level)
 
 # Отключить дублирование логирования SQLAlchemy
 from sqlalchemy import log as sqlalchemy_log
@@ -64,11 +67,20 @@ async def main():
     # Эмодзи шкалы настроения
     grades: dict = load_emoji_grades(config.root_path / 'resources' / 'emoji')
 
+    # ChatGPT
+    prompts_config = load_json(config.root_path / 'tgbot' / 'config' / 'prompts_info.json')
+    config.gpt.prompts_info = prompts_config['psychology']
+
+    gpt = ChatGptService(token=config.gpt.token, url=config.gpt.url)
+
     # Инициализация диспетчера
-    dp = Dispatcher(storage=storage,
-                    repo=repo,
-                    config=config,
-                    grades=grades)
+    dp = Dispatcher(
+        storage=storage,
+        grades=grades,
+        repo=repo,
+        gpt=gpt,
+        config=config,
+    )
 
     # Инициализация fluentogram
     translator_hub: TranslatorHub = create_translator_hub()
@@ -83,9 +95,6 @@ async def main():
         tests_dialog,
         aboutme_dialog,
     )
-
-    # Фильтр IsAdmin
-    # IsAdmin.admin_ids = config.tg_bot.admin_ids
 
     # Регистрация миддлварей
     dp.update.middleware(TranslatorRunnerMiddleware())  # i18n

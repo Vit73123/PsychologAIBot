@@ -1,12 +1,13 @@
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from aiogram_dialog import DialogManager
-from aiogram_dialog.widgets.kbd import Radio
+from aiogram.fsm.context import FSMContext
 from fluentogram import TranslatorRunner
 
-from tgbot.db.models.user import Gender
+from tgbot.config import Config
+from tgbot.services.gpt import ChatGptService
 from tgbot.tools.logger import get_logger_dev
+from tgbot.utils import get_prompt, get_state_data
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -15,32 +16,57 @@ if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
 
 
-# Пол
-async def get_gender(
-        dialog_manager: DialogManager,
+# GPT
+
+# Start
+async def get_start(
+        state: FSMContext,
+        config: Config,
+        gpt: ChatGptService,
         i18n: TranslatorRunner,
+
         **kwargs
 ) -> dict[str, str]:
-    gender = [
-        (i18n.btn.aboutme.profile.gender.male(), '1'),
-        (i18n.btn.aboutme.profile.gender.female(), '2'),
-    ]
-    # widget_data = dialog_manager.current_context().widget_data
-    # dialog_data = dialog_manager.dialog_data
+    log.debug(" GPT: get_start: context: %s", await state.get_data())
 
-    # radio: Radio = dialog_manager.find('radio_gender')
-    # text = radio.get_checked()
-    # gender_enum: Gender = text
-
-    return {
-        # "win_gender": i18n.win.aboutme.profile.gender(),
-        # "win_gender_text": text,
-        # "win_gender_enum": gender_enum,
-        # "radio_gender": gender,
-        # "btn_gender_clear": i18n.btn.clear(),
-        # "btn_gender_cancel": i18n.btn.cancel(),
+    prompt_info = config.gpt.prompts_info['psychology']
+    prompt_intro = get_prompt(prompt_info, config)
+    person_data = {
+        
     }
 
 
-def test(index: int, dialog_manager: DialogManager):
-    context = dialog_manager.current_context()
+    prompt_intro = {
+        'role': 'system',
+        'text': get_prompt(prompt_itro, config)
+    }
+    gpt = {
+        'messages_list': [prompt_intro]
+    }
+    await state.update_data(gpt)
+
+    log.debug(" Start: get_start: context: %s", await state.get_data())
+
+    return {
+    }
+
+
+# Psychology
+async def get_psychology(
+        state: FSMContext,
+        gpt: ChatGptService,
+
+        **kwargs
+) -> dict[str, str]:
+    log.debug(" GPT: get_psychology: context: %s", await state.get_data())
+
+    gpt_data: dict = await get_state_data('gpt', state)
+    messages_list: list = gpt_data['messages_list']
+    gpt.set_messages_list(messages_list)
+
+    gpt_text = ''
+
+    return {
+        'gpt_text': gpt_text,
+    }
+

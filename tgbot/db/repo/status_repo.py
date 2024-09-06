@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from tgbot.db.dao import StatusDAO
 from tgbot.db.models import Status
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils.status_utils import create_status_from_dao, create_status_to_dao
+from tgbot.utils import create_status_from_dao, create_status_to_dao
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
