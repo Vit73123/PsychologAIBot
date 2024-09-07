@@ -32,7 +32,7 @@ def create_aboutme_text(user: UserDAO, dialog_manager: DialogManager, i18n: Tran
 
 def create_name_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
     name_str: str = _create_name_string(user, dialog_manager, i18n)
-    return ' '.join([i18n.txt.name.before(), '<b>' + name_str + '</b>']) if name_str else ''
+    return ' '.join([i18n.win.aboutme.name.h(), '<b>' + name_str + '</b>']) if name_str else ''
 
 
 def _create_name_string(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:

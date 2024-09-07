@@ -3,6 +3,7 @@ from aiogram.fsm.state import StatesGroup, State
 
 class Start(StatesGroup):
     start = State()
+    dialog = State()
 
 
 class Psychology(StatesGroup):

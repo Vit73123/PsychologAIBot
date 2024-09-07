@@ -7,7 +7,6 @@ from fluentogram import TranslatorRunner
 
 from tgbot.db import Repo
 from tgbot.db.dao import StatusDAO, UserDAO
-from tgbot.dialogs.states import Aboutme
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils.dialogs import create_aboutme_text, create_status_text, create_grade_text, create_name_text
 
@@ -26,16 +25,8 @@ async def get_aboutme(
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    log_dev.debug(" About me: get_aboutme: context: %s", dialog_manager.current_context())
-
-    await state.set_state(Aboutme.start)
-    state_data = await state.get_data()
-    log_dev.debug(" About me: get_aboutme: FSM: state: %s, context: %s", await state.get_state(), state_data)
-
-    if 'user' not in state_data:
-        user: UserDAO = await repo.user.get(dialog_manager.start_data['user_id'])
-        await state.update_data({'user': user})
-        dialog_manager.dialog_data.update({'updated_items': set()})
+    log_dev.debug(" Aboutme: get_aboutme: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Aboutme: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
         "win_aboutme": i18n.win.aboutme(),
@@ -54,18 +45,30 @@ async def get_profile(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Profile: get_profile: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Profile: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     state_data = await state.get_data()
-    log_dev.debug(" About me: get_aboutme: FSM: state: %s, context: %s", await state.get_state(), state_data)
 
-    user: UserDAO = state_data['user']
+    # Добавляем пользователя в контекст FSM, если его ещё там нет (ленивая загрузка из базы данных)
+    if 'user' not in state_data:
+        user: UserDAO = await repo.user.get(dialog_manager.start_data['user_id'])
+        await state.update_data({'user': user})
+        dialog_manager.dialog_data.update({'updated_items': set()})
+    # Берём пользователя из контекста FSM, если он уже там есть
+    else:
+        user: UserDAO = state_data['user']
+
+    # Добавляем состояние пользователя в контекст FSM, если его ещё там нет (ленивая загрузка из базы данных)
     if 'status' not in state_data:
         status: StatusDAO = await repo.status.get_last_by_user_id(dialog_manager.start_data['user_id'])
         status_data = {'status': status}
         state_data.update(status_data)
         await state.update_data(status_data)
-    status = state_data['status']
+    # Берём состояние пользователя из контекста FSM, если оно уже там есть
+    else:
+        status: StatusDAO = state_data['status']
 
+    # Создаём строку описания пользователя - первая строка с данными пользователя в свободном стиле
     aboutme_txt = create_aboutme_text(user=user, dialog_manager=dialog_manager, i18n=i18n)
     status_txt = create_status_text(status=status, dialog_manager=dialog_manager)
     grade_txt = create_grade_text(status=status, dialog_manager=dialog_manager, grades=grades)
@@ -96,6 +99,7 @@ async def get_name(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Name: get_name: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Name: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     state_data = await state.get_data()
     user: UserDAO = state_data['user']
@@ -103,7 +107,7 @@ async def get_name(
 
     return {
         "win_name_h": name_txt,
-        "win_name_txt": i18n.win.aboutme.profile.name(),
+        "win_name_txt": i18n.win.aboutme.name.txt(),
         "btn_name_setback": i18n.btn.setback(),
         "btn_name_clear": i18n.btn.clear(),
         "btn_name_cancel": i18n.btn.cancel.getback(),
@@ -113,9 +117,13 @@ async def get_name(
 # Возраст
 async def get_age(
         dialog_manager: DialogManager,
+        state: FSMContext,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
+    log_dev.debug(" Age: get_age: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Age: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+
     return {
         "win_age": i18n.win.aboutme.profile.age(),
         "btn_age_setback": i18n.btn.setback(),
@@ -127,9 +135,13 @@ async def get_age(
 # Пол
 async def get_gender(
         dialog_manager: DialogManager,
+        state: FSMContext,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
+    log_dev.debug(" Gender: get_gender: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Gender: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+
     gender = [
         (i18n.btn.aboutme.profile.gender.male(), '1'),
         (i18n.btn.aboutme.profile.gender.female(), '2'),
@@ -146,9 +158,13 @@ async def get_gender(
 # Состояние
 async def get_status(
         dialog_manager: DialogManager,
+        state: FSMContext,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
+    log_dev.debug(" Status: get_status: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Status: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+
     return {
         "win_status": i18n.win.aboutme.profile.status(),
         "btn_status_setback": i18n.btn.setback(),
@@ -160,9 +176,13 @@ async def get_status(
 # Оценка состояния
 async def get_grade(
         dialog_manager: DialogManager,
+        state: FSMContext,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
+    log_dev.debug(" Grade: get_grade: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Grade: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+
     grades = [("+1 😏", '1'), ("+2 😌", '2'), ("+3 🙂", '3'), ("+4 😀", '4'), ("+5 😆", '5'),
               ("-1 🫤", '6'), ("-2 🙁", '7'), ("-3 😟", '8'), ("-4 😧", '9'), ("-5 🥵", '10'),
               ("😑 Мне всё безразлично", 11)]

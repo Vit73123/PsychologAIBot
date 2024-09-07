@@ -1,6 +1,7 @@
 from logging import getLogger
 from typing import TYPE_CHECKING
 
+from aiogram.fsm.context import FSMContext
 from aiogram_dialog import DialogManager
 from fluentogram import TranslatorRunner
 
@@ -16,10 +17,12 @@ log_dev = get_logger_dev(__name__, log.level)
 # Тесты
 async def get_tests(
         dialog_manager: DialogManager,
+        state: FSMContext,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
-    log.debug(" Tests: get_start: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Tests: get_psychology: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Tests: get_psychology: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
         "win_tests": i18n.win.tests(),

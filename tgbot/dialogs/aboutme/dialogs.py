@@ -2,7 +2,7 @@ import operator
 
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back
+from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back, SwitchTo
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Format
 
@@ -89,7 +89,7 @@ aboutme_dialog = Dialog(
 
     # Имя:
     Window(
-        Format("{win_name_h}"),
+        Format("{win_name_h}\n"),
         Format("{win_name_txt}"),
         TextInput(
             id="inp_name",
@@ -108,7 +108,11 @@ aboutme_dialog = Dialog(
                 id='btn_name_clear',
                 on_click=btn_name_clear_clicked
             ),
-            Back(Format('{btn_name_cancel}'), id='btn_name_cancel'),
+            SwitchTo(
+                text=Format('{btn_name_cancel}'),
+                id='btn_name_cancel',
+                state=Aboutme.profile
+            ),
         ),
         getter=get_name,
         state=Aboutme.name,
@@ -134,7 +138,11 @@ aboutme_dialog = Dialog(
                 id='btn_age_clear',
                 on_click=btn_age_clear_clicked
             ),
-            Back(Format('{btn_age_cancel}'), id='btn_age_cancel'),
+            SwitchTo(
+                text=Format('{btn_age_cancel}'),
+                id='btn_age_cancel',
+                state=Aboutme.profile
+            ),
         ),
         getter=get_age,
         state=Aboutme.age,
@@ -163,10 +171,10 @@ aboutme_dialog = Dialog(
                 id='btn_gender_clear',
                 on_click=btn_gender_clear_clicked,
             ),
-            Button(
+            SwitchTo(
                 text=Format('{btn_gender_cancel}'),
                 id='btn_gender_cancel',
-                on_click=btn_gender_cancel_clicked,
+                state=Aboutme.profile
             ),
         ),
         getter=get_gender,
@@ -193,7 +201,11 @@ aboutme_dialog = Dialog(
                 id='btn_status_clear',
                 on_click=btn_status_clear_clicked
             ),
-            Back(Format('{btn_status_cancel}'), id='btn_status_cancel'),
+            SwitchTo(
+                text=Format('{btn_status_cancel}'),
+                id='btn_status_cancel',
+                state=Aboutme.profile
+            ),
         ),
         getter=get_status,
         state=Aboutme.status,
@@ -201,7 +213,7 @@ aboutme_dialog = Dialog(
 
     # Оценка состояния
     Window(
-        Format("{win_grade}}"),
+        Format("{win_grade}"),
         Group(
             Row(
                 Radio(
@@ -225,7 +237,11 @@ aboutme_dialog = Dialog(
                 id='btn_grade_clear',
                 on_click=btn_grade_clear_clicked
             ),
-            Back(Format('{btn_grade_cancel}'), id='btn_grade_cancel'),
+            SwitchTo(
+                text=Format('{btn_grade_cancel}'),
+                id='btn_grade_cancel',
+                state=Aboutme.profile
+            ),
         ),
         getter=get_grade,
         state=Aboutme.grade,

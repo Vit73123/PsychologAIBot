@@ -6,11 +6,11 @@ class TranslatorRunner:
     
     cmd: Cmd
     emoji: Emoji
+    txt: Txt
+    srv: Srv
     win: Win
     btn: Btn
     gpt: Gpt
-    txt: Txt
-    srv: Srv
 
 
 class Cmd:
@@ -54,6 +54,7 @@ class CmdProfile:
 
 class Emoji:
     i: EmojiI
+    hands: EmojiHands
     me: EmojiMe
     psychologist: EmojiPsychologist
 
@@ -129,6 +130,11 @@ class EmojiI:
     def oh() -> Literal["""🤷"""]: ...
 
 
+class EmojiHands:
+    @staticmethod
+    def handshake() -> Literal["""🤝"""]: ...
+
+
 class EmojiMe:
     @staticmethod
     def important() -> Literal["""❤️‍🔥"""]: ...
@@ -140,6 +146,57 @@ class EmojiPsychologist:
 
     @staticmethod
     def woman() -> Literal["""🕵️‍♀️"""]: ...
+
+
+class Txt:
+    name: TxtName
+    age: TxtAge
+    gender: TxtGender
+
+    @staticmethod
+    def yearsstring1() -> Literal["""год"""]: ...
+
+    @staticmethod
+    def yearsstring2() -> Literal["""года"""]: ...
+
+    @staticmethod
+    def yearsstring3() -> Literal["""лет"""]: ...
+
+
+class TxtName:
+    @staticmethod
+    def anonim() -> Literal["""Новый пользователь"""]: ...
+
+    @staticmethod
+    def before() -> Literal["""Меня зовут"""]: ...
+
+
+class TxtAge:
+    @staticmethod
+    def before() -> Literal["""Мне"""]: ...
+
+    @staticmethod
+    def after() -> Literal["""лет"""]: ...
+
+
+class TxtGender:
+    @staticmethod
+    def before() -> Literal["""Я"""]: ...
+
+    @staticmethod
+    def male() -> Literal["""мужчина"""]: ...
+
+    @staticmethod
+    def femail() -> Literal["""женщина"""]: ...
+
+
+class Srv:
+    name: SrvName
+
+
+class SrvName:
+    @staticmethod
+    def checkname() -> Literal["""^[а-яА-ЯёЁ ]+"""]: ...
 
 
 class Win:
@@ -171,17 +228,12 @@ class Win:
 Знайте: все люди разные, и кем бы вы не хотели казаться самому себе, ваша природа останется той как она есть.
 Тест не даёт критической оценки: хорошо или плохо. Тест раскрывает вашу природу.
 
-Если вы чувствуете, что в вашей жизни что-то не так, то наверняка причина кроется в неправильном представлении о себе.
-Тест поможет вам найти эти пробелы.
-
-Если вы чувствуете, что в вашей жизни всё идёт хорошо, то скорее всего вы хорошо знаете себя. Это здорово!
-Тест добавит вам частичку этого знания.
-
 В добрый путь к самопознанию!"""]: ...
 
 
 class WinAboutme:
     profile: WinAboutmeProfile
+    name: WinAboutmeName
 
     @staticmethod
     def __call__() -> Literal["""&lt;b&gt;О себе: кто вы и как ваше самочувствие?&lt;/b&gt;
@@ -197,7 +249,6 @@ class WinAboutme:
 
 class WinAboutmeProfile:
     h: WinAboutmeProfileH
-    name: WinAboutmeProfileName
     age: WinAboutmeProfileAge
 
     @staticmethod
@@ -226,9 +277,12 @@ class WinAboutmeProfileH:
     def grade() -> Literal["""&lt;b&gt;📶 Моё состояние:&lt;/b&gt;"""]: ...
 
 
-class WinAboutmeProfileName:
+class WinAboutmeName:
     @staticmethod
-    def __call__() -> Literal["""✅ Теперь ко мне будут обращаться так, каким именем я представляюсь."""]: ...
+    def h() -> Literal["""🙋 Меня зовут"""]: ...
+
+    @staticmethod
+    def txt() -> Literal["""Приятно, если ко мне обращаются так, как мне это нравится 🤝."""]: ...
 
     @staticmethod
     def error() -> Literal["""&lt;b&gt;💁 Я ошибся:&lt;/b&gt;
@@ -340,7 +394,7 @@ class BtnTestsStart:
     def choosetest() -> Literal["""Выбрать тест"""]: ...
 
     @staticmethod
-    def dotest() -> Literal["""Пройти тест"""]: ...
+    def dotest() -> Literal["""Пройти тест 📝"""]: ...
 
 
 class BtnAboutme:
@@ -351,7 +405,7 @@ class BtnAboutmeProfile:
     gender: BtnAboutmeProfileGender
 
     @staticmethod
-    def __call__() -> Literal["""О себе 🙋"""]: ...
+    def __call__() -> Literal["""Рссказать о себе 🙋"""]: ...
 
     @staticmethod
     def name() -> Literal["""Имя 🙎"""]: ...
@@ -432,55 +486,4 @@ class GptPmtPsychologPersonGender:
 class GptPmtPsychologFinish:
     @staticmethod
     def createreview() -> Literal["""Дайте развёрнутую характеристику моему психологическому состоянию по итогам всего нашего диалога, принимая во внимание все ваши знания из области психологии, психоанализа, конфликтологии, психиатрии, социальных наук, а также вашего общения с другими людьми. Выделите и сформулируйте конкретные проблемные вопросы так, чтобы вы могли продолжить наш разговор и обсудить со мной все эти вопросы в будущем. Не полагайтесь только на беседу в этот раз, а обязательно примите во внимание то, какой была ваша последняя оценка, с которой вы начали разговор со мной."""]: ...
-
-
-class Txt:
-    name: TxtName
-    age: TxtAge
-    gender: TxtGender
-
-    @staticmethod
-    def yearsstring1() -> Literal["""год"""]: ...
-
-    @staticmethod
-    def yearsstring2() -> Literal["""года"""]: ...
-
-    @staticmethod
-    def yearsstring3() -> Literal["""лет"""]: ...
-
-
-class TxtName:
-    @staticmethod
-    def anonim() -> Literal["""Новый пользователь"""]: ...
-
-    @staticmethod
-    def before() -> Literal["""меня зовут"""]: ...
-
-
-class TxtAge:
-    @staticmethod
-    def before() -> Literal["""мне"""]: ...
-
-    @staticmethod
-    def after() -> Literal["""лет"""]: ...
-
-
-class TxtGender:
-    @staticmethod
-    def before() -> Literal["""я"""]: ...
-
-    @staticmethod
-    def male() -> Literal["""мужчина"""]: ...
-
-    @staticmethod
-    def femail() -> Literal["""женщина"""]: ...
-
-
-class Srv:
-    name: SrvName
-
-
-class SrvName:
-    @staticmethod
-    def checkname() -> Literal["""^[а-яА-ЯёЁ ]+"""]: ...
 

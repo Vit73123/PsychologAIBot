@@ -2,9 +2,8 @@ import logging
 from typing import TYPE_CHECKING
 
 from aiogram import Router
-from aiogram.filters import CommandStart, StateFilter
+from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import default_state
 from aiogram.types import Message
 from aiogram_dialog import DialogManager, StartMode
 from fluentogram import TranslatorRunner
@@ -13,6 +12,7 @@ from tgbot.db import Repo
 from tgbot.dialogs.states import Start
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils.db import create_user_from_bot, create_user_name_text
+from tgbot.utils.dialogs import reset_fsm
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
@@ -23,36 +23,36 @@ log_dev = get_logger_dev(__name__, log.level)
 router = Router()
 
 
-@router.message(CommandStart(), StateFilter(default_state))
+@router.message(CommandStart())
 async def cmd_start(message: Message, dialog_manager: DialogManager, repo: Repo,
                     state: FSMContext, i18n: TranslatorRunner, **kwargs):
     log_dev.debug(' /start: Register user')
 
-    # Регистрация пользователя: добавить в общий контекст бота его id из базы данных
-    user_db = create_user_from_bot(message.from_user)
-    user = await repo.user.register(user_db)
-    # Общий контекст FSM, который должен сохраняться при перезагрузке диалогов
-    context = {
-        'user_id': user.id,
-        'user_name': create_user_name_text(user.name, i18n),
-        'default_state': True,
-    }
+    # Первый запуск бота: состояние default (state=None)
+    if not await state.get_state():
+        # Регистрация пользователя: добавить в общий контекст бота его id из базы данных
+        user_db = create_user_from_bot(message.from_user)
+        user = await repo.user.register(user_db)
 
-    await state.set_data({'context': context})
-    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK, data=context)
+        # Общий контекст FSM, который должен сохраняться при перезагрузке диалогов
+        state_data = {
+            'user_data': {
+                'user_id': user.id,
+                'user_name': create_user_name_text(user.name, i18n),
+            }
+        }
 
+        # Переключаем бота в рабочее состояние
 
-@router.message(CommandStart(), ~StateFilter(default_state))
-async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMContext, **kwargs):
-    log_dev.debug(' /start')
+        # Переход по команде /start в рабочем состоянии бота: not default (state=not None)
+    else:
+
+        # Перезагрузка диалогов:
+        # - очищаем контекст FSM;
+        # - сохраняем общий контекст FSM, необходимый для всех диалогов
+        await reset_fsm(state)
+        state_data = await state.get_data()
 
     await state.set_state(Start.start)
-
-    # Перезагрузка диалогов после перехода в старт из любого другого диалога или по команде /start
-    # Очищаем контекст FSM. Сохраняем общий контекст FSM, необходимый для всех диалогов
-    data = await state.get_data()
-    context = data['context']
-    await state.clear()
-
-    await state.set_data({'context': context})
-    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK, data=context)
+    await state.set_data(state_data)
+    await dialog_manager.start(state=Start.start, mode=StartMode.RESET_STACK, data=state_data['user_data'])
