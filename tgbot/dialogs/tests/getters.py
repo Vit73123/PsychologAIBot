@@ -1,11 +1,9 @@
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from aiogram.fsm.context import FSMContext
 from aiogram_dialog import DialogManager
 from fluentogram import TranslatorRunner
 
-from tgbot.dialogs.states import Start
 from tgbot.tools.logger import get_logger_dev
 
 if TYPE_CHECKING:
@@ -16,7 +14,7 @@ log_dev = get_logger_dev(__name__, log.level)
 
 
 # Тесты
-async def get_start(
+async def get_tests(
         dialog_manager: DialogManager,
         i18n: TranslatorRunner,
         **kwargs

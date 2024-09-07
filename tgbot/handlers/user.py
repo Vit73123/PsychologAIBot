@@ -12,7 +12,7 @@ from fluentogram import TranslatorRunner
 from tgbot.db import Repo
 from tgbot.dialogs.states import Start
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import create_user_from_bot, create_user_name_text
+from tgbot.utils.db import create_user_from_bot, create_user_name_text
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
@@ -45,6 +45,8 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, repo: Repo,
 @router.message(CommandStart(), ~StateFilter(default_state))
 async def cmd_start(message: Message, dialog_manager: DialogManager, state: FSMContext, **kwargs):
     log_dev.debug(' /start')
+
+    await state.set_state(Start.start)
 
     # Перезагрузка диалогов после перехода в старт из любого другого диалога или по команде /start
     # Очищаем контекст FSM. Сохраняем общий контекст FSM, необходимый для всех диалогов

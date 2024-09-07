@@ -5,7 +5,8 @@ from fluentogram import TranslatorRunner
 
 from tgbot.db.dao import UserDAO, StatusDAO
 from tgbot.db.models.user import Gender
-from tgbot.utils import create_user_name_text, create_after_years_string, get_gender_string
+from tgbot.utils.common import create_after_years_string, get_gender_string
+from tgbot.utils.db import create_user_name_text
 
 
 # Aboutme

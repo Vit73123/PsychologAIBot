@@ -6,7 +6,7 @@ from openai import OpenAI
 from tgbot.tools.logger import get_logger_dev
 
 log = getLogger(__name__)
-log_dev = get_logger_dev(__name__, log.getEffectiveLevel())
+log_dev = get_logger_dev(__name__, log.level)
 
 
 class ChatGptService:
@@ -33,24 +33,27 @@ class ChatGptService:
         return message.content
 
     def set_prompt(self, prompt_text: str) -> None:
-        log_dev.debug("Set prompt: %s", prompt_text)
+        log_dev.debug(" Set prompt: %s", prompt_text)
         self.messages_list.clear()
         self.messages_list.append({"role": "system", "content": prompt_text})
+        log_dev.debug(" Set prompt: messages_list: %s", self.messages_list)
 
     async def add_prompt(self, prompt_text: str) -> str:
-        log_dev.debug("Add prompt: %s", prompt_text)
+        log_dev.debug(" Add prompt: %s", prompt_text)
         self.messages_list.append({"role": "system", "content": prompt_text})
+        log_dev.debug(" Set prompt: messages_list: %s", self.messages_list)
         return await self._send_message_list()
 
     async def add_message(self, message_text: str) -> str:
         self.messages_list.append({"role": "user", "content": message_text})
+        log_dev.debug(" Set prompt: messages_list: %s", self.messages_list)
         return await self._send_message_list()
 
     async def send_question(self, prompt_text: str, message_text: str) -> str:
         self.messages_list.clear()
         self.messages_list.append({"role": "system", "content": prompt_text})
         self.messages_list.append({"role": "user", "content": message_text})
-        return await self._send_message_list()
+        # return await self._send_message_list()
 
-    def set_messages_list(self, messages_list: list) -> None:
-        self.messages_list = messages_list
+    # def set_messages_list(self, messages_list: list) -> None:
+    #     self.messages_list = messages_list

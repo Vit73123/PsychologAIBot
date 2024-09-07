@@ -1,50 +1,57 @@
+from logging import getLogger
+
 from fluentogram import TranslatorRunner
 
 from tgbot.config import Config
-from tgbot.utils.services.gpt_utils import (get_prompt,
-                                            load_prompt_info)
+from tgbot.tools.logger import get_logger_dev
+from tgbot.utils.services import (get_prompt,
+                                  get_prompt_info)
+
+log = getLogger(__name__)
+log_dev = get_logger_dev(__name__, log.level)
 
 
-def create_prompt(person_data: dict, config: Config, i18n: TranslatorRunner, prompt_info: dict = None) -> str:
+def create_prompt(user_data: dict, config: Config, i18n: TranslatorRunner, prompt_info: dict = None) -> str:
     if not prompt_info:
-        prompt_info = load_prompt_info('psychology', config)
+        prompt_info = get_prompt_info('psychology', config)
 
     prompt_gpt = get_prompt(prompt_info, config)
-    prompt_text = create_prompt_text(person_data, i18n)
+    prompt_text = create_prompt_text(user_data, i18n)
 
     return ' '.join([prompt_gpt, prompt_text])
 
 
-def create_prompt_text(person_data: dict, i18n: TranslatorRunner) -> str:
-    if 'name' in person_data:
-        name_string = ' '.join([i18n.gpt.pmt.psycholog.person.name(), person_data['name']])
+def create_prompt_text(user_data: dict, i18n: TranslatorRunner) -> str:
+    if user_data['name']:
+        name_string = ' '.join([i18n.gpt.pmt.psycholog.person.name(), user_data['name']])
     else:
-        name_string = i18n.gpt.pmt.psycholog.person.name.anonin()
+        name_string = i18n.gpt.pmt.psycholog.person.name.anoninm()
 
-    if 'age' in person_data:
-        age_string = ' '.join([i18n.gpt.pmt.psycholog.person.age(), person_data['age']])
+    if user_data['age']:
+        age_string = ' '.join([i18n.gpt.pmt.psycholog.person.age(), user_data['age']])
     else:
         age_string = i18n.gpt.pmt.psycholog.person.age.anonim()
 
-    if 'gender' in person_data:
-        gender_string = ' '.join([i18n.gpt.pmt.psycholog.person.gender(), person_data['gender']])
+    if user_data['gender']:
+        gender_string = ' '.join([i18n.gpt.pmt.psycholog.person.gender(), user_data['gender']])
     else:
         gender_string = i18n.gpt.pmt.psycholog.person.gender.anonim()
 
-    if 'status' in person_data:
-        status_string = ' '.join([i18n.gpt.pmt.psycholog.person.status(), person_data['status']])
+    if user_data['status']:
+        status_string = ' '.join([i18n.gpt.pmt.psycholog.person.status(), user_data['status']])
     else:
         status_string = ''
 
-    if 'review' in person_data:
-        review_string = ' '.join([i18n.gpt.pmt.psycholog.person.review(), person_data['review']])
+    if user_data['review'] in user_data:
+        review_string = ' '.join([i18n.gpt.pmt.psycholog.person.review(), user_data['review']])
     else:
         review_string = ''
 
     text = ', '.join([name_string, age_string, gender_string])
+
     if status_string:
-        text = '. '.join(status_string)
+        text = '. '.join([text, status_string])
     if review_string:
-        text = '. '.join(review_string)
+        text = '. '.join([text, review_string])
 
     return text

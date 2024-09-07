@@ -4,12 +4,12 @@ from tgbot.tools.json import load_json
 
 def get_prompt(prompt_info: dict, config: Config) -> str:
     path = config.root_path / 'resources' / 'prompts' / 'prompts.json'
-    prompt = load_prompt(prompt_info, path)
+    prompt: str = load_prompt(prompt_info, path)
 
     return prompt
 
 
-def load_prompt_info(category: str, config: Config) -> dict:
+def get_prompt_info(category: str, config: Config) -> dict:
     return config.gpt.prompts_info[category]
 
 

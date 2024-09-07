@@ -311,8 +311,24 @@ class BtnStart:
 
 
 class BtnPsychology:
+    appointment: BtnPsychologyAppointment
+
+
+class BtnPsychologyAppointment:
     @staticmethod
-    def startappointment() -> Literal["""Начать сеанс"""]: ...
+    def start() -> Literal["""Начать сеанс"""]: ...
+
+    @staticmethod
+    def new() -> Literal["""Новый сеанс"""]: ...
+
+    @staticmethod
+    def follow() -> Literal["""Продолжить сеанс"""]: ...
+
+    @staticmethod
+    def stop() -> Literal["""Звершить сеанс"""]: ...
+
+    @staticmethod
+    def thankyou() -> Literal["""Спасибо!"""]: ...
 
 
 class BtnTests:
@@ -371,6 +387,7 @@ class GptPmt:
 
 class GptPmtPsycholog:
     person: GptPmtPsychologPerson
+    finish: GptPmtPsychologFinish
 
 
 class GptPmtPsychologPerson:
@@ -379,29 +396,29 @@ class GptPmtPsychologPerson:
     gender: GptPmtPsychologPersonGender
 
     @staticmethod
-    def data() -> Literal["""Учитывайте следующие данные о человеке:"""]: ...
+    def data() -> Literal["""Учитывайте следующие данные обо мне:"""]: ...
 
     @staticmethod
-    def status() -> Literal["""Человек говорит, что в настоящее время особую важность для него представляет следующее:"""]: ...
+    def status() -> Literal["""В настоящее время особую важность для меня представляет следующее:"""]: ...
 
     @staticmethod
-    def review() -> Literal["""Ваши выводы из последнего сеанса общения с человеком следующие:"""]: ...
+    def review() -> Literal["""Ваши выводы из нашего последнего сеанса общения с вами:"""]: ...
 
 
 class GptPmtPsychologPersonName:
     @staticmethod
-    def __call__() -> Literal["""имя человека"""]: ...
+    def __call__() -> Literal["""меня зовут"""]: ...
 
     @staticmethod
-    def anonin() -> Literal["""человек не хочет называть своего имени"""]: ...
+    def anoninm() -> Literal["""я не хочу называть своего имени"""]: ...
 
 
 class GptPmtPsychologPersonAge:
     @staticmethod
-    def __call__() -> Literal["""возраст человека"""]: ...
+    def __call__() -> Literal["""мой возраст"""]: ...
 
     @staticmethod
-    def anonim() -> Literal["""возраст человека неизвестен"""]: ...
+    def anonim() -> Literal["""мой возраст останется неизвестен"""]: ...
 
 
 class GptPmtPsychologPersonGender:
@@ -409,7 +426,12 @@ class GptPmtPsychologPersonGender:
     def __call__() -> Literal["""пол человека"""]: ...
 
     @staticmethod
-    def anonim() -> Literal["""пол человека неизвестен"""]: ...
+    def anonim() -> Literal["""мой пол останется неизвестен"""]: ...
+
+
+class GptPmtPsychologFinish:
+    @staticmethod
+    def createreview() -> Literal["""Дайте развёрнутую характеристику моему психологическому состоянию по итогам всего нашего диалога, принимая во внимание все ваши знания из области психологии, психоанализа, конфликтологии, психиатрии, социальных наук, а также вашего общения с другими людьми. Выделите и сформулируйте конкретные проблемные вопросы так, чтобы вы могли продолжить наш разговор и обсудить со мной все эти вопросы в будущем. Не полагайтесь только на беседу в этот раз, а обязательно примите во внимание то, какой была ваша последняя оценка, с которой вы начали разговор со мной."""]: ...
 
 
 class Txt:

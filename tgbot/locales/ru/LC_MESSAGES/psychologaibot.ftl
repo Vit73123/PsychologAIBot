@@ -135,7 +135,11 @@ btn-start-psychology = Сеанс с психологом { emoji-psychologist-w
 btn-start-tests = Тесты { emoji-tests }
 btn-start-aboutme = О себе { emoji-i-profile }
 
-btn-psychology-startappointment = Начать сеанс
+btn-psychology-appointment-start = Начать сеанс
+btn-psychology-appointment-new = Новый сеанс
+btn-psychology-appointment-follow = Продолжить сеанс
+btn-psychology-appointment-stop = Звершить сеанс
+btn-psychology-appointment-thankyou = Спасибо!
 
 btn-tests-start-choosetest = Выбрать тест
 btn-tests-start-dotest = Пройти тест
@@ -151,15 +155,17 @@ btn-aboutme-profile-age = Возраст { emoji-i-am }
 btn-aboutme-profile-status = Сейчас важно! { emoji-me-important }
 btn-aboutme-profile-grade = Оценка состояния { emoji-grade }
 
-gpt-pmt-psycholog-person-data = Учитывайте следующие данные о человеке:
-gpt-pmt-psycholog-person-name = имя человека
-gpt-pmt-psycholog-person-name-anonin = человек не хочет называть своего имени
-gpt-pmt-psycholog-person-age = возраст человека
-gpt-pmt-psycholog-person-age-anonim = возраст человека неизвестен
+gpt-pmt-psycholog-person-data = Учитывайте следующие данные обо мне:
+gpt-pmt-psycholog-person-name = меня зовут
+gpt-pmt-psycholog-person-name-anoninm = я не хочу называть своего имени
+gpt-pmt-psycholog-person-age = мой возраст
+gpt-pmt-psycholog-person-age-anonim = мой возраст останется неизвестен
 gpt-pmt-psycholog-person-gender = пол человека
-gpt-pmt-psycholog-person-gender-anonim = пол человека неизвестен
-gpt-pmt-psycholog-person-status = Человек говорит, что в настоящее время особую важность для него представляет следующее:
-gpt-pmt-psycholog-person-review = Ваши выводы из последнего сеанса общения с человеком следующие:
+gpt-pmt-psycholog-person-gender-anonim = мой пол останется неизвестен
+gpt-pmt-psycholog-person-status = В настоящее время особую важность для меня представляет следующее:
+gpt-pmt-psycholog-person-review = Ваши выводы из нашего последнего сеанса общения с вами:
+
+gpt-pmt-psycholog-finish-createreview = Дайте развёрнутую характеристику моему психологическому состоянию по итогам всего нашего диалога, принимая во внимание все ваши знания из области психологии, психоанализа, конфликтологии, психиатрии, социальных наук, а также вашего общения с другими людьми. Выделите и сформулируйте конкретные проблемные вопросы так, чтобы вы могли продолжить наш разговор и обсудить со мной все эти вопросы в будущем. Не полагайтесь только на беседу в этот раз, а обязательно примите во внимание то, какой была ваша последняя оценка, с которой вы начали разговор со мной.
 
 txt-name-anonim = Новый пользователь
 

@@ -8,6 +8,7 @@ class Start(StatesGroup):
 class Psychology(StatesGroup):
     start = State()
     appointment = State()
+    review = State()
 
 
 class Tests(StatesGroup):

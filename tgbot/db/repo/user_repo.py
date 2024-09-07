@@ -1,13 +1,13 @@
 from logging import getLogger
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, cast, label
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from sqlalchemy.orm import selectinload, aliased
 
 from tgbot.db.dao import UserDAO
 from tgbot.db.models import User, Appointment, Status
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import create_user_to_dao
+from tgbot.utils.db import create_user_to_dao
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -62,7 +62,7 @@ class UserRepo:
             return user
 
     # Получить пользователя и его последние статус, сеанс
-    async def get_with_last_status_appointment(self, user_id: int) -> []:
+    async def get_with_last_status_appointment(self, user_id: int) -> dict | None:
         log.debug(" Repo: get user with last status id=: %s", user_id)
 
         async with self.pool() as session:
@@ -71,7 +71,7 @@ class UserRepo:
             a = aliased(Appointment)
 
             query = (
-                select(u.id, u.name, u.age, u.gender, s.text, s.grade, a.review)
+                select(u.id, u.name, u.age, u.gender, label('status', s.text), s.grade, a.review)
                 .join(s, and_(u.id == s.user_id))
                 .join(a, and_(u.id == a.user_id))
                 .order_by(s.updated_at, a.updated_at)
@@ -79,7 +79,8 @@ class UserRepo:
                 .where(and_(u.id == user_id))
             )
             result = await session.execute(query)
-        return result.all()
+            data = result.one_or_none()
+        return data._mapping if data else None
 
     # Получить пользователя и все его статусы, отсортированные по убыванию даты
     async def _get_with_all_statuses_to_user(self, user_id: int) -> User | None:

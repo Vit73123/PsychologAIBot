@@ -16,7 +16,7 @@ from tgbot.dialogs import (start_dialog,
                            psychology_dialog,
                            tests_dialog,
                            aboutme_dialog, )
-from tgbot.handlers import user_router
+from tgbot.handlers import user_router, admin_router
 from tgbot.middlewares.i18n import TranslatorRunnerMiddleware
 from tgbot.services.gpt import ChatGptService
 from tgbot.tools.emoji import load_emoji_grades
@@ -68,8 +68,7 @@ async def main():
     grades: dict = load_emoji_grades(config.root_path / 'resources' / 'emoji')
 
     # ChatGPT
-    prompts_config = load_json(config.root_path / 'tgbot' / 'config' / 'prompts_info.json')
-    config.gpt.prompts_info = prompts_config['psychology']
+    config.gpt.prompts_info = load_json(config.root_path / 'tgbot' / 'config' / 'prompts_info.json')
 
     gpt = ChatGptService(token=config.gpt.token, url=config.gpt.url)
 
@@ -77,6 +76,7 @@ async def main():
     dp = Dispatcher(
         storage=storage,
         grades=grades,
+        engine=engine,
         repo=repo,
         gpt=gpt,
         config=config,
@@ -87,6 +87,7 @@ async def main():
 
     # Регистрация роутеров
     dp.include_routers(  # Роутеры хэндлеров
+        admin_router,
         user_router,
     )
     dp.include_routers(  # Роутеры диалогов

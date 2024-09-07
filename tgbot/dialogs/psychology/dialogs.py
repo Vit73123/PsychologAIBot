@@ -1,31 +1,54 @@
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Button, Cancel
+from aiogram_dialog.widgets.input import TextInput
+from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Next
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Format, Const
 
-from tgbot.dialogs.states import Psychology
-from .callbacks import (
-    btn_startappointment_clicked,
-)
-from .getters import get_start
+from .callbacks import *
+from .getters import *
 
-
-# Психология
 psychology_dialog = Dialog(
+
+    # Психология
     Window(
         Format('{win_psychology}'),
         StaticMedia(
             path='resources/images/psychology.jpg',
             type=ContentType.PHOTO
         ),
-        Button(
-            text=Format('{btn_startappointment}'),
-            id='btn_startappointment',
-            on_click=btn_startappointment_clicked,
-        ),
+        Next(Format('{btn_appointment_start}'), id='btn_appointment_start'),
         Cancel(Format('{btn_getback_home}'), id='btn_getback_home'),
-        getter=get_start,
+        getter=get_psychology,
         state=Psychology.start,
-    )
+    ),
+
+    # GPT
+    Window(
+        Format("{gpt_message}"),
+        TextInput(
+            id="inp_message",
+            type_factory=inp_message_check,
+            on_success=inp_message_success,
+        ),
+        SwitchTo(
+            text=Format("{btn_appointment_stop}"),
+            id='btn_appointment_stop',
+            state=Psychology.review,
+        ),
+        getter=get_appointment,
+        state=Psychology.appointment,
+    ),
+
+    # Ревью
+    Window(
+        Format("{gpt_message}"),
+        SwitchTo(
+            text=Format("{btn_appointment_thankyou}"),
+            id='btn_appointment_thankyou',
+            state=Psychology.start,
+        ),
+        getter=get_review,
+        state=Psychology.review,
+    ),
 )

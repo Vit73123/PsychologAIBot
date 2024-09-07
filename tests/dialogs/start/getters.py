@@ -6,10 +6,10 @@ from fluentogram import TranslatorRunner
 
 from tgbot.config import Config
 from tgbot.db import Repo
-from tgbot.db.dao import UserDAO, AppointmentDAO, StatusDAO
+from tgbot.db.dao import UserDAO, StatusDAO
 from tgbot.services.gpt import ChatGptService
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import get_prompt, get_state_data, create_prompt
+from tgbot.utils.dialogs import get_state_data
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)

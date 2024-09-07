@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from tgbot.db.dao import AppointmentDAO
 from tgbot.db.models import Appointment
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import create_appointment_to_dao, create_appointment_from_dao
+from tgbot.utils.db import create_appointment_to_dao, create_appointment_from_dao
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)

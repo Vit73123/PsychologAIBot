@@ -9,7 +9,7 @@ from tgbot.db import Repo
 from tgbot.db.dao import StatusDAO, UserDAO
 from tgbot.dialogs.states import Aboutme
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils import (create_aboutme_text, create_status_text, create_grade_text, create_name_text)
+from tgbot.utils.dialogs import create_aboutme_text, create_status_text, create_grade_text, create_name_text
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
