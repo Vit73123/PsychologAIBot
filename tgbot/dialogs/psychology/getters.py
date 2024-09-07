@@ -42,7 +42,7 @@ async def get_psychology(
 
         prompt = create_prompt(user_data=user_data, config=config, i18n=i18n)
         gpt.set_prompt(prompt)
-        await state.set_data({'gpt_context': {
+        await state.update_data({'gpt_context': {
             'messages_list': gpt.messages_list
         }})
 
@@ -113,7 +113,6 @@ async def get_review(
     gpt.model = gpt_context['model']
     text: str = i18n.gpt.pmt.psycholog.finish.createreview()
     answer: str = await gpt.add_message(text)
-    # TODO: Показать ревью перед выводом окна начала диалога Психология
     await repo.appointment.add(
         AppointmentDAO(
             user_id=dialog_manager.start_data['user_id'],
