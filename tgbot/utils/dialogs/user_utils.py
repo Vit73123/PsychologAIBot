@@ -5,7 +5,7 @@ from fluentogram import TranslatorRunner
 
 from tgbot.db.dao import UserDAO, StatusDAO
 from tgbot.db.models.user import Gender
-from tgbot.utils.common import create_after_years_string, get_gender_string
+from tgbot.utils.common import create_after_years_string, get_gender_string, lower_text
 from tgbot.utils.db import create_user_name_text
 
 
@@ -20,13 +20,10 @@ def create_aboutme_text(user: UserDAO, dialog_manager: DialogManager, i18n: Tran
     if new_line:
         name = (name[0].upper() + name[1:]) if name else name
 
-    if age and not name:
-        age = age[0].upper() + age[1:]
-    if gender:
-        if not (name and age):
-            gender = gender[0].upper() + gender[1:]
-        else:
-            gender = ', и ' + gender
+    if age and name:
+        age = lower_text(age)
+    if gender and (name or age):
+        gender = 'и ' + lower_text(gender)
 
     str_list = [s for s in [name, age, gender] if s]
 

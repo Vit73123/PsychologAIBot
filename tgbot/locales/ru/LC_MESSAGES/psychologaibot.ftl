@@ -144,7 +144,7 @@ btn-psychology-appointment-thankyou = Спасибо!
 btn-tests-start-choosetest = Выбрать тест
 btn-tests-start-dotest = Пройти тест
 
-btn-aboutme-profile = О себе { emoji-i-hi }
+btn-aboutme-profile = Рссказать о себе { emoji-i-hi }
 
 btn-aboutme-profile-name = Имя { emoji-i-am }
 btn-aboutme-profile-gender = Пол { emoji-i-am }
@@ -169,10 +169,10 @@ gpt-pmt-psycholog-finish-createreview = Дайте развёрнутую хар
 
 txt-name-anonim = Новый пользователь
 
-txt-name-before = меня зовут
-txt-age-before = мне
+txt-name-before = Меня зовут
+txt-age-before = Мне
 txt-age-after = лет
-txt-gender-before = я
+txt-gender-before = Я
 
 txt-yearsstring1 = год
 txt-yearsstring2 = года

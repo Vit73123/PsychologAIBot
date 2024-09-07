@@ -25,3 +25,7 @@ def get_gender_string(gender: Gender, i18n: TranslatorRunner) -> str:
         return i18n.txt.gender.male()
     else:
         return i18n.txt.gender.femail()
+
+
+def lower_text(text: str) -> str:
+    return text[0].lower() + text[1:]
