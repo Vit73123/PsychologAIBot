@@ -1,3 +1,5 @@
+from logging import getLogger
+
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Radio
@@ -5,8 +7,11 @@ from fluentogram import TranslatorRunner
 
 from tgbot.db.dao import UserDAO, StatusDAO
 from tgbot.db.models.user import Gender
+from tgbot.tools.logger import get_logger_dev
 from tgbot.utils.common import create_after_years_string, get_gender_string, lower_text
-from tgbot.utils.db import create_user_name_text
+
+log = getLogger(__name__)
+log_dev = get_logger_dev(__name__, log.level)
 
 
 # Aboutme
@@ -27,29 +32,27 @@ def create_aboutme_text(user: UserDAO, dialog_manager: DialogManager, i18n: Tran
 
     str_list = [s for s in [name, age, gender] if s]
 
-    return ', '.join(str_list)
+    return ', '.join(str_list) if str_list else i18n.txt.aboutme.menothing()
 
 
 def create_name_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
     name_str: str = _create_name_string(user, dialog_manager, i18n)
-    return ' '.join([i18n.win.aboutme.name.h(), '<b>' + name_str + '</b>']) if name_str else ''
+    return ' '.join([i18n.txt.name.before.short(), '<b>' + name_str + '</b>']) if name_str else ''
 
 
 def _create_name_string(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
     updated_items: set = dialog_manager.dialog_data.get('updated_items')
     inp_name: TextInput = dialog_manager.find('inp_name')
-
     name_str: str = inp_name.get_value() if 'name' in updated_items else user.name
-    name_str = name_str if name_str else create_user_name_text(name_str, i18n)
 
-    return name_str
+    return name_str.strip() if name_str else ''
 
 
 def _create_age_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
     age_num: int = _create_age_num(user, dialog_manager, i18n)
 
     return ' '.join(
-        [i18n.txt.age.before(), '<b>' + str(age_num) + '</b>',
+        [i18n.txt.age.before.short(), '<b>' + str(age_num) + '</b>',
          create_after_years_string(years=age_num, i18n=i18n)]) if age_num else ''
 
 
@@ -66,7 +69,7 @@ def _create_gender_text(user: UserDAO, dialog_manager: DialogManager, i18n: Tran
     gender_str: str = _create_gender_string(user, dialog_manager, i18n)
 
     return ' '.join(
-        [i18n.txt.gender.before() + ' -',
+        [i18n.txt.gender.before.short() + ' -',
          '<b>' + gender_str + '</b>']) if gender_str else ''
 
 
@@ -91,6 +94,8 @@ def create_status_text(status: StatusDAO, dialog_manager: DialogManager) -> str 
     else:
         return None
 
+
+# Grade
 
 def create_grade_text(status: StatusDAO, dialog_manager: DialogManager, grades: dict) -> str | None:
     if status:

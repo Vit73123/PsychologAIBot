@@ -27,3 +27,8 @@ class Aboutme(StatesGroup):
     gender = State()
     status = State()
     grade = State()
+    yesno_name = State()
+    yesno_age = State()
+    yesno_gender = State()
+    yesno_status = State()
+    yesno_grade = State()

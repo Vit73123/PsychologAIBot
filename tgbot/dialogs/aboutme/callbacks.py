@@ -105,11 +105,15 @@ async def inp_name_error(message: Message, widget: ManagedTextInput, dialog_mana
     log_dev.debug(" Name: input text: error")
     i18n: TranslatorRunner = dialog_manager.middleware_data['i18n']
     await message.answer(
-        i18n.win.aboutme.profile.name.error()
+        i18n.win.name.error()
     )
 
 
 # -------------------------------------------------------------------------------------------------------------
+
+async def btn_name_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Name: button clicked: ok")
+
 
 async def btn_name_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Name: button clicked: setback")
@@ -166,11 +170,15 @@ async def inp_age_error(message: Message, widget: ManagedTextInput, dialog_manag
     log_dev.debug(" Age: input text: error")
     i18n: TranslatorRunner = dialog_manager.middleware_data['i18n']
     await message.answer(
-        i18n.win.aboutme.profile.age.error()
+        i18n.win.age.error()
     )
 
 
 # -------------------------------------------------------------------------------------------------------------
+
+async def btn_age_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Age: button clicked: ok")
+
 
 async def btn_age_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Age: button clicked: setback")
@@ -197,6 +205,10 @@ async def btn_gender_ok_clicked(callback: CallbackQuery, button: Button, dialog_
 
     log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
     await dialog_manager.switch_to(state=Aboutme.profile)
+
+
+async def btn_gender_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Gender: button clicked: setback")
 
 
 async def btn_gender_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -237,6 +249,10 @@ async def inp_status_success(message: Message, widget: ManagedTextInput, dialog_
 
 # -------------------------------------------------------------------------------------------------------------
 
+async def btn_status_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Status: button clicked: ok")
+
+
 async def btn_status_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Status: button clicked: setback")
     await dialog_manager.back()
@@ -266,6 +282,10 @@ async def inp_grade_success(message: Message, widget: ManagedTextInput, dialog_m
 
 
 # -------------------------------------------------------------------------------------------------------------
+
+async def btn_grade_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Grade: button clicked: ok")
+
 
 async def btn_grade_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Grade: button clicked: setback")

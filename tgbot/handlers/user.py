@@ -38,7 +38,8 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, repo: Repo,
         state_data = {
             'user_data': {
                 'user_id': user.id,
-                'user_name': create_user_name_text(user.name, i18n),
+                'user_name': user.name,
+                'user_name_show': create_user_name_text(user.name, i18n),
             }
         }
 

@@ -89,8 +89,7 @@ aboutme_dialog = Dialog(
 
     # Имя:
     Window(
-        Format("{win_name_h}\n"),
-        Format("{win_name_txt}"),
+        Format("{win_name}\n"),
         TextInput(
             id="inp_name",
             type_factory=inp_name_check,
@@ -98,6 +97,11 @@ aboutme_dialog = Dialog(
             on_error=inp_name_error,
         ),
         Row(
+            Button(
+                text=Format('{btn_name_ok}'),
+                id='btn_name_ok',
+                on_click=btn_name_ok_clicked
+            ),
             Button(
                 text=Format('{btn_name_setback}'),
                 id='btn_name_setback',
@@ -128,6 +132,11 @@ aboutme_dialog = Dialog(
             on_error=inp_age_error,
         ),
         Row(
+            Button(
+                text=Format('{btn_age_ok}'),
+                id='btn_age_ok',
+                on_click=btn_age_ok_clicked
+            ),
             Button(
                 text=Format('{btn_age_setback}'),
                 id='btn_age_setback',
@@ -164,12 +173,17 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_gender_ok}'),
                 id='btn_gender_ok',
-                on_click=btn_gender_ok_clicked,
+                on_click=btn_gender_ok_clicked
+            ),
+            Button(
+                text=Format('{btn_gender_setback}'),
+                id='btn_gender_setback',
+                on_click=btn_gender_setback_clicked
             ),
             Button(
                 text=Format('{btn_gender_clear}'),
                 id='btn_gender_clear',
-                on_click=btn_gender_clear_clicked,
+                on_click=btn_gender_clear_clicked
             ),
             SwitchTo(
                 text=Format('{btn_gender_cancel}'),
@@ -191,6 +205,11 @@ aboutme_dialog = Dialog(
             on_error=inp_age_error,
         ),
         Row(
+            Button(
+                text=Format('{btn_status_ok}'),
+                id='btn_status_ok',
+                on_click=btn_status_ok_clicked
+            ),
             Button(
                 text=Format('{btn_status_setback}'),
                 id='btn_status_setback',
@@ -228,6 +247,11 @@ aboutme_dialog = Dialog(
         ),
         Row(
             Button(
+                text=Format('{btn_grade_ok}'),
+                id='btn_grade_ok',
+                on_click=btn_grade_ok_clicked
+            ),
+            Button(
                 text=Format('{btn_grade_setback}'),
                 id='btn_grade_setback',
                 on_click=btn_grade_setback_clicked
@@ -245,5 +269,24 @@ aboutme_dialog = Dialog(
         ),
         getter=get_grade,
         state=Aboutme.grade,
+    ),
+
+    # Да/Нет Имя
+    Window(
+        Format("{win_yesno_name}"),
+        Row(
+            SwitchTo(
+                text=Format('{btn_yesno_name_yes}'),
+                id='btn_yesno_name_yes',
+                state=Aboutme.profile
+            ),
+            Button(
+                text=Format('{btn_yesno_name_no}'),
+                id='btn_yesno_name_no',
+                on_click=btn_grade_setback_clicked
+            ),
+        ),
+        getter=get_yesno_name,
+        state=Aboutme.yesno_name,
     ),
 )

@@ -34,7 +34,7 @@ async def get_start(dialog_manager: DialogManager,
         await state.set_state(Start.dialog)
 
     return {
-        'user_name': dialog_manager.start_data['user_name'],
+        'user_name': dialog_manager.start_data['user_name_show'],
         'win_start': i18n.win.start(),
         'btn_psychology': i18n.btn.start.psychology(),
         'btn_tests': i18n.btn.start.tests(),

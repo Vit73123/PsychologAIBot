@@ -75,19 +75,19 @@ async def get_profile(
 
     return {
         "win_profile_aboutme": aboutme_txt,
-        "win_profile_h_status": i18n.win.aboutme.profile.h.status(),
+        "win_profile_h_status": i18n.win.profile.h.status(),
         "win_profile_status": status_txt,
-        "win_profile_h_grade": i18n.win.aboutme.profile.h.grade(),
+        "win_profile_h_grade": i18n.win.profile.h.grade(),
         "win_profile_grade": grade_txt,
-        "btn_profile_name": i18n.btn.aboutme.profile.name(),
-        "btn_profile_age": i18n.btn.aboutme.profile.age(),
-        "btn_profile_gender": i18n.btn.aboutme.profile.gender(),
-        "btn_profile_status": i18n.btn.aboutme.profile.status(),
-        "btn_profile_grade": i18n.btn.aboutme.profile.grade(),
+        "btn_profile_name": i18n.btn.profile.name(),
+        "btn_profile_age": i18n.btn.profile.age(),
+        "btn_profile_gender": i18n.btn.profile.gender(),
+        "btn_profile_status": i18n.btn.profile.status(),
+        "btn_profile_grade": i18n.btn.profile.grade(),
         "btn_profile_ok": i18n.btn.ok(),
         "btn_profile_setback": i18n.btn.setback(),
         "btn_profile_clear": i18n.btn.clear(),
-        "btn_profile_cancel": i18n.btn.cancel.getback(),
+        "btn_profile_cancel": i18n.btn.cancel(),
     }
 
 
@@ -103,14 +103,13 @@ async def get_name(
 
     state_data = await state.get_data()
     user: UserDAO = state_data['user']
-    name_txt: str = create_name_text(user, dialog_manager, i18n)
 
     return {
-        "win_name_h": name_txt,
-        "win_name_txt": i18n.win.aboutme.name.txt(),
+        "win_name": i18n.win.name(),
+        "btn_name_ok": i18n.btn.ok(),
         "btn_name_setback": i18n.btn.setback(),
         "btn_name_clear": i18n.btn.clear(),
-        "btn_name_cancel": i18n.btn.cancel.getback(),
+        "btn_name_cancel": i18n.btn.cancel(),
     }
 
 
@@ -125,10 +124,11 @@ async def get_age(
     log_dev.debug(" Age: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
-        "win_age": i18n.win.aboutme.profile.age(),
+        "win_age": i18n.win.age(),
+        "btn_age_ok": i18n.btn.ok(),
         "btn_age_setback": i18n.btn.setback(),
         "btn_age_clear": i18n.btn.clear(),
-        "btn_age_cancel": i18n.btn.cancel.getback(),
+        "btn_age_cancel": i18n.btn.cancel(),
     }
 
 
@@ -143,13 +143,14 @@ async def get_gender(
     log_dev.debug(" Gender: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     gender = [
-        (i18n.btn.aboutme.profile.gender.male(), '1'),
-        (i18n.btn.aboutme.profile.gender.female(), '2'),
+        (i18n.btn.gender.male(), '1'),
+        (i18n.btn.gender.female(), '2'),
     ]
     return {
-        "win_gender": i18n.win.aboutme.profile.gender(),
+        "win_gender": i18n.win.gender(),
         "radio_gender": gender,
         "btn_gender_ok": i18n.btn.ok(),
+        "btn_gender_setback": i18n.btn.setback(),
         "btn_gender_clear": i18n.btn.clear(),
         "btn_gender_cancel": i18n.btn.cancel(),
     }
@@ -166,7 +167,8 @@ async def get_status(
     log_dev.debug(" Status: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
-        "win_status": i18n.win.aboutme.profile.status(),
+        "win_status": i18n.win.status(),
+        "btn_status_ok": i18n.btn.ok(),
         "btn_status_setback": i18n.btn.setback(),
         "btn_status_clear": i18n.btn.clear(),
         "btn_status_cancel": i18n.btn.cancel(),
@@ -187,9 +189,26 @@ async def get_grade(
               ("-1 🫤", '6'), ("-2 🙁", '7'), ("-3 😟", '8'), ("-4 😧", '9'), ("-5 🥵", '10'),
               ("😑 Мне всё безразлично", 11)]
     return {
-        "win_grade": i18n.win.aboutme.profile.grade(),
+        "win_grade": i18n.win.grade(),
+        "btn_grade_ok": i18n.btn.ok(),
         "btn_grade_setback": i18n.btn.setback(),
         "btn_grade_clear": i18n.btn.clear(),
         "btn_grade_cancel": i18n.btn.cancel(),
         "radio_grade": grades,
+    }
+
+# Да/Нет Имя
+async def get_yesno_name(
+        dialog_manager: DialogManager,
+        state: FSMContext,
+        i18n: TranslatorRunner,
+        **kwargs
+) -> dict[str, str]:
+    log_dev.debug(" YesNo Name: get_status: context: %s", dialog_manager.current_context())
+    log_dev.debug(" YesNo Name: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+
+    return {
+        "win_yesno_name": i18n.win.yesno.name(),
+        "btn_yesno_name_yes": i18n.btn.yes(),
+        "btn_yesno-name-no": i18n.btn.no(),
     }
