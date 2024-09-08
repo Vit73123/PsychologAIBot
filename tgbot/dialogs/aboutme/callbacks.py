@@ -18,13 +18,15 @@ log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 
-# О себе
+# О себе ======================================================================================================
+
 async def btn_aboutme_profile_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log.debug(" About me: button clicked: next: to Profile")
     await dialog_manager.next()
 
 
-# Профиль
+# Профиль =====================================================================================================
+
 async def btn_profile_name_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: name: to Name")
 
@@ -46,6 +48,8 @@ async def btn_profile_gender_clicked(callback: CallbackQuery, button: Button, di
     await dialog_manager.switch_to(state=Aboutme.gender)
 
 
+# -------------------------------------------------------------------------------------------------------------
+
 async def btn_profile_status_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: status: to Status")
 
@@ -58,10 +62,15 @@ async def btn_profile_grade_clicked(callback: CallbackQuery, button: Button, dia
     await dialog_manager.switch_to(state=Aboutme.grade)
 
 
+# -------------------------------------------------------------------------------------------------------------
+
 async def btn_profile_ok_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: ok: to Aboutme")
     # TODO: Сохранение в базе данных, если данные изменялись: user_upd,status_upd
-    await dialog_manager.back()
+    updated_items: set = dialog_manager.dialog_data.get('updated_items')
+    if updated_items:
+        log_dev.debug(" Profile: button clicked: ok: context: %s", dialog_manager.current_context())
+    await dialog_manager.switch_to(Aboutme.profile)
 
 
 async def btn_profile_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -70,6 +79,10 @@ async def btn_profile_setback_clicked(callback: CallbackQuery, button: Button, d
     dialog_manager.current_context().dialog_data.clear()
     dialog_manager.current_context().widget_data.clear()
     dialog_manager.dialog_data.update({'updated_items': set()})
+
+    log_dev.debug(" Profile: button clicked: ok: context: %s", dialog_manager.current_context())
+
+    await dialog_manager.switch_to(Aboutme.profile)
 
 
 async def btn_profile_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
