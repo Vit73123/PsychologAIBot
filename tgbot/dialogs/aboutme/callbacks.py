@@ -10,6 +10,7 @@ from fluentogram import TranslatorRunner
 
 from tgbot.dialogs.states import Aboutme
 from tgbot.tools.logger import get_logger_dev
+from tgbot.utils.dialogs import set_profile_empty
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
@@ -88,6 +89,10 @@ async def btn_profile_setback_clicked(callback: CallbackQuery, button: Button, d
 async def btn_profile_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: clear")
     # TODO: Сбросить все данные диалога: сбросить FSMContext user
+    log_dev.debug(" Profile: button clicked: clear: context: %s", dialog_manager.current_context())
+    set_profile_empty(dialog_manager)
+    log_dev.debug(" Profile: button clicked: clear: context: %s", dialog_manager.current_context())
+    await dialog_manager.switch_to(Aboutme.profile)
 
 
 # Имя =========================================================================================================
@@ -95,7 +100,7 @@ async def btn_profile_clear_clicked(callback: CallbackQuery, button: Button, dia
 def inp_name_check(text: str) -> str:
     log_dev.debug(" Name: input text: check")
     pattern = re.compile("^[a-zA-Zа-яА-ЯёЁ ]+$")
-    if pattern.search(text):
+    if pattern.search(text) or text == '':
         return text.strip()
     else:
         raise ValueError
@@ -157,10 +162,12 @@ async def btn_name_cancel_clicked(callback: CallbackQuery, button: Button, dialo
 
 # Возраст =====================================================================================================
 
-def inp_age_check(text: str) -> int:
+def inp_age_check(text: str) -> int | str:
     log_dev.debug(" Age: input text: check")
     if text.isdigit() and (5 <= int(text) <= 150):
         return int(text)
+    elif text == '':
+        return ''
     else:
         raise ValueError
 

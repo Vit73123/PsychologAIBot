@@ -26,7 +26,7 @@ async def get_aboutme(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Aboutme: get_aboutme: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Aboutme: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Aboutme: get_aboutme: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
         "win_aboutme": i18n.win.aboutme(),
@@ -45,7 +45,7 @@ async def get_profile(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Profile: get_profile: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Profile: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Profile: get_profile: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     state_data = await state.get_data()
 
@@ -99,7 +99,7 @@ async def get_name(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Name: get_name: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Name: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Name: get_name: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     state_data = await state.get_data()
     user: UserDAO = state_data['user']
@@ -121,7 +121,7 @@ async def get_age(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Age: get_age: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Age: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Age: get_age: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
         "win_age": i18n.win.age(),
@@ -140,7 +140,7 @@ async def get_gender(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Gender: get_gender: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Gender: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Gender: get_gender: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     gender = [
         (i18n.btn.gender.male(), '1'),
@@ -164,7 +164,7 @@ async def get_status(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Status: get_status: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Status: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Status: get_status: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
         "win_status": i18n.win.status(),
@@ -183,7 +183,7 @@ async def get_grade(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Grade: get_grade: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Grade: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Grade: get_grade: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     grades = [("+1 😏", '1'), ("+2 😌", '2'), ("+3 🙂", '3'), ("+4 😀", '4'), ("+5 😆", '5'),
               ("-1 🫤", '6'), ("-2 🙁", '7'), ("-3 😟", '8'), ("-4 😧", '9'), ("-5 🥵", '10'),
@@ -205,7 +205,7 @@ async def get_yesno_name(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" YesNo Name: get_status: context: %s", dialog_manager.current_context())
-    log_dev.debug(" YesNo Name: get_start: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" YesNo Name: get_status: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
         "win_yesno_name": i18n.win.yesno.name(),

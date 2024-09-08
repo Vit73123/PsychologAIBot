@@ -91,7 +91,7 @@ aboutme_dialog = Dialog(
     Window(
         Format("{win_name}\n"),
         TextInput(
-            id="inp_name",
+            id="name",
             type_factory=inp_name_check,
             on_success=inp_name_success,
             on_error=inp_name_error,
@@ -124,9 +124,9 @@ aboutme_dialog = Dialog(
 
     # Возраст:
     Window(
-        Format("{win_age}"),
+        Format("{win-age}"),
         TextInput(
-            id="inp_age",
+            id="age",
             type_factory=inp_age_check,
             on_success=inp_age_success,
             on_error=inp_age_error,
@@ -159,12 +159,12 @@ aboutme_dialog = Dialog(
 
     # Пол:
     Window(
-        Format("{win_gender}"),
+        Format("{win-gender}"),
         Row(
             Radio(
                 checked_text=Format('[✔ {item[0]} ]'),
                 unchecked_text=Format('[ {item[0]} ]'),
-                id='radio_gender',
+                id='gender',
                 item_id_getter=operator.itemgetter(1),
                 items='radio_gender',
             ),
@@ -199,7 +199,7 @@ aboutme_dialog = Dialog(
     Window(
         Format("{win_status}"),
         TextInput(
-            id="inp_status",
+            id="status",
             type_factory=inp_status_check,
             on_success=inp_status_success,
             on_error=inp_age_error,
@@ -238,7 +238,7 @@ aboutme_dialog = Dialog(
                 Radio(
                     checked_text=Format('✔ {item[0]}'),
                     unchecked_text=Format('{item[0]}'),
-                    id='radio_grade',
+                    id='grade',
                     item_id_getter=operator.itemgetter(1),
                     items='radio_grade'
                 ),
