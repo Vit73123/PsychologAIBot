@@ -24,7 +24,7 @@ aboutme_dialog = Dialog(
             id='btn_aboutme_profile',
             on_click=btn_aboutme_profile_click,
         ),
-        Cancel(Format('{btn_aboutme_getback_home}'), id='btn_aboutme_getback_home'),
+        Cancel(text=Format('{btn_aboutme_getback_home}'), id='btn_aboutme_getback_home'),
         getter=get_aboutme,
         state=Aboutme.start,
     ),
@@ -82,7 +82,7 @@ aboutme_dialog = Dialog(
                 id='btn_profile_clear',
                 on_click=btn_profile_clear_click
             ),
-            Back(Format('{btn_profile_cancel}'), id='btn_profile_cancel'),
+            Back(text=Format('{btn_profile_cancel}'), id='btn_profile_cancel'),
         ),
         getter=get_profile,
         state=Aboutme.profile,
@@ -90,7 +90,8 @@ aboutme_dialog = Dialog(
 
     # Имя
     Window(
-        Format("{win_name}\n"),
+        Format("{win_name} <b>{txt_username}?</b>\n"),
+        Format("{win_name_txt}"),
         TextInput(
             id="name",
             type_factory=inp_name_check,
@@ -98,11 +99,7 @@ aboutme_dialog = Dialog(
             on_error=inp_name_error,
         ),
         Row(
-            Button(
-                text=Format('{btn_name_ok}'),
-                id='btn_name_ok',
-                on_click=btn_name_ok_click
-            ),
+            Back(Format('{btn_name_ok}'), id='btn_name_ok'),
             Button(
                 text=Format('{btn_name_reset}'),
                 id='btn_name_reset',

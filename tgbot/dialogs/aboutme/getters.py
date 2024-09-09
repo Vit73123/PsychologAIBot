@@ -8,7 +8,10 @@ from fluentogram import TranslatorRunner
 from tgbot.db import Repo
 from tgbot.db.dao import StatusDAO, UserDAO
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils.dialogs import create_aboutme_text, create_status_text, create_grade_text
+from tgbot.utils.dialogs import (create_aboutme_text,
+                                 create_status_text,
+                                 create_grade_text, )
+from tgbot.utils.dialogs.aboutme_utils import get_name_string
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -53,25 +56,16 @@ async def get_profile(
     if 'user' not in state_data:
         user: UserDAO = await repo.user.get(dialog_manager.start_data['user_id'])
         await state.update_data({'user': user})
-        dialog_manager.dialog_data.update({'updated': set()})
-    # Берём пользователя из контекста FSM, если он уже там есть
-    else:
-        user: UserDAO = state_data['user']
 
     # Добавляем состояние пользователя в контекст FSM, если его ещё там нет (ленивая загрузка из базы данных)
     if 'status' not in state_data:
         status: StatusDAO = await repo.status.get_last_by_user_id(dialog_manager.start_data['user_id'])
-        status_data = {'status': status}
-        state_data.update(status_data)
-        await state.update_data(status_data)
-    # Берём состояние пользователя из контекста FSM, если оно уже там есть
-    else:
-        status: StatusDAO = state_data['status']
+        await state.update_data({'status': status})
 
     # Создаём строку описания пользователя - первая строка с данными пользователя в свободном стиле
-    aboutme_txt = create_aboutme_text(user=user, dialog_manager=dialog_manager, i18n=i18n)
-    status_txt = create_status_text(status=status, dialog_manager=dialog_manager)
-    grade_txt = create_grade_text(status=status, dialog_manager=dialog_manager, grades=grades)
+    aboutme_txt = await create_aboutme_text(dialog_manager=dialog_manager, i18n=i18n)
+    status_txt = await create_status_text(dialog_manager=dialog_manager)
+    grade_txt = await create_grade_text(dialog_manager=dialog_manager, grades=grades)
 
     return {
         "win_profile_aboutme": aboutme_txt,
@@ -95,41 +89,24 @@ async def get_profile(
 async def get_name(
         state: FSMContext,
         dialog_manager: DialogManager,
-        user: UserDAO,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Name: get_name: context: %s", dialog_manager.current_context())
     log_dev.debug(" Name: get_name: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
-    # Инициализируем начальное состояние виджета: {old_value, old_updated, new_updated}
-    # new_value отдельно не сохраняем, т.к. берём из самого виджета
-    if 'item_state' not in dialog_manager.dialog_data:
-        updated: bool = 'name' in dialog_manager.dialog_data.get('updated')
-        if updated:
-            old_value: str = dialog_manager.current_context().widget_data['name']
-        else:
-            old_value: str = user.name
-        item_state = {
-            'old_value': old_value,
-            'new_value': old_value,
-            'updated': updated,
-        }
-
-        # Добавляем начальное состояние виджета в контекст диалога
-        dialog_manager.dialog_data.update({'item_state': item_state})
-
-        log_dev.debug(" Name: get_name: context: %s", dialog_manager.current_context())
-        log_dev.debug(" Name: get_name: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    user_name = await get_name_string(dialog_manager)
 
     return {
         "win_name": i18n.win.name(),
-        # "txt_username": state_data['updated_item']['old_value'],
+        "win_name_txt": i18n.win.name.txt(),
+        "txt_username": user_name,
         "btn_name_ok": i18n.btn.ok(),
         "btn_name_reset": i18n.btn.reset(),
         "btn_name_clear": i18n.btn.clear(),
         "btn_name_cancel": i18n.btn.cancel(),
     }
+
 
 # Возраст
 async def get_age(
@@ -148,6 +125,7 @@ async def get_age(
         "btn_age_clear": i18n.btn.clear(),
         "btn_age_cancel": i18n.btn.cancel(),
     }
+
 
 # Пол
 async def get_gender(
@@ -173,6 +151,7 @@ async def get_gender(
         "btn_gender_cancel": i18n.btn.cancel(),
     }
 
+
 # Состояние
 async def get_status(
         dialog_manager: DialogManager,
@@ -192,6 +171,7 @@ async def get_status(
         "btn_status_cancel": i18n.btn.cancel(),
     }
 
+
 # Оценка состояния
 async def get_grade(
         dialog_manager: DialogManager,
@@ -204,7 +184,7 @@ async def get_grade(
 
     grades = [("+1 😏", '1'), ("+2 😌", '2'), ("+3 🙂", '3'), ("+4 😀", '4'), ("+5 😆", '5'),
               ("-1 🫤", '6'), ("-2 🙁", '7'), ("-3 😟", '8'), ("-4 😧", '9'), ("-5 🥵", '10'),
-              ("😑 Мне всё безразлично", 11)]
+              ("😑 Мне всё безразлично", '11')]
     return {
         "win_grade": i18n.win.grade(),
         "btn_grade_ok": i18n.btn.ok(),
@@ -213,6 +193,7 @@ async def get_grade(
         "btn_grade_cancel": i18n.btn.cancel(),
         "radio_grade": grades,
     }
+
 
 # Да/Нет Имя
 async def get_yesno_name(

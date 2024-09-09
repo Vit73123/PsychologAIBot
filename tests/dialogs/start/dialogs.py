@@ -38,6 +38,16 @@ start_dialog = Dialog(
             id='btn_test_set',
             on_click=btn_test_set_click
         ),
+        Button(
+            text=Const("Удалить виджет"),
+            id='btn_test_remove',
+            on_click=btn_test_remove_click
+        ),
+        Button(
+            text=Const("Проверить репозиторий"),
+            id='btn_test_repo',
+            on_click=btn_test_repo_click
+        ),
         # SwitchTo(
         #     text=Const("Начать сеанс"),
         #     id='btn_psychology_start',

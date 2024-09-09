@@ -3,6 +3,7 @@ from aiogram_dialog.widgets.kbd import Button
 
 from tests.dialogs.states import *
 from tests.utils.dialog_utils import *
+from tgbot.db import Repo
 from tgbot.tools.logger import get_logger_dev
 
 # from typing import TYPE_CHECKING
@@ -15,23 +16,44 @@ log_dev = get_logger_dev(__name__, log.level)
 
 
 async def btn_test_check_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Test: btn_test_click: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Test: btn_test_check_click: context: %s", dialog_manager.current_context())
 
-    log_dev.debug(" Test: btn_test_click: inp_test: %s",
+    log_dev.debug(" Test: btn_test_check_click: inp_test: %s",
                   item_get_value(item_id='inp_test', dialog_manager=dialog_manager))
-    log_dev.debug(" Test: btn_test_click: radio_test: %s",
+    log_dev.debug(" Test: btn_test_check_click: radio_test: %s",
                   item_get_value(item_id='radio_test', dialog_manager=dialog_manager))
+
+    log_dev.debug(" Test: btn_test_check_click: state: %s",
+                  await dialog_manager.middleware_data['state'].get_data())
 
 
 async def btn_test_set_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Test: btn_test_click: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Test: btn_test_set_click: context: %s", dialog_manager.current_context())
 
-    log_dev.debug(" Test: btn_test_click: inp_test: %s",
+    log_dev.debug(" Test: btn_test_set_click: inp_test: %s",
                   item_set_value(item_id='inp_test', dialog_manager=dialog_manager))
-    log_dev.debug(" Test: btn_test_click: radio_test: %s",
+    log_dev.debug(" Test: btn_test_set_click: radio_test: %s",
                   item_set_value(item_id='radio_test', dialog_manager=dialog_manager))
 
     await dialog_manager.switch_to(state=Start.start)
+
+
+async def btn_test_remove_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Test: btn_test_remove_click: context: %s", dialog_manager.current_context())
+
+    dialog_manager.current_context().widget_data.pop('inp_test')
+
+    log_dev.debug(" Test: btn_test_remove_click: context: %s", dialog_manager.current_context())
+
+    await dialog_manager.switch_to(state=Start.start)
+
+
+async def btn_test_repo_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Test: btn_test_repo_click: context: %s", dialog_manager.current_context())
+
+    repo: Repo = dialog_manager.middleware_data.get('repo')
+
+    log_dev.debug(" Test: btn_test_repo_click: repo: %s", repo)
 
 
 def inp_test_check(text: str) -> str:

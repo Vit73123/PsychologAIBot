@@ -8,12 +8,17 @@ from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button, Radio
 from fluentogram import TranslatorRunner
 
+from tgbot.db import Repo
+from tgbot.db.dao import UserDAO
 from tgbot.dialogs.states import Aboutme
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils.dialogs import (profile_set_empty,
-                                 item_clear_state,
-                                 item_reset_to_state,
-                                 item_refresh_in_updated_items, )
+from tgbot.utils.dialogs import (item_reset,
+                                 item_clear,
+                                 item_set,
+                                 profile_reset,
+                                 profile_clear,
+                                 save_user,
+                                 save_status, )
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
@@ -70,31 +75,24 @@ async def btn_profile_grade_click(callback: CallbackQuery, button: Button, dialo
 
 async def btn_profile_ok_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: ok: to Aboutme")
-    # TODO: Сохранение в базе данных, если данные изменялись: user_upd,status_upd
-    updated_items: set = dialog_manager.dialog_data.get('updated_items')
-    if updated_items:
-        log_dev.debug(" Profile: button clicked: ok: context: %s", dialog_manager.current_context())
-    await dialog_manager.switch_to(Aboutme.profile)
+
+    await save_user(dialog_manager)
+    await save_status(dialog_manager)
+
+    await dialog_manager.back()
 
 
 async def btn_profile_reset_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: reset")
-    # TODO: Восстановить первоначальные данные диалога: сбросить FSMContext user_upd
-    dialog_manager.current_context().dialog_data.clear()
-    dialog_manager.current_context().widget_data.clear()
-    dialog_manager.dialog_data.update({'updated_items': set()})
 
-    log_dev.debug(" Profile: button clicked: ok: context: %s", dialog_manager.current_context())
-
+    profile_reset(dialog_manager)
     await dialog_manager.switch_to(Aboutme.profile)
 
 
 async def btn_profile_clear_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: clear")
-    # TODO: Сбросить все данные диалога: сбросить FSMContext user
-    log_dev.debug(" Profile: button clicked: clear: context: %s", dialog_manager.current_context())
-    profile_set_empty(dialog_manager)
-    log_dev.debug(" Profile: button clicked: clear: context: %s", dialog_manager.current_context())
+
+    profile_clear(dialog_manager)
     await dialog_manager.switch_to(Aboutme.profile)
 
 
@@ -113,12 +111,7 @@ async def inp_name_success(message: Message, widget: ManagedTextInput, dialog_ma
                            text: str) -> None:
     log_dev.debug(" Name: input text: succeed")
 
-    # updated_items: set = dialog_manager.dialog_data.get('updated_items')
-    # if 'name' not in updated_items:
-    #     updated_items.add('name')
-    #     dialog_manager.dialog_data.update({'updated_items': updated_items})
-    #
-    # await dialog_manager.switch_to(state=Aboutme.name)
+    item_set(value=text, item_id='name', dialog_manager=dialog_manager)
 
 
 async def inp_name_error(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
@@ -132,43 +125,24 @@ async def inp_name_error(message: Message, widget: ManagedTextInput, dialog_mana
 
 # -------------------------------------------------------------------------------------------------------------
 
-async def btn_name_ok_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Name: button clicked: ok")
-
-    # Обновляем updated_items в соответствии с состоянием виджета (updated=True/False)
-    item_refresh_in_updated_items(item_id='name', dialog_manager=dialog_manager)
-
-    # Удаляем начальное состояние виджета из контекста диалога
-    dialog_manager.dialog_data.pop('item_state')
-
-    # Возвращаемся в основное окно Profile со всеми изменениями виджета: значение, состояние updated
-    await dialog_manager.back()
-
-
 async def btn_name_reset_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Name: button clicked: reset")
 
-    item_reset_to_state('name', dialog_manager=dialog_manager)
+    item_reset(item_id='name', dialog_manager=dialog_manager)
     await dialog_manager.switch_to(state=Aboutme.name)
 
 
 async def btn_name_clear_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Name: button clicked: clear")
 
-    item_clear_state(item_id='name', dialog_manager=dialog_manager)
+    item_clear(item_id='name', dialog_manager=dialog_manager)
     await dialog_manager.switch_to(state=Aboutme.name)
 
 
 async def btn_name_cancel_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Name: button clicked: cancel")
 
-    # Восстанавливаем состояние виджета до начального
-    item_reset_to_state(item_id='name', dialog_manager=dialog_manager)
-
-    # Удаляем начальное состояние виджета из контекста диалога
-    dialog_manager.dialog_data.pop('item_state')
-
-    # Возвращаемся в основное окно Profile без каких-либо изменений виджета
+    item_reset(item_id='name', dialog_manager=dialog_manager)
     await dialog_manager.back()
 
 

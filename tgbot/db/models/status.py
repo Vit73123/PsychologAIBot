@@ -22,7 +22,7 @@ class Status(Base):
     def __repr__(self):
         return (f"id={self.id} "
                 f"user_id={self.user_id} "
-                f"text={self.status_text} "
+                f"status_text={self.status_text} "
                 f"grade={self.grade} "
                 f"created_at={self.created_at} "
                 f"updated_at={self.updated_at}")

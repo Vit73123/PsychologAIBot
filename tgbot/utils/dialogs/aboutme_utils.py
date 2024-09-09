@@ -2,19 +2,20 @@ from logging import getLogger
 
 from aiogram_dialog import DialogManager
 
-from tgbot.db.dao import UserDAO, StatusDAO
 from tgbot.tools.logger import get_logger_dev
 from .text_utils import *
+from ...db import Repo
+from ...db.dao import UserDAO, StatusDAO
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
 
 # О себе
-def create_aboutme_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
-    name: str = create_name_text(user, dialog_manager, i18n)
-    age: str = create_age_text(user, dialog_manager, i18n)
-    gender: str = create_gender_text(user, dialog_manager, i18n)
+async def create_aboutme_text(dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
+    name: str = await create_name_text(dialog_manager, i18n)
+    age: str = await create_age_text(dialog_manager, i18n)
+    gender: str = await create_gender_text(dialog_manager, i18n)
 
     if age and name:
         age = lower_text(age)
@@ -27,188 +28,154 @@ def create_aboutme_text(user: UserDAO, dialog_manager: DialogManager, i18n: Tran
 
 
 # Имя
-def create_name_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
-    name: str = get_name_string(user, dialog_manager)
+async def create_name_text(dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
+    name: str = await get_item_value(item_id='name', host='user', dialog_manager=dialog_manager)
     return ' '.join([i18n.txt.name.before.short(), '<b>' + name + '</b>']) if name else ''
 
 
-def get_name_string(user: UserDAO, dialog_manager: DialogManager) -> str:
-    name: str = get_item_value('name', user, dialog_manager)
+async def get_name_string(dialog_manager: DialogManager) -> str:
+    name: str = await get_item_value(item_id='name', host='user', dialog_manager=dialog_manager)
     return create_name_string(name)
 
 
 # Возраст
-def create_age_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
-    age: int = get_item_value('age', user, dialog_manager)
+async def create_age_text(dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
+    age: int = await get_item_value(item_id='age', host='user', dialog_manager=dialog_manager)
     age_f_str: str = create_age_f_string(age, i18n)
 
     return ' '.join([i18n.txt.age.before.short(), '<b>' + age_f_str + '</b>']) if age else ''
 
 
-def get_age_string(user: UserDAO, dialog_manager: DialogManager) -> str:
-    age: int = get_item_value('age', user, dialog_manager)
+async def get_age_string(dialog_manager: DialogManager) -> str:
+    age: int = await get_item_value(item_id='age', host='user', dialog_manager=dialog_manager)
     return create_age_string(age)
 
 
-# Gender
-def create_gender_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
-    gender: Gender = get_item_value('gender', user, dialog_manager)
+# Пол
+async def create_gender_text(dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
+    gender: Gender = await get_item_value(item_id='gender', host='user', dialog_manager=dialog_manager)
     gender_f_str: str = create_gender_f_string(gender, i18n)
 
     return ' '.join([i18n.txt.gender.before.short() + ' -', '<b>' + gender_f_str + '</b>']) if gender_f_str else ''
 
 
-def get_gender_string(user: UserDAO, dialog_manager: DialogManager) -> str:
-    gender: Gender = get_item_value('gender', user, dialog_manager)
+async def get_gender_string(dialog_manager: DialogManager) -> str:
+    gender: Gender = await get_item_value(item_id='gender', host='user', dialog_manager=dialog_manager)
     return create_gender_string(gender)
 
 
-# Status
-def create_status_text(status: StatusDAO, dialog_manager: DialogManager) -> str:
-    status: str = get_status_string(status, dialog_manager)
+# Состояние
+async def create_status_text(dialog_manager: DialogManager) -> str:
+    status: str = await get_item_value(item_id='status_text', host='status', dialog_manager=dialog_manager)
     return create_status_string(status)
 
 
-def get_status_string(status: StatusDAO, dialog_manager: DialogManager) -> str:
-    status: str = get_item_value('status_text', status, dialog_manager)
+async def get_status_string(dialog_manager: DialogManager) -> str:
+    status: str = await get_item_value(item_id='status_text', host='status', dialog_manager=dialog_manager)
     return status if status else ''
 
 
-# Grade
-def create_grade_text(status: StatusDAO, dialog_manager: DialogManager, grades: dict) -> str:
-    grade: int = get_item_value('grade', status, dialog_manager)
+# Оценка состояния
+async def create_grade_text(dialog_manager: DialogManager, grades: dict) -> str:
+    grade: int = await get_item_value(item_id='grade', host='status', dialog_manager=dialog_manager)
     grade_str: str = create_grade_string(grade)
     grade_f_str = create_grade_f_string(grade)
 
     return '   '.join([grade_f_str, grades[grade_str]]) if grade else ''
 
 
-def get_grade_string(status: StatusDAO, dialog_manager: DialogManager) -> str:
-    grade: int = get_item_value('grade', status, dialog_manager)
+async def get_grade_string(dialog_manager: DialogManager) -> str:
+    grade: int = await get_item_value(item_id='grade', host='status', dialog_manager=dialog_manager)
     return create_grade_string(grade) if grade else ''
 
 
-# Get item value
-def get_item_value(item_id: str, obj: UserDAO | StatusDAO, dialog_manager: DialogManager) -> Gender | int | str | None:
+# Виджеты ====================================================================================================
+
+# Получить значение любого виджета, или None, если виджета нет, или его значение None
+async def get_item_value(item_id: str, host: str, dialog_manager: DialogManager) -> Gender | int | str | None:
     log_dev.debug(" get_item_value: item_id: %s", item_id)
-    value = None
-    if item_id in dialog_manager.dialog_data.get('updated'):
-        widget_data = dialog_manager.current_context().widget_data
-        if item_id in widget_data:
-            value = widget_data[item_id]
+    widget_data: dict = dialog_manager.current_context().widget_data
+    if item_id in widget_data:
+        return widget_data[item_id]
     else:
-        value = getattr(obj, item_id)
-    return value
+        state_data: dict = await dialog_manager.middleware_data['state'].get_data()
+        obj = state_data.get(host)
+        return getattr(obj, item_id)
 
 
-# Виджеты =====================================================================================================
+# Окна обработки Виджетов =====================================================================================
 
-# Восстановить временное состояние виджета до начального: значение, состояние в updated
-def item_reset_to_state(item_id: str, dialog_manager) -> None:
-    dialog_manager.dialog_data['item_state']['new_updated'] = dialog_manager.dialog_data['item_state']['old_updated']
-    dialog_manager.dialog_data['item_state']['new_updated'] = dialog_manager.dialog_data['item_state']['old_updated']
-
-
-# -------------------------------------------------------------------------------------------------------------
-
-# Виджет во временном состоянии: в окне виджета со снимком состояния item_state в dialog_data
-
-# Кнопки reset, clear окна обработки виджета
-
+# Кнопки Reset, Cancel
 def item_reset(item_id: str, dialog_manager: DialogManager) -> None:
-    item_reset_value(item_id=item_id, dialog_manager=dialog_manager)
-    item_reset_updated(item_id=item_id, dialog_manager=dialog_manager)
+    widget_data: dict = dialog_manager.current_context().widget_data
+    if item_id in widget_data:
+        widget_data.pop(item_id)
 
 
-def item_reset_value(item_id: str, dialog_manager: DialogManager) -> None:
-    log_dev.debug(" item_reset_value: item_id: %s", item_id)
-
-    dialog_manager.current_context().widget_data[item_id] = dialog_manager.dialog_data['item_state']['old_value']
-
-
-def item_reset_updated(item_id: str, dialog_manager: DialogManager) -> None:
-    log_dev.debug(" item_reset_updated: item_id: %s", item_id)
-
-    dialog_manager.dialog_data['item_state']['new_updated'] = dialog_manager.dialog_data['item_state']['old_updated']
+# Кнопка Clear
+def item_clear(item_id: str, dialog_manager: DialogManager) -> None:
+    dialog_manager.current_context().widget_data.update({item_id: None})
 
 
-# -------------------------------------------------------------------------------------------------------------
-
-# Кнопки ok, cancel окна обработки виджета
-
-# Задать "пустое" состояние виджета: значение, добавить в updated
-def item_clear(item_id: str, dialog_manager) -> None:
-    item_set_value(value=None, item_id=item_id, dialog_manager=dialog_manager)
-    item_add_to_updated(item_id, dialog_manager)
-
-
-# Установить только значение виджета: необходимо в cancel_click окна обработки виджета
-def item_set_value(value: str | int | None, item_id: str, dialog_manager) -> None:
+# Установить значение виджета
+def item_set(value: str | int | None, item_id: str, dialog_manager) -> None:
     dialog_manager.current_context().widget_data[item_id] = value
-    item_add_to_updated(item_id='name', dialog_manager=dialog_manager)
 
 
-# Обновить updated в соответствии с состоянием виджета: необходимо в ok_click окна обработки виджета
-def item_set_updated(item_id: str, dialog_manager: DialogManager):
-    item_state = dialog_manager.dialog_data['item_state']
-    if item_state['updated']:
-        item_add_to_updated(item_id)
-    else:
-        item_remove_from_updated(item_id)
+# Профиль =====================================================================================================
 
-
-# -------------------------------------------------------------------------------------------------------------
-
-# Восстановить профиль: задать значения "пустые" состояния для всех виджетов профиля: значения, состояния в updated
-# Значения при отображении не "подтягиваются" из базы данных, а фактически остаются "пустыми"
-def profile_clear(dialog_manager: DialogManager, ) -> None:
-    dialog_manager.current_context().widget_data.clear()
-    dialog_manager.dialog_data.update({
-        'updated': {
-            'name', 'age', 'gender', 'status_text', 'grade'}
-    })
-
-
-# "Очистить" значения всех виджетов.
-# В таком состоянии
-# - виджеты в состоянии "изменённый" (присутствуют в set updated)
-# при выводе "занимают место" начальных значений из базы данных.
-# - виджеты состояния "неизменённый" (отсутствуют в set updated),
-# при выводе "освобождают место" начальных значений из базы данных, включая новые значения None.
-def profile_clear_values(dialog_manager: DialogManager, ) -> None:
+# Кнопка Reset
+def profile_reset(dialog_manager: DialogManager) -> None:
     dialog_manager.current_context().widget_data.clear()
 
 
-# Сделать все ВИДЖЕТЫ "ИЗМЕНЁННЫМИ". Виджеты "занимают место" начальных значений из базы данных,
-# независимо от того, есть ли у виджета значение.
-# Значения виджетов Null будут отображаться пустыми строками "поверх" значений базы данных
-def profile_set_updated(dialog_manager: DialogManager, ) -> None:
-    dialog_manager.dialog_data.update({
-        'updated': {
-            'name', 'age', 'gender', 'status_text', 'grade'}
+# Кнопка Clear
+def profile_clear(dialog_manager: DialogManager) -> None:
+    dialog_manager.current_context().widget_data.update({
+        'name': None,
+        'age': None,
+        'gender': None,
+        'status_text': None,
+        'grade': None,
     })
 
 
-# Сделать все ВИДЖЕТЫ "НЕИЗМЕНЁННЫМИ". Виджеты "освобождают место" для начальных значений из базы данных.
-# независимо от того, есть ли у виджета значение.
-# Значения базы данных Null будут отображаться пустыми строками "поверх" значений виджетов
-def profile_clear_updated(dialog_manager: DialogManager, ) -> None:
-    dialog_manager.dialog_data.update({
-        'updated': set()
-    })
+# Сохранить пользователя
+async def save_user(dialog_manager: DialogManager) -> None:
+    widget_data = dialog_manager.current_context().widget_data
+
+    name: str = widget_data['name'] if 'name' in widget_data else None
+    age: int = widget_data['age'] if 'age' in widget_data else None
+    gender: str = create_grade_string(widget_data['gender']) if 'gender' in widget_data else None
+
+    state_data: dict = await dialog_manager.middleware_data['state'].get_data()
+    user: UserDAO = state_data.get('user')
+
+    if name:
+        user.name = name
+    if age:
+        user.age = age
+    if gender:
+        user.gender = gender
+
+    repo: Repo = dialog_manager.middleware_data.get('repo')
+    await repo.user.update(user)
 
 
-# -------------------------------------------------------------------------------------------------------------
+# Сохранить состояние
+async def save_status(dialog_manager: DialogManager) -> None:
+    widget_data = dialog_manager.current_context().widget_data
 
-# Добавить виджет в updated
-def item_add_to_updated(item_id: str, dialog_manager: DialogManager):
-    updated: set = dialog_manager.dialog_data.get('updated')
-    updated.add(item_id)
-    dialog_manager.dialog_data.update({'updated': updated})
+    status_text: str = widget_data['status_text'] if 'status_text' in widget_data else None
+    grade: int = int(create_grade_string(widget_data['grade'])) if 'grade' in widget_data else None
 
+    state_data: dict = await dialog_manager.middleware_data['state'].get_data()
+    status: StatusDAO = state_data.get('status')
 
-# Удалить виджет из updated
-def item_remove_from_updated(item_id: str, dialog_manager: DialogManager):
-    updated: set = dialog_manager.dialog_data.get('updated')
-    updated.discard(item_id)
-    dialog_manager.dialog_data.update({'updated': updated})
+    if status_text:
+        status.status_text = status_text
+    if grade:
+        status.grade = grade
+
+    repo: Repo = dialog_manager.middleware_data.get('repo')
+    await repo.status.update(status)

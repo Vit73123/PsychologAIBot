@@ -118,9 +118,9 @@ win-profile-h-grade = <b>{ emoji-grade } Моё состояние:</b>
 
 # Name --------------------------------------------------------------------------------------------
 
-win-name = <b>{ emoji-i-hi } { txt-name-before-long-v2 }?</b>
+win-name = <b>{ emoji-i-hi } { txt-name-before-long-v2 }</b>
 
-    { emoji-check } Приятно, если ко мне обращаются так, как мне это нравится { emoji-hands-handshake }.
+win-name-txt = { emoji-check } Приятно, если ко мне обращаются так, как мне это нравится { emoji-hands-handshake }.
 
 win-name-error = <b>{ emoji-i-wrong } Я ошибся:</b>
 

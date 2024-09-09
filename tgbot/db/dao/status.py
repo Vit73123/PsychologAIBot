@@ -8,6 +8,6 @@ class StatusDAO:
 
     def __repr__(self):
         return (f"id={self.id} "
-                f"text={self.status_text} "
+                f"status_text={self.status_text} "
                 f"grade={self.grade} "
                 f"user_id={self.user_id}")
