@@ -2,6 +2,7 @@ from logging import getLogger
 from typing import TYPE_CHECKING
 
 from aiogram.fsm.context import FSMContext
+from aiogram_dialog import DialogManager
 from fluentogram import TranslatorRunner
 
 from tgbot.config import Config
@@ -25,15 +26,22 @@ async def get_start(
         state: FSMContext,
         config: Config,
         repo: Repo,
+        dialog_manager: DialogManager,
         gpt: ChatGptService,
         i18n: TranslatorRunner,
 
         **kwargs
 ) -> dict[str, str]:
-    log.debug(" GPT: get_start: context: %s", await state.get_data())
+    log_dev.debug(" Test: get_grade: context: %s", dialog_manager.current_context())
+    log_dev.debug(" Test: get_grade: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
-    user: UserDAO = await repo.user.get(1)
-    status: StatusDAO = await repo.status.get_last_by_user_id(1)
+    radio_test = [
+        ('A', '1'),
+        ('B', '2'),
+    ]
+
+    # user: UserDAO = await repo.user.get(1)
+    # status: StatusDAO = await repo.status.get_last_by_user_id(1)
     # appointment: AppointmentDAO = await repo.appointment.get_last_by_user_id(1)
 
     # prompt = create_prompt(person_data=)
@@ -47,9 +55,10 @@ async def get_start(
     # }
     # await state.update_data(gpt)
     #
-    # log.debug(" Start: get_start: context: %s", await state.get_data())
+    # log_dev.debug(" Start: get_start: context: %s", await state.get_data())
     #
     return {
+        'radio_test': radio_test,
     }
 
 

@@ -2,6 +2,7 @@ import operator
 
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
+from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back, SwitchTo
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Format, Const
@@ -21,7 +22,7 @@ aboutme_dialog = Dialog(
         Button(
             text=Format('{btn_aboutme_profile}'),
             id='btn_aboutme_profile',
-            on_click=btn_aboutme_profile_clicked,
+            on_click=btn_aboutme_profile_click,
         ),
         Cancel(Format('{btn_aboutme_getback_home}'), id='btn_aboutme_getback_home'),
         getter=get_aboutme,
@@ -40,46 +41,46 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_profile_name}'),
                 id='btn_profile_name',
-                on_click=btn_profile_name_clicked
+                on_click=btn_profile_name_click
             ),
             Button(
                 text=Format('{btn_profile_age}'),
                 id='btn_profile_age',
-                on_click=btn_profile_age_clicked
+                on_click=btn_profile_age_click
             ),
             Button(
                 text=Format('{btn_profile_gender}'),
                 id='btn_profile_gender',
-                on_click=btn_profile_gender_clicked
+                on_click=btn_profile_gender_click
             ),
         ),
         Row(
             Button(
                 text=Format('{btn_profile_status}'),
                 id='btn_profile_status',
-                on_click=btn_profile_status_clicked
+                on_click=btn_profile_status_click
             ),
             Button(
                 text=Format('{btn_profile_grade}'),
                 id='btn_profile_grade',
-                on_click=btn_profile_grade_clicked
+                on_click=btn_profile_grade_click
             ),
         ),
         Row(
             Button(
                 text=Format('{btn_profile_ok}'),
                 id='btn_profile_ok',
-                on_click=btn_profile_ok_clicked
+                on_click=btn_profile_ok_click
             ),
             Button(
                 text=Format('{btn_profile_reset}'),
                 id='btn_profile_reset',
-                on_click=btn_profile_reset_clicked
+                on_click=btn_profile_reset_click
             ),
             Button(
                 text=Format('{btn_profile_clear}'),
                 id='btn_profile_clear',
-                on_click=btn_profile_clear_clicked
+                on_click=btn_profile_clear_click
             ),
             Back(Format('{btn_profile_cancel}'), id='btn_profile_cancel'),
         ),
@@ -100,22 +101,22 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_name_ok}'),
                 id='btn_name_ok',
-                on_click=btn_name_ok_clicked
+                on_click=btn_name_ok_click
             ),
             Button(
                 text=Format('{btn_name_reset}'),
                 id='btn_name_reset',
-                on_click=btn_name_reset_clicked
+                on_click=btn_name_reset_click
             ),
             Button(
                 text=Format('{btn_name_clear}'),
                 id='btn_name_clear',
-                on_click=btn_name_clear_clicked
+                on_click=btn_name_clear_click
             ),
-            SwitchTo(
+            Button(
                 text=Format('{btn_name_cancel}'),
                 id='btn_name_cancel',
-                state=Aboutme.profile
+                on_click=btn_name_cancel_click
             ),
         ),
         getter=get_name,
@@ -135,17 +136,17 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_age_ok}'),
                 id='btn_age_ok',
-                on_click=btn_age_ok_clicked
+                on_click=btn_age_ok_click
             ),
             Button(
                 text=Format('{btn_age_reset}'),
                 id='btn_age_reset',
-                on_click=btn_age_reset_clicked
+                on_click=btn_age_reset_click
             ),
             Button(
                 text=Format('{btn_age_clear}'),
                 id='btn_age_clear',
-                on_click=btn_age_clear_clicked
+                on_click=btn_age_clear_click
             ),
             SwitchTo(
                 text=Format('{btn_age_cancel}'),
@@ -173,17 +174,17 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_gender_ok}'),
                 id='btn_gender_ok',
-                on_click=btn_gender_ok_clicked
+                on_click=btn_gender_ok_click
             ),
             Button(
                 text=Format('{btn_gender_reset}'),
                 id='btn_gender_reset',
-                on_click=btn_gender_reset_clicked
+                on_click=btn_gender_reset_click
             ),
             Button(
                 text=Format('{btn_gender_clear}'),
                 id='btn_gender_clear',
-                on_click=btn_gender_clear_clicked
+                on_click=btn_gender_clear_click
             ),
             SwitchTo(
                 text=Format('{btn_gender_cancel}'),
@@ -208,17 +209,17 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_status_ok}'),
                 id='btn_status_ok',
-                on_click=btn_status_ok_clicked
+                on_click=btn_status_ok_click
             ),
             Button(
                 text=Format('{btn_status_reset}'),
                 id='btn_status_reset',
-                on_click=btn_status_reset_clicked
+                on_click=btn_status_reset_click
             ),
             Button(
                 text=Format('{btn_status_clear}'),
                 id='btn_status_clear',
-                on_click=btn_status_clear_clicked
+                on_click=btn_status_clear_click
             ),
             SwitchTo(
                 text=Format('{btn_status_cancel}'),
@@ -249,17 +250,17 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_grade_ok}'),
                 id='btn_grade_ok',
-                on_click=btn_grade_ok_clicked
+                on_click=btn_grade_ok_click
             ),
             Button(
                 text=Format('{btn_grade_reset}'),
                 id='btn_grade_reset',
-                on_click=btn_grade_reset_clicked
+                on_click=btn_grade_reset_click
             ),
             Button(
                 text=Format('{btn_grade_clear}'),
                 id='btn_grade_clear',
-                on_click=btn_grade_clear_clicked
+                on_click=btn_grade_clear_click
             ),
             SwitchTo(
                 text=Format('{btn_grade_cancel}'),
@@ -283,7 +284,7 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_yesno_name_no}'),
                 id='btn_yesno_name_no',
-                on_click=btn_grade_reset_clicked
+                on_click=btn_grade_reset_click
             ),
         ),
         getter=get_yesno_name,

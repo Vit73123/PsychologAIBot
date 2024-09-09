@@ -53,7 +53,7 @@ async def get_profile(
     if 'user' not in state_data:
         user: UserDAO = await repo.user.get(dialog_manager.start_data['user_id'])
         await state.update_data({'user': user})
-        dialog_manager.dialog_data.update({'updated_items': set()})
+        dialog_manager.dialog_data.update({'updated': set()})
     # Берём пользователя из контекста FSM, если он уже там есть
     else:
         user: UserDAO = state_data['user']
@@ -95,16 +95,32 @@ async def get_profile(
 async def get_name(
         state: FSMContext,
         dialog_manager: DialogManager,
+        user: UserDAO,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Name: get_name: context: %s", dialog_manager.current_context())
     log_dev.debug(" Name: get_name: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
-    state_data: dict = await state.get_data()
-    if 'old_names' not in state_data:
-        state_data.update({'old_names': [dialog_manager.start_data['user_name']]})
-    log_dev.debug(" Name: get_name: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    # Инициализируем начальное состояние виджета: {old_value, old_updated, new_updated}
+    # new_value отдельно не сохраняем, т.к. берём из самого виджета
+    if 'item_state' not in dialog_manager.dialog_data:
+        updated: bool = 'name' in dialog_manager.dialog_data.get('updated')
+        if updated:
+            old_value: str = dialog_manager.current_context().widget_data['name']
+        else:
+            old_value: str = user.name
+        item_state = {
+            'old_value': old_value,
+            'new_value': old_value,
+            'updated': updated,
+        }
+
+        # Добавляем начальное состояние виджета в контекст диалога
+        dialog_manager.dialog_data.update({'item_state': item_state})
+
+        log_dev.debug(" Name: get_name: context: %s", dialog_manager.current_context())
+        log_dev.debug(" Name: get_name: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
         "win_name": i18n.win.name(),
@@ -114,7 +130,6 @@ async def get_name(
         "btn_name_clear": i18n.btn.clear(),
         "btn_name_cancel": i18n.btn.cancel(),
     }
-
 
 # Возраст
 async def get_age(
@@ -134,7 +149,6 @@ async def get_age(
         "btn_age_cancel": i18n.btn.cancel(),
     }
 
-
 # Пол
 async def get_gender(
         dialog_manager: DialogManager,
@@ -143,7 +157,8 @@ async def get_gender(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Gender: get_gender: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Gender: get_gender: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Gender: get_gender: FSM: state: %s, context: %s", await state.get_state(),
+                  await state.get_data())
 
     gender = [
         (i18n.btn.gender.male(), '1'),
@@ -158,7 +173,6 @@ async def get_gender(
         "btn_gender_cancel": i18n.btn.cancel(),
     }
 
-
 # Состояние
 async def get_status(
         dialog_manager: DialogManager,
@@ -167,7 +181,8 @@ async def get_status(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" Status: get_status: context: %s", dialog_manager.current_context())
-    log_dev.debug(" Status: get_status: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" Status: get_status: FSM: state: %s, context: %s", await state.get_state(),
+                  await state.get_data())
 
     return {
         "win_status": i18n.win.status(),
@@ -176,7 +191,6 @@ async def get_status(
         "btn_status_clear": i18n.btn.clear(),
         "btn_status_cancel": i18n.btn.cancel(),
     }
-
 
 # Оценка состояния
 async def get_grade(
@@ -199,7 +213,6 @@ async def get_grade(
         "btn_grade_cancel": i18n.btn.cancel(),
         "radio_grade": grades,
     }
-
 
 # Да/Нет Имя
 async def get_yesno_name(
