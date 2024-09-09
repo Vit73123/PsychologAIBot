@@ -44,8 +44,8 @@ async def btn_profile_age_clicked(callback: CallbackQuery, button: Button, dialo
 async def btn_profile_gender_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: gender: to Gender")
 
-    radio_gender: Radio = dialog_manager.find('radio_gender')
-    dialog_manager.dialog_data.update({'radio_gender': radio_gender.get_checked()})
+    radio_gender: Radio = dialog_manager.find('gender')
+    dialog_manager.dialog_data.update({'gender': radio_gender.get_checked()})
     await dialog_manager.switch_to(state=Aboutme.gender)
 
 
@@ -146,7 +146,7 @@ async def btn_name_setback_clicked(callback: CallbackQuery, button: Button, dial
 async def btn_name_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Name: button clicked: clear")
 
-    inp_name: TextInput = dialog_manager.find('inp_name')
+    inp_name: TextInput = dialog_manager.find('name')
     inp_name.set_widget_data(manager=dialog_manager, value=None)
 
     updated_items: set = dialog_manager.dialog_data.get('updated_items')
@@ -221,7 +221,7 @@ async def btn_gender_ok_clicked(callback: CallbackQuery, button: Button, dialog_
     log_dev.debug(" Gender: button clicked: ok")
     log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
 
-    dialog_manager.dialog_data.pop('radio_gender')
+    dialog_manager.dialog_data.pop('gender')
 
     log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
     await dialog_manager.switch_to(state=Aboutme.profile)
@@ -235,7 +235,7 @@ async def btn_gender_clear_clicked(callback: CallbackQuery, button: Button, dial
     log_dev.debug(" Gender: button clicked: clear")
     log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
 
-    radio_gender: Radio = dialog_manager.find('radio_gender')
+    radio_gender: Radio = dialog_manager.find('gender')
     await radio_gender.set_checked(0)
 
 
@@ -243,9 +243,9 @@ async def btn_gender_cancel_clicked(callback: CallbackQuery, button: Button, dia
     log_dev.debug(" Gender: button clicked: ok")
     log_dev.debug(" Gender: context: %s", dialog_manager.current_context())
 
-    radio_gender: Radio = dialog_manager.find('radio_gender')
+    radio_gender: Radio = dialog_manager.find('gender')
     await radio_gender.set_checked(
-        dialog_manager.dialog_data.pop('radio_gender')
+        dialog_manager.dialog_data.pop('gender')
     )
 
     log_dev.debug(" Gender: context: %s", dialog_manager.current_context())

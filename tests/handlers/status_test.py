@@ -65,7 +65,7 @@ async def cmd_add_test(message: Message, repo: Repo, state: FSMContext, **kwargs
     user_id = 1
 
     status = StatusDAO(
-        text="New status",
+        status_text="New status",
         grade=5,
         user_id=user_id
     )
@@ -88,7 +88,7 @@ async def cmd_update_test(message: Message, state: FSMContext, repo: Repo, **kwa
     status = StatusDAO(
         status_id=1,
         user_id=user_id,
-        text="Updated status",
+        status_text="Updated status",
         grade=-5
     )
 

@@ -71,7 +71,7 @@ class UserRepo:
             a = aliased(Appointment)
 
             query = (
-                select(u.id, u.name, u.age, u.gender, label('status', s.text), s.grade, a.review)
+                select(u.id, u.name, u.age, u.gender, s.status_text, s.grade, a.review)
                 .join(s, and_(u.id == s.user_id))
                 .join(a, and_(u.id == a.user_id))
                 .order_by(s.updated_at, a.updated_at)

@@ -54,14 +54,14 @@ def get_age_string(user: UserDAO, dialog_manager: DialogManager) -> str:
 
 # Gender
 def create_gender_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
-    gender: Gender = get_item_checked('gender', user, dialog_manager)
+    gender: Gender = get_item_value('gender', user, dialog_manager)
     gender_f_str: str = create_gender_f_string(gender, i18n)
 
     return ' '.join([i18n.txt.gender.before.short() + ' -', '<b>' + gender_f_str + '</b>']) if gender_f_str else ''
 
 
 def get_gender_string(user: UserDAO, dialog_manager: DialogManager) -> str:
-    gender: Gender = get_item_checked('gender', user, dialog_manager)
+    gender: Gender = get_item_value('gender', user, dialog_manager)
     return create_gender_string(gender)
 
 
@@ -72,13 +72,13 @@ def create_status_text(status: StatusDAO, dialog_manager: DialogManager) -> str:
 
 
 def get_status_string(status: StatusDAO, dialog_manager: DialogManager) -> str:
-    status: str = get_item_value('status_text', status, dialog_manager)
+    status: str = get_item_value('status', status, dialog_manager)
     return status if status else ''
 
 
 # Grade
 def create_grade_text(status: StatusDAO, dialog_manager: DialogManager, grades: dict) -> str:
-    grade: int = get_item_checked('grade', status, dialog_manager)
+    grade: int = get_item_value('grade', status, dialog_manager)
     grade_str: str = create_grade_string(grade)
     grade_f_str = create_grade_f_string(grade)
 
@@ -86,33 +86,18 @@ def create_grade_text(status: StatusDAO, dialog_manager: DialogManager, grades: 
 
 
 def get_grade_string(status: StatusDAO, dialog_manager: DialogManager) -> str:
-    grade: int = get_item_checked('grade', status, dialog_manager)
+    grade: int = get_item_value('grade', status, dialog_manager)
     return create_grade_string(grade) if grade else ''
 
 
 # Get item value
 def get_item_value(item_id: str, obj: UserDAO | StatusDAO, dialog_manager: DialogManager) -> Gender | int | str | None:
-    log_dev.debug(" get_item_value: item_id: %s", item_id)
     if item_id in dialog_manager.dialog_data.get('updated_items'):
         item: TextInput | Radio = dialog_manager.find(item_id)
-        log_dev.debug(" get_item_value: item.get_value(): %s", item.get_value())
-        return item.get_value()
+        result = item.get_value()
+        return result if result else getattr(obj, item_id)
     else:
-        log_dev.debug(" get_item_value: getattr(obj, item_id): %s", getattr(obj, item_id))
-        return getattr(obj, item_id)
-
-
-# Get item value
-def get_item_checked(item_id: str, obj: UserDAO | StatusDAO,
-                     dialog_manager: DialogManager) -> Gender | int | str | None:
-    log_dev.debug(" get_item_checked: item_id: %s", item_id)
-    if item_id in dialog_manager.dialog_data.get('updated_items'):
-        item: Radio = dialog_manager.find(item_id)
-        log_dev.debug(" get_item_checked: item.get_checked(): %s", item.get_checked())
-        return item.get_checked()
-    else:
-        log_dev.debug(" get_item_checked: getattr(obj, item_id): %s", getattr(obj, item_id))
-        return getattr(obj, item_id)
+        return None
 
 
 # Set profile empty
@@ -120,5 +105,5 @@ def set_profile_empty(dialog_manager: DialogManager, ) -> None:
     dialog_manager.current_context().widget_data.clear()
     dialog_manager.dialog_data.update({
         'updated_items': {
-            'name', 'age', 'gender', 'status_text', 'grade'}
+            'inp_name', 'inp_age', 'radio_gender', 'inp_status', 'radio_grade'}
     })

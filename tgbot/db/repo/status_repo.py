@@ -81,7 +81,7 @@ class StatusRepo:
         async with self.pool() as session:
             status = await session.get(Status, status.id)
 
-            status.text = status_dao.text
+            status.status_text = status_dao.status_text
             status.grade = status_dao.grade
 
             await session.commit()

@@ -4,7 +4,7 @@ from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back, SwitchTo
 from aiogram_dialog.widgets.media import StaticMedia
-from aiogram_dialog.widgets.text import Format
+from aiogram_dialog.widgets.text import Format, Const
 
 from .callbacks import *
 from .getters import *
@@ -124,7 +124,7 @@ aboutme_dialog = Dialog(
 
     # Возраст:
     Window(
-        Format("{win-age}"),
+        Format("{win_age}"),
         TextInput(
             id="age",
             type_factory=inp_age_check,
@@ -159,7 +159,7 @@ aboutme_dialog = Dialog(
 
     # Пол:
     Window(
-        Format("{win-gender}"),
+        Format("{win_gender}"),
         Row(
             Radio(
                 checked_text=Format('[✔ {item[0]} ]'),
@@ -199,7 +199,7 @@ aboutme_dialog = Dialog(
     Window(
         Format("{win_status}"),
         TextInput(
-            id="status",
+            id="status_text",
             type_factory=inp_status_check,
             on_success=inp_status_success,
             on_error=inp_age_error,

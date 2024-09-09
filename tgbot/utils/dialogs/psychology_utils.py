@@ -37,8 +37,8 @@ def create_prompt_text(user_data: dict, i18n: TranslatorRunner) -> str:
     else:
         gender_string = i18n.gpt.pmt.psycholog.person.gender.anonim()
 
-    if user_data['status']:
-        status_string = ' '.join([i18n.gpt.pmt.psycholog.person.status(), user_data['status']])
+    if user_data['status_text']:
+        status_string = ' '.join([i18n.gpt.pmt.psycholog.person.status(), user_data['status_text']])
     else:
         status_string = ''
 
