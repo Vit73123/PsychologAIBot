@@ -11,8 +11,8 @@ from fluentogram import TranslatorRunner
 from tgbot.db import Repo
 from tgbot.dialogs.states import Start
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils.db import create_user_from_bot, create_user_name_text
-from tgbot.utils.dialogs import reset_fsm
+from tgbot.utils.db import create_user_from_bot
+from tgbot.utils.dialogs import reset_fsm, create_show_name_string
 
 if TYPE_CHECKING:
     from tgbot.locales.stub import TranslatorRunner
@@ -39,7 +39,6 @@ async def cmd_start(message: Message, dialog_manager: DialogManager, repo: Repo,
             'user_data': {
                 'user_id': user.id,
                 'user_name': user.name,
-                'user_name_show': create_user_name_text(user.name, i18n),
             }
         }
 

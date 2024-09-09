@@ -24,7 +24,6 @@ if TYPE_CHECKING:
 async def get_aboutme(
         dialog_manager: DialogManager,
         state: FSMContext,
-        repo: Repo,
         i18n: TranslatorRunner,
         **kwargs
 ) -> dict[str, str]:

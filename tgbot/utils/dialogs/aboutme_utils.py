@@ -1,11 +1,12 @@
 from logging import getLogger
 
+from aiogram.fsm.context import FSMContext
 from aiogram_dialog import DialogManager
 
+from tgbot.db import Repo
+from tgbot.db.dao import UserDAO, StatusDAO
 from tgbot.tools.logger import get_logger_dev
 from .text_utils import *
-from ...db import Repo
-from ...db.dao import UserDAO, StatusDAO
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -36,6 +37,11 @@ async def create_name_text(dialog_manager: DialogManager, i18n: TranslatorRunner
 async def get_name_string(dialog_manager: DialogManager) -> str:
     name: str = await get_item_value(item_id='name', host='user', dialog_manager=dialog_manager)
     return create_name_string(name)
+
+
+async def show_name_string(dialog_manager: DialogManager) -> str:
+    name: str = await get_item_value(item_id='name', host='user', dialog_manager=dialog_manager)
+    return create_show_name_string(name)
 
 
 # Возраст
@@ -144,19 +150,20 @@ def profile_clear(dialog_manager: DialogManager) -> None:
 async def save_user(dialog_manager: DialogManager) -> None:
     widget_data = dialog_manager.current_context().widget_data
 
-    name: str = widget_data['name'] if 'name' in widget_data else None
-    age: int = widget_data['age'] if 'age' in widget_data else None
-    gender: str = create_grade_string(widget_data['gender']) if 'gender' in widget_data else None
-
-    state_data: dict = await dialog_manager.middleware_data['state'].get_data()
+    state: FSMContext = dialog_manager.middleware_data['state']
+    state_data: dict = await state.get_data()
     user: UserDAO = state_data.get('user')
 
-    if name:
-        user.name = name
-    if age:
-        user.age = age
-    if gender:
-        user.gender = gender
+    if 'name' in widget_data:
+        user_name = widget_data['name']
+        user.name = user_name
+
+        # Обновление имени пользователя в общем контексте state data
+        await state.update_data({'user_data': {'user_name': user_name}})
+    if 'age' in widget_data:
+        user.age = widget_data['age']
+    if 'gender' in widget_data:
+        user.gender = create_grade_string(widget_data['gender'])
 
     repo: Repo = dialog_manager.middleware_data.get('repo')
     await repo.user.update(user)
@@ -166,16 +173,13 @@ async def save_user(dialog_manager: DialogManager) -> None:
 async def save_status(dialog_manager: DialogManager) -> None:
     widget_data = dialog_manager.current_context().widget_data
 
-    status_text: str = widget_data['status_text'] if 'status_text' in widget_data else None
-    grade: int = int(create_grade_string(widget_data['grade'])) if 'grade' in widget_data else None
-
     state_data: dict = await dialog_manager.middleware_data['state'].get_data()
     status: StatusDAO = state_data.get('status')
 
-    if status_text:
-        status.status_text = status_text
-    if grade:
-        status.grade = grade
+    if 'status_text' in widget_data:
+        status.status_text = widget_data['status_text']
+    if 'grade' in widget_data:
+        status.grade = int(create_grade_string(widget_data['grade']))
 
     repo: Repo = dialog_manager.middleware_data.get('repo')
     await repo.status.update(status)

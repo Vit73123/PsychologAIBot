@@ -1,9 +1,6 @@
-from fluentogram import TranslatorRunner
-
 from tgbot.db.dao import UserDAO
 from tgbot.db.models import User
 from tgbot.errors.errors import *
-from tgbot.tools.jinja import escape_text
 from tgbot.tools.logger import get_logger_dev
 
 log = getLogger(__name__)
@@ -38,8 +35,7 @@ def create_user_from_dao(user_dao: UserDAO) -> User | None:
         user.age = user_dao.age
         return user
 
-
-def create_user_name_text(name: str, i18n: TranslatorRunner) -> str:
-    return escape_text(
-        i18n.txt.name.anonim() if not name else name
-    )
+# def create_user_name_text(name: str, i18n: TranslatorRunner) -> str:
+#     return escape_text(
+#         i18n.txt.name.anonim() if not name else name
+#     )

@@ -1,11 +1,18 @@
 from fluentogram import TranslatorRunner
 
 from tgbot.db.models.user import Gender
+from tgbot.tools.jinja import escape_text
 
 
 # Name
 def create_name_string(name: str) -> str:
     return name if name else ''
+
+
+def create_show_name_string(name: str, i18n: TranslatorRunner) -> str:
+    return escape_text(
+        i18n.txt.name.anonim() if not name else name
+    )
 
 
 # Age
