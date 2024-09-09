@@ -74,8 +74,8 @@ async def btn_profile_ok_clicked(callback: CallbackQuery, button: Button, dialog
     await dialog_manager.switch_to(Aboutme.profile)
 
 
-async def btn_profile_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Profile: button clicked: setback")
+async def btn_profile_reset_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Profile: button clicked: reset")
     # TODO: Восстановить первоначальные данные диалога: сбросить FSMContext user_upd
     dialog_manager.current_context().dialog_data.clear()
     dialog_manager.current_context().widget_data.clear()
@@ -110,12 +110,17 @@ async def inp_name_success(message: Message, widget: ManagedTextInput, dialog_ma
                            text: str) -> None:
     log_dev.debug(" Name: input text: succeed")
 
-    updated_items: set = dialog_manager.dialog_data.get('updated_items')
-    if 'name' not in updated_items:
-        updated_items.add('name')
-        dialog_manager.dialog_data.update({'updated_items': updated_items})
+    old_names: list = dialog_manager.dialog_data.get('old_names')
+    dialog_manager.dialog_data.update({
+        'old_names': old_names[-1] if old_names else []
+    })
 
-    await dialog_manager.switch_to(state=Aboutme.profile)
+    # updated_items: set = dialog_manager.dialog_data.get('updated_items')
+    # if 'name' not in updated_items:
+    #     updated_items.add('name')
+    #     dialog_manager.dialog_data.update({'updated_items': updated_items})
+    #
+    # await dialog_manager.switch_to(state=Aboutme.name)
 
 
 async def inp_name_error(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
@@ -133,8 +138,8 @@ async def btn_name_ok_clicked(callback: CallbackQuery, button: Button, dialog_ma
     log_dev.debug(" Name: button clicked: ok")
 
 
-async def btn_name_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Name: button clicked: setback")
+async def btn_name_reset_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Name: button clicked: reset")
 
     updated_items: set = dialog_manager.dialog_data.get('updated_items')
     updated_items.discard('name')
@@ -200,8 +205,8 @@ async def btn_age_ok_clicked(callback: CallbackQuery, button: Button, dialog_man
     log_dev.debug(" Age: button clicked: ok")
 
 
-async def btn_age_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Age: button clicked: setback")
+async def btn_age_reset_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Age: button clicked: reset")
     await dialog_manager.back()
 
 
@@ -227,8 +232,8 @@ async def btn_gender_ok_clicked(callback: CallbackQuery, button: Button, dialog_
     await dialog_manager.switch_to(state=Aboutme.profile)
 
 
-async def btn_gender_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Gender: button clicked: setback")
+async def btn_gender_reset_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Gender: button clicked: reset")
 
 
 async def btn_gender_clear_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
@@ -273,8 +278,8 @@ async def btn_status_ok_clicked(callback: CallbackQuery, button: Button, dialog_
     log_dev.debug(" Status: button clicked: ok")
 
 
-async def btn_status_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Status: button clicked: setback")
+async def btn_status_reset_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Status: button clicked: reset")
     await dialog_manager.back()
 
 
@@ -307,8 +312,8 @@ async def btn_grade_ok_clicked(callback: CallbackQuery, button: Button, dialog_m
     log_dev.debug(" Grade: button clicked: ok")
 
 
-async def btn_grade_setback_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Grade: button clicked: setback")
+async def btn_grade_reset_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Grade: button clicked: reset")
     await dialog_manager.back()
 
 

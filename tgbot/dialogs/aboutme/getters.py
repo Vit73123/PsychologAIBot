@@ -8,7 +8,7 @@ from fluentogram import TranslatorRunner
 from tgbot.db import Repo
 from tgbot.db.dao import StatusDAO, UserDAO
 from tgbot.tools.logger import get_logger_dev
-from tgbot.utils.dialogs import create_aboutme_text, create_status_text, create_grade_text, create_name_text
+from tgbot.utils.dialogs import create_aboutme_text, create_status_text, create_grade_text
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -85,7 +85,7 @@ async def get_profile(
         "btn_profile_status": i18n.btn.profile.status(),
         "btn_profile_grade": i18n.btn.profile.grade(),
         "btn_profile_ok": i18n.btn.ok(),
-        "btn_profile_setback": i18n.btn.setback(),
+        "btn_profile_reset": i18n.btn.reset(),
         "btn_profile_clear": i18n.btn.clear(),
         "btn_profile_cancel": i18n.btn.cancel(),
     }
@@ -101,13 +101,16 @@ async def get_name(
     log_dev.debug(" Name: get_name: context: %s", dialog_manager.current_context())
     log_dev.debug(" Name: get_name: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
-    state_data = await state.get_data()
-    user: UserDAO = state_data['user']
+    state_data: dict = await state.get_data()
+    if 'old_names' not in state_data:
+        state_data.update({'old_names': [dialog_manager.start_data['user_name']]})
+    log_dev.debug(" Name: get_name: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     return {
         "win_name": i18n.win.name(),
+        # "txt_username": state_data['updated_item']['old_value'],
         "btn_name_ok": i18n.btn.ok(),
-        "btn_name_setback": i18n.btn.setback(),
+        "btn_name_reset": i18n.btn.reset(),
         "btn_name_clear": i18n.btn.clear(),
         "btn_name_cancel": i18n.btn.cancel(),
     }
@@ -123,11 +126,10 @@ async def get_age(
     log_dev.debug(" Age: get_age: context: %s", dialog_manager.current_context())
     log_dev.debug(" Age: get_age: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
-
     return {
         "win_age": i18n.win.age(),
         "btn_age_ok": i18n.btn.ok(),
-        "btn_age_setback": i18n.btn.setback(),
+        "btn_age_reset": i18n.btn.reset(),
         "btn_age_clear": i18n.btn.clear(),
         "btn_age_cancel": i18n.btn.cancel(),
     }
@@ -151,7 +153,7 @@ async def get_gender(
         "win_gender": i18n.win.gender(),
         "radio_gender": gender,
         "btn_gender_ok": i18n.btn.ok(),
-        "btn_gender_setback": i18n.btn.setback(),
+        "btn_gender_reset": i18n.btn.reset(),
         "btn_gender_clear": i18n.btn.clear(),
         "btn_gender_cancel": i18n.btn.cancel(),
     }
@@ -170,7 +172,7 @@ async def get_status(
     return {
         "win_status": i18n.win.status(),
         "btn_status_ok": i18n.btn.ok(),
-        "btn_status_setback": i18n.btn.setback(),
+        "btn_status_reset": i18n.btn.reset(),
         "btn_status_clear": i18n.btn.clear(),
         "btn_status_cancel": i18n.btn.cancel(),
     }
@@ -192,11 +194,12 @@ async def get_grade(
     return {
         "win_grade": i18n.win.grade(),
         "btn_grade_ok": i18n.btn.ok(),
-        "btn_grade_setback": i18n.btn.setback(),
+        "btn_grade_reset": i18n.btn.reset(),
         "btn_grade_clear": i18n.btn.clear(),
         "btn_grade_cancel": i18n.btn.cancel(),
         "radio_grade": grades,
     }
+
 
 # Да/Нет Имя
 async def get_yesno_name(
@@ -206,7 +209,8 @@ async def get_yesno_name(
         **kwargs
 ) -> dict[str, str]:
     log_dev.debug(" YesNo Name: get_status: context: %s", dialog_manager.current_context())
-    log_dev.debug(" YesNo Name: get_status: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
+    log_dev.debug(" YesNo Name: get_status: FSM: state: %s, context: %s", await state.get_state(),
+                  await state.get_data())
 
     return {
         "win_yesno_name": i18n.win.yesno.name(),

@@ -72,9 +72,9 @@ aboutme_dialog = Dialog(
                 on_click=btn_profile_ok_clicked
             ),
             Button(
-                text=Format('{btn_profile_setback}'),
-                id='btn_profile_setback',
-                on_click=btn_profile_setback_clicked
+                text=Format('{btn_profile_reset}'),
+                id='btn_profile_reset',
+                on_click=btn_profile_reset_clicked
             ),
             Button(
                 text=Format('{btn_profile_clear}'),
@@ -87,7 +87,7 @@ aboutme_dialog = Dialog(
         state=Aboutme.profile,
     ),
 
-    # Имя:
+    # Имя
     Window(
         Format("{win_name}\n"),
         TextInput(
@@ -103,9 +103,9 @@ aboutme_dialog = Dialog(
                 on_click=btn_name_ok_clicked
             ),
             Button(
-                text=Format('{btn_name_setback}'),
-                id='btn_name_setback',
-                on_click=btn_name_setback_clicked
+                text=Format('{btn_name_reset}'),
+                id='btn_name_reset',
+                on_click=btn_name_reset_clicked
             ),
             Button(
                 text=Format('{btn_name_clear}'),
@@ -122,7 +122,7 @@ aboutme_dialog = Dialog(
         state=Aboutme.name,
     ),
 
-    # Возраст:
+    # Возраст
     Window(
         Format("{win_age}"),
         TextInput(
@@ -138,9 +138,9 @@ aboutme_dialog = Dialog(
                 on_click=btn_age_ok_clicked
             ),
             Button(
-                text=Format('{btn_age_setback}'),
-                id='btn_age_setback',
-                on_click=btn_age_setback_clicked
+                text=Format('{btn_age_reset}'),
+                id='btn_age_reset',
+                on_click=btn_age_reset_clicked
             ),
             Button(
                 text=Format('{btn_age_clear}'),
@@ -157,7 +157,7 @@ aboutme_dialog = Dialog(
         state=Aboutme.age,
     ),
 
-    # Пол:
+    # Пол
     Window(
         Format("{win_gender}"),
         Row(
@@ -176,9 +176,9 @@ aboutme_dialog = Dialog(
                 on_click=btn_gender_ok_clicked
             ),
             Button(
-                text=Format('{btn_gender_setback}'),
-                id='btn_gender_setback',
-                on_click=btn_gender_setback_clicked
+                text=Format('{btn_gender_reset}'),
+                id='btn_gender_reset',
+                on_click=btn_gender_reset_clicked
             ),
             Button(
                 text=Format('{btn_gender_clear}'),
@@ -211,9 +211,9 @@ aboutme_dialog = Dialog(
                 on_click=btn_status_ok_clicked
             ),
             Button(
-                text=Format('{btn_status_setback}'),
-                id='btn_status_setback',
-                on_click=btn_status_setback_clicked
+                text=Format('{btn_status_reset}'),
+                id='btn_status_reset',
+                on_click=btn_status_reset_clicked
             ),
             Button(
                 text=Format('{btn_status_clear}'),
@@ -252,9 +252,9 @@ aboutme_dialog = Dialog(
                 on_click=btn_grade_ok_clicked
             ),
             Button(
-                text=Format('{btn_grade_setback}'),
-                id='btn_grade_setback',
-                on_click=btn_grade_setback_clicked
+                text=Format('{btn_grade_reset}'),
+                id='btn_grade_reset',
+                on_click=btn_grade_reset_clicked
             ),
             Button(
                 text=Format('{btn_grade_clear}'),
@@ -283,7 +283,7 @@ aboutme_dialog = Dialog(
             Button(
                 text=Format('{btn_yesno_name_no}'),
                 id='btn_yesno_name_no',
-                on_click=btn_grade_setback_clicked
+                on_click=btn_grade_reset_clicked
             ),
         ),
         getter=get_yesno_name,
