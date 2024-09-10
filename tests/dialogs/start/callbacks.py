@@ -14,6 +14,13 @@ from tgbot.tools.logger import get_logger_dev
 log = logging.getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
 
+import enum
+
+
+class MyGender(enum.Enum):
+    m = 'male'
+    f = 'female'
+
 
 async def btn_test_check_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Test: btn_test_check_click: context: %s", dialog_manager.current_context())
@@ -55,6 +62,19 @@ async def btn_test_repo_click(callback: CallbackQuery, button: Button, dialog_ma
 
     log_dev.debug(" Test: btn_test_repo_click: repo: %s", repo)
 
+
+async def btn_test_radio_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Test: btn_test_radio_click: context: %s", dialog_manager.current_context())
+
+    log_dev.debug(" Test: btn_test_check_click: radio_test: %s",
+                  item_get_value(item_id='radio_test', dialog_manager=dialog_manager))
+
+    log_dev.debug(" Test: btn_test_check_click: MyGender: %s",
+                  item_get_value(item_id='radio_test', dialog_manager=dialog_manager))
+
+
+    log_dev.debug(" Test: btn_test_check_click: state: %s",
+                  await dialog_manager.middleware_data['state'].get_data())
 
 def inp_test_check(text: str) -> str:
     return text

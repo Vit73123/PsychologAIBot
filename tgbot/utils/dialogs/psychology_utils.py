@@ -1,9 +1,5 @@
-from logging import getLogger
-
-from fluentogram import TranslatorRunner
-
 from tgbot.config import Config
-from tgbot.tools.logger import get_logger_dev
+from tgbot.utils.dialogs.text_utils import *
 from tgbot.utils.services import (get_prompt,
                                   get_prompt_info)
 
@@ -33,7 +29,8 @@ def create_prompt_text(user_data: dict, i18n: TranslatorRunner) -> str:
         age_string = i18n.gpt.pmt.psycholog.person.age.anonim()
 
     if user_data['gender']:
-        gender_string = ' '.join([i18n.gpt.pmt.psycholog.person.gender(), user_data['gender']])
+        gender_string = ' '.join([i18n.gpt.pmt.psycholog.person.gender(),
+                                  create_gender_string(gender=user_data['gender'], i18n=i18n)])
     else:
         gender_string = i18n.gpt.pmt.psycholog.person.gender.anonim()
 

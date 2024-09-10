@@ -67,6 +67,7 @@ async def cmd_start(message: Message, state: FSMContext, **kwargs):
     /user_gl  - get user id=1 with last status
     /user_ga  - get user id=1 with all statuses
     /user_a   - add user bot_id=9999999999
+    /user_ag  - add gender user bot_id=1111111112
     /user_u   - update user id=1
     /user_d   - delete user id=1
     

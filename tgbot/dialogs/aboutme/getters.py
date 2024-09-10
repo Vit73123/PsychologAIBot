@@ -10,9 +10,13 @@ from tgbot.db.dao import StatusDAO, UserDAO
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils.dialogs import (create_aboutme_text,
                                  create_status_text,
+                                 create_age_f_text,
                                  create_grade_text,
                                  get_name_string,
-                                 get_status_string, )
+                                 get_status_string,
+                                 get_gender_string,
+                                 get_grade_str,
+                                 item_set, )
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -118,8 +122,12 @@ async def get_age(
     log_dev.debug(" Age: get_age: context: %s", dialog_manager.current_context())
     log_dev.debug(" Age: get_age: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
+    age: str = await create_age_f_text(dialog_manager=dialog_manager, i18n=i18n)
+
     return {
-        "win_age": i18n.win.age(),
+        "win_age_h": i18n.win.age.h(),
+        "win_age_txt": i18n.win.age.txt(),
+        "txt_age": age,
         "btn_age_ok": i18n.btn.ok(),
         "btn_age_reset": i18n.btn.reset(),
         "btn_age_clear": i18n.btn.clear(),
@@ -138,10 +146,14 @@ async def get_gender(
     log_dev.debug(" Gender: get_gender: FSM: state: %s, context: %s", await state.get_state(),
                   await state.get_data())
 
+    gender_radio: str = await get_gender_string(dialog_manager=dialog_manager)
+    item_set(value=gender_radio, item_id='gender', dialog_manager=dialog_manager)
+
     gender = [
-        (i18n.btn.gender.male(), '1'),
-        (i18n.btn.gender.female(), '2'),
+        (i18n.btn.gender.male(), 'm'),
+        (i18n.btn.gender.female(), 'f'),
     ]
+
     return {
         "win_gender": i18n.win.gender(),
         "radio_gender": gender,
@@ -186,9 +198,12 @@ async def get_grade(
     log_dev.debug(" Grade: get_grade: context: %s", dialog_manager.current_context())
     log_dev.debug(" Grade: get_grade: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
-    grades = [("+1 😏", '1'), ("+2 😌", '2'), ("+3 🙂", '3'), ("+4 😀", '4'), ("+5 😆", '5'),
-              ("-1 🫤", '6'), ("-2 🙁", '7'), ("-3 😟", '8'), ("-4 😧", '9'), ("-5 🥵", '10'),
-              ("😑 Мне всё безразлично", '11')]
+    grade_str: str = await get_grade_str(dialog_manager=dialog_manager)
+    item_set(value=grade_str, item_id='grade', dialog_manager=dialog_manager)
+
+    grades = [("+1 😏", "1"), ("+2 😌", "2"), ("+3 🙂", "3"), ("+4 😀", "4"), ("+5 😆", "5"),
+              ("-1 🫤", "-1"), ("-2 🙁", "-2"), ("-3 😟", "-3"), ("-4 😧", "-4"), ("-5 🥵", "-5"),
+              ("😑 Мне всё безразлично", "0")]
     return {
         "win_grade": i18n.win.grade(),
         "btn_grade_ok": i18n.btn.ok(),
@@ -196,22 +211,4 @@ async def get_grade(
         "btn_grade_clear": i18n.btn.clear(),
         "btn_grade_cancel": i18n.btn.cancel(),
         "radio_grade": grades,
-    }
-
-
-# Да/Нет Имя
-async def get_yesno_name(
-        dialog_manager: DialogManager,
-        state: FSMContext,
-        i18n: TranslatorRunner,
-        **kwargs
-) -> dict[str, str]:
-    log_dev.debug(" YesNo Name: get_status: context: %s", dialog_manager.current_context())
-    log_dev.debug(" YesNo Name: get_status: FSM: state: %s, context: %s", await state.get_state(),
-                  await state.get_data())
-
-    return {
-        "win_yesno_name": i18n.win.yesno.name(),
-        "btn_yesno_name_yes": i18n.btn.yes(),
-        "btn_yesno-name-no": i18n.btn.no(),
     }

@@ -3,7 +3,7 @@ import operator
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back, SwitchTo
+from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back, SwitchTo, Radio
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Format
 
@@ -33,7 +33,7 @@ aboutme_dialog = Dialog(
     # Профиль
     Window(
 
-        Format('{win_profile_aboutme}\n'),
+        Format('<b>{win_profile_aboutme}</b>\n'),
         Format('{win_profile_h_status}'),
         Format('{win_profile_status}\n'),
         Format('{win_profile_h_grade}'),
@@ -91,7 +91,7 @@ aboutme_dialog = Dialog(
 
     # Имя
     Window(
-        Format("{win_name} <b>{txt_username}?</b>\n"),
+        Format("<b>{win_name} {txt_username}?</b>\n"),
         Format("{win_name_txt}"),
         TextInput(
             id="name",
@@ -126,7 +126,8 @@ aboutme_dialog = Dialog(
 
     # Возраст
     Window(
-        Format("{win_age}"),
+        Format("<b>{win_age_h} {txt_age}?</b>\n"),
+        Format("{win_age_txt}"),
         TextInput(
             id="age",
             type_factory=inp_age_check,
@@ -134,11 +135,10 @@ aboutme_dialog = Dialog(
             on_error=inp_age_error,
         ),
         Row(
-            Button(
+            SwitchTo(
                 text=Format('{btn_age_ok}'),
                 id='btn_age_ok',
-                on_click=btn_age_ok_click
-            ),
+                state=Aboutme.profile),
             Button(
                 text=Format('{btn_age_reset}'),
                 id='btn_age_reset',
@@ -149,10 +149,10 @@ aboutme_dialog = Dialog(
                 id='btn_age_clear',
                 on_click=btn_age_clear_click
             ),
-            SwitchTo(
+            Button(
                 text=Format('{btn_age_cancel}'),
                 id='btn_age_cancel',
-                state=Aboutme.profile
+                on_click=btn_age_cancel_click
             ),
         ),
         getter=get_age,
@@ -172,11 +172,10 @@ aboutme_dialog = Dialog(
             ),
         ),
         Row(
-            Button(
+            SwitchTo(
                 text=Format('{btn_gender_ok}'),
                 id='btn_gender_ok',
-                on_click=btn_gender_ok_click
-            ),
+                state=Aboutme.profile),
             Button(
                 text=Format('{btn_gender_reset}'),
                 id='btn_gender_reset',
@@ -187,10 +186,10 @@ aboutme_dialog = Dialog(
                 id='btn_gender_clear',
                 on_click=btn_gender_clear_click
             ),
-            SwitchTo(
+            Button(
                 text=Format('{btn_gender_cancel}'),
                 id='btn_gender_cancel',
-                state=Aboutme.profile
+                on_click=btn_gender_cancel_click
             ),
         ),
         getter=get_gender,
@@ -249,11 +248,10 @@ aboutme_dialog = Dialog(
             width=5
         ),
         Row(
-            Button(
+            SwitchTo(
                 text=Format('{btn_grade_ok}'),
                 id='btn_grade_ok',
-                on_click=btn_grade_ok_click
-            ),
+                state=Aboutme.profile),
             Button(
                 text=Format('{btn_grade_reset}'),
                 id='btn_grade_reset',
@@ -264,32 +262,13 @@ aboutme_dialog = Dialog(
                 id='btn_grade_clear',
                 on_click=btn_grade_clear_click
             ),
-            SwitchTo(
+            Button(
                 text=Format('{btn_grade_cancel}'),
                 id='btn_grade_cancel',
-                state=Aboutme.profile
+                on_click=btn_grade_cancel_click
             ),
         ),
         getter=get_grade,
         state=Aboutme.grade,
-    ),
-
-    # Да/Нет Имя
-    Window(
-        Format("{win_yesno_name}"),
-        Row(
-            SwitchTo(
-                text=Format('{btn_yesno_name_yes}'),
-                id='btn_yesno_name_yes',
-                state=Aboutme.profile
-            ),
-            Button(
-                text=Format('{btn_yesno_name_no}'),
-                id='btn_yesno_name_no',
-                on_click=btn_grade_reset_click
-            ),
-        ),
-        getter=get_yesno_name,
-        state=Aboutme.yesno_name,
     ),
 )

@@ -129,9 +129,9 @@ win-name-error = <b>{ emoji-i-wrong } Я ошибся:</b>
 
 # Age ---------------------------------------------------------------------------------------------
 
-win-age = <b>{ txt-age-before-long-v2 }?</b>
+win-age-h = { txt-age-before-short }
 
-    { emoji-check } В общении люди всегда учитывают возраст собеседника.
+win-age-txt = { emoji-check } В общении люди всегда учитывают возраст собеседника.
 
 win-age-error = <b>{ emoji-i-wrong } Я ошибся:</b>
 

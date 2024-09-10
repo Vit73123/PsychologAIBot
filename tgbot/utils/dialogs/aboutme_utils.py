@@ -1,11 +1,8 @@
-from logging import getLogger
-
 from aiogram.fsm.context import FSMContext
 from aiogram_dialog import DialogManager
 
 from tgbot.db import Repo
 from tgbot.db.dao import UserDAO, StatusDAO
-from tgbot.tools.logger import get_logger_dev
 from .text_utils import *
 
 log = getLogger(__name__)
@@ -18,10 +15,12 @@ async def create_aboutme_text(dialog_manager: DialogManager, i18n: TranslatorRun
     age: str = await create_age_text(dialog_manager, i18n)
     gender: str = await create_gender_text(dialog_manager, i18n)
 
+    log_dev.debug(" create_aboutme_text: gender: %s", gender)
+
     if age and name:
-        age = lower_text(age)
+        age = lower_string(age)
     if gender and (name or age):
-        gender = 'и ' + lower_text(gender)
+        gender = 'и ' + lower_string(gender)
 
     str_list = [s for s in [name, age, gender] if s]
 
@@ -31,7 +30,7 @@ async def create_aboutme_text(dialog_manager: DialogManager, i18n: TranslatorRun
 # Имя
 async def create_name_text(dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
     name: str = await get_item_value(item_id='name', host='user', dialog_manager=dialog_manager)
-    return ' '.join([i18n.txt.name.before.short(), '<b>' + name + '</b>']) if name else ''
+    return ' '.join([i18n.txt.name.before.short(), name]) if name else ''
 
 
 async def get_name_string(dialog_manager: DialogManager) -> str:
@@ -49,7 +48,14 @@ async def create_age_text(dialog_manager: DialogManager, i18n: TranslatorRunner)
     age: int = await get_item_value(item_id='age', host='user', dialog_manager=dialog_manager)
     age_f_str: str = create_age_f_string(age, i18n)
 
-    return ' '.join([i18n.txt.age.before.short(), '<b>' + age_f_str + '</b>']) if age else ''
+    return ' '.join([i18n.txt.age.before.short(), age_f_str]) if age else ''
+
+
+async def create_age_f_text(dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
+    age: int = await get_item_value(item_id='age', host='user', dialog_manager=dialog_manager)
+    age_f_str: str = create_age_f_string(age, i18n)
+
+    return age_f_str if age else ''
 
 
 async def get_age_string(dialog_manager: DialogManager) -> str:
@@ -59,15 +65,21 @@ async def get_age_string(dialog_manager: DialogManager) -> str:
 
 # Пол
 async def create_gender_text(dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
-    gender: Gender = await get_item_value(item_id='gender', host='user', dialog_manager=dialog_manager)
-    gender_f_str: str = create_gender_f_string(gender, i18n)
+    gender_item: str = await get_item_value(item_id='gender', host='user', dialog_manager=dialog_manager)
+    gender: Gender = Gender(gender_item) if gender_item else None
+    gender_str: str = create_gender_string(gender, i18n)
 
-    return ' '.join([i18n.txt.gender.before.short() + ' -', '<b>' + gender_f_str + '</b>']) if gender_f_str else ''
+    return ' '.join([i18n.txt.gender.before.short() + ' -', gender_str]) if gender_str else ''
 
 
-async def get_gender_string(dialog_manager: DialogManager) -> str:
-    gender: Gender = await get_item_value(item_id='gender', host='user', dialog_manager=dialog_manager)
-    return create_gender_string(gender)
+async def get_gender_string(dialog_manager: DialogManager) -> str | None:
+    """
+    Получить значение виджета 'Пол' как строку
+
+    :param dialog_manager:
+    :return:
+    """
+    return await get_item_value(item_id='gender', host='user', dialog_manager=dialog_manager)
 
 
 # Состояние
@@ -83,22 +95,35 @@ async def get_status_string(dialog_manager: DialogManager) -> str:
 
 # Оценка состояния
 async def create_grade_text(dialog_manager: DialogManager, grades: dict) -> str:
-    grade: int = await get_item_value(item_id='grade', host='status', dialog_manager=dialog_manager)
-    grade_str: str = create_grade_string(grade)
-    grade_f_str = create_grade_f_string(grade)
+    grade_item: str | int = await get_item_value(item_id='grade', host='status', dialog_manager=dialog_manager)
+    grade_str: str = create_grade_string(grade_item)
+    grade_f_str: str = create_grade_f_string(grade_item)
 
-    return '   '.join([grade_f_str, grades[grade_str]]) if grade else ''
+    log_dev.debug(" create_grade_text: grade_f_str: %s", grade_f_str)
+    return '   '.join([grade_f_str, grades[grade_str]]) if grade_item else ''
 
 
-async def get_grade_string(dialog_manager: DialogManager) -> str:
-    grade: int = await get_item_value(item_id='grade', host='status', dialog_manager=dialog_manager)
-    return create_grade_string(grade) if grade else ''
+async def get_grade_str(dialog_manager: DialogManager) -> str | None:
+    """
+    Получить значение виджета 'Оценка состояния' как число
+
+    :param dialog_manager: 
+    :return: 
+    """
+    return await get_item_value(item_id='grade', host='status', dialog_manager=dialog_manager)
 
 
 # Виджеты ====================================================================================================
 
-# Получить значение любого виджета, или None, если виджета нет, или его значение None
-async def get_item_value(item_id: str, host: str, dialog_manager: DialogManager) -> Gender | int | str | None:
+async def get_item_value(item_id: str, host: str, dialog_manager: DialogManager) -> int | str | None:
+    """
+    Получить значение любого виджета, или None, если виджета нет, или его значение None
+
+    :param item_id:
+    :param host:
+    :param dialog_manager:
+    :return:
+    """
     log_dev.debug(" get_item_value: item_id: %s", item_id)
     widget_data: dict = dialog_manager.current_context().widget_data
     if item_id in widget_data:
@@ -170,7 +195,7 @@ async def update_user(dialog_manager: DialogManager) -> None:
 
 
 # Сохранить состояние
-async def save_status(dialog_manager: DialogManager) -> None:
+async def add_status(dialog_manager: DialogManager) -> None:
     widget_data = dialog_manager.current_context().widget_data
 
     state_data: dict = await dialog_manager.middleware_data['state'].get_data()
@@ -179,11 +204,8 @@ async def save_status(dialog_manager: DialogManager) -> None:
     if 'status_text' in widget_data:
         status.status_text = widget_data['status_text']
     if 'grade' in widget_data:
-        status.grade = int(create_grade_string(widget_data['grade']))
-    # status.id = None
+        status.grade = int(widget_data['grade'])
+    status.id = None
 
     repo: Repo = dialog_manager.middleware_data.get('repo')
-    log_dev.debug(" save status: %s", status)
-
-    await repo.status.update(status)
-    # await repo.status.add(status)
+    await repo.status.add(status)

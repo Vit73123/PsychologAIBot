@@ -48,6 +48,11 @@ start_dialog = Dialog(
             id='btn_test_repo',
             on_click=btn_test_repo_click
         ),
+        Button(
+            text=Const("Проверить radio"),
+            id='btn_test_radio',
+            on_click=btn_test_radio_click
+        ),
         # SwitchTo(
         #     text=Const("Начать сеанс"),
         #     id='btn_psychology_start',

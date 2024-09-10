@@ -55,7 +55,7 @@ def get_age_string(user: UserDAO, dialog_manager: DialogManager) -> str:
 # Gender
 def create_gender_text(user: UserDAO, dialog_manager: DialogManager, i18n: TranslatorRunner) -> str:
     gender: Gender = get_item_value('gender', user, dialog_manager)
-    gender_f_str: str = create_gender_f_string(gender, i18n)
+    gender_f_str: str = create_gender_string(gender, i18n)
 
     return ' '.join([i18n.txt.gender.before.short() + ' -', '<b>' + gender_f_str + '</b>']) if gender_f_str else ''
 

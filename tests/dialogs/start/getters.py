@@ -7,7 +7,7 @@ from fluentogram import TranslatorRunner
 
 from tgbot.config import Config
 from tgbot.db import Repo
-from tgbot.db.dao import UserDAO, StatusDAO
+from tgbot.db.dao import UserDAO, StatusDAO, Gender
 from tgbot.services.gpt import ChatGptService
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils.dialogs import get_state_data
@@ -36,8 +36,8 @@ async def get_start(
     log_dev.debug(" Test: get_grade: FSM: state: %s, context: %s", await state.get_state(), await state.get_data())
 
     radio_test = [
-        ('A', '1'),
-        ('B', '2'),
+        ('M', Gender.male),
+        ('F', Gender.female),
     ]
 
     # user: UserDAO = await repo.user.get(1)
