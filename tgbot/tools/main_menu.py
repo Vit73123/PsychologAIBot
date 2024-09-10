@@ -6,10 +6,19 @@ from aiogram.types import BotCommand, Message
 log = logging.getLogger(__name__)
 
 
-# Установить команды и вывести кнопку Menu
-async def set_main_menu(commands: list[BotCommand], bot: Bot):
-    log.debug("Set main menu")
+# Создать основное меню и вывести кнопку Menu
+async def create_main_menu(bot: Bot):
+    log.debug("Create main menu")
 
+    main_menu_commands = [
+        BotCommand(command='/start',
+                   description='Добро пожаловать в Бот!'),
+    ]
+    await set_main_menu(commands=main_menu_commands, bot=bot)
+
+
+# Установить команды
+async def set_main_menu(commands: list[BotCommand], bot: Bot):
     await bot.delete_my_commands()
     await bot.set_my_commands(commands)
 
