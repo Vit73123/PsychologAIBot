@@ -8,8 +8,6 @@ from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button, Radio
 from fluentogram import TranslatorRunner
 
-from tgbot.db import Repo
-from tgbot.db.dao import UserDAO
 from tgbot.dialogs.states import Aboutme
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils.dialogs import (item_reset,
@@ -17,7 +15,7 @@ from tgbot.utils.dialogs import (item_reset,
                                  item_set,
                                  profile_reset,
                                  profile_clear,
-                                 save_user,
+                                 update_user,
                                  save_status, )
 
 if TYPE_CHECKING:
@@ -45,7 +43,6 @@ async def btn_profile_name_click(callback: CallbackQuery, button: Button, dialog
 async def btn_profile_age_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: age: to Age")
 
-    dialog_manager.dialog_data.update({'input_data': 'age'})
     await dialog_manager.switch_to(state=Aboutme.age)
 
 
@@ -62,7 +59,6 @@ async def btn_profile_gender_click(callback: CallbackQuery, button: Button, dial
 async def btn_profile_status_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: status: to Status")
 
-    dialog_manager.dialog_data.update({'input_data': 'status'})
     await dialog_manager.switch_to(state=Aboutme.status)
 
 
@@ -76,7 +72,7 @@ async def btn_profile_grade_click(callback: CallbackQuery, button: Button, dialo
 async def btn_profile_ok_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Profile: button clicked: ok: to Aboutme")
 
-    await save_user(dialog_manager)
+    await update_user(dialog_manager)
     await save_status(dialog_manager)
 
     await dialog_manager.back()
@@ -101,7 +97,7 @@ async def btn_profile_clear_click(callback: CallbackQuery, button: Button, dialo
 def inp_name_check(text: str) -> str:
     log_dev.debug(" Name: input text: check")
     pattern = re.compile("^[a-zA-Zа-яА-ЯёЁ ]+$")
-    if pattern.search(text) or text == '':
+    if pattern.match(text) or text == '':
         return text.strip()
     else:
         raise ValueError
@@ -143,7 +139,7 @@ async def btn_name_cancel_click(callback: CallbackQuery, button: Button, dialog_
     log_dev.debug(" Name: button clicked: cancel")
 
     item_reset(item_id='name', dialog_manager=dialog_manager)
-    await dialog_manager.back()
+    await dialog_manager.switch_to(state=Aboutme.profile)
 
 
 # Возраст =====================================================================================================
@@ -242,36 +238,51 @@ async def btn_gender_cancel_clicked(callback: CallbackQuery, button: Button, dia
 # Состояние ===================================================================================================
 
 
-async def inp_status_check(text: str) -> str:
-    log_dev.debug(" Status: Input text: check")
-    return text
+def inp_status_check(text: str) -> str:
+    log_dev.debug(" Status: input text: check")
+    if text.isspace() or text.isdigit():
+        raise ValueError
+    else:
+        return text.strip()
 
 
 async def inp_status_success(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
                              text: str) -> None:
-    log_dev.debug(" Status: Input text: succeed")
-    await dialog_manager.next()
+    log_dev.debug(" Status: input text: succeed")
+
+    item_set(value=text, item_id='status_text', dialog_manager=dialog_manager)
+
+
+async def inp_status_error(message: Message, widget: ManagedTextInput, dialog_manager: DialogManager,
+                           error: ValueError) -> None:
+    log_dev.debug(" Status: input text: error")
+    i18n: TranslatorRunner = dialog_manager.middleware_data['i18n']
+    await message.answer(
+        i18n.win.status.error()
+    )
 
 
 # -------------------------------------------------------------------------------------------------------------
 
-async def btn_status_ok_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    log_dev.debug(" Status: button clicked: ok")
-
-
 async def btn_status_reset_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Status: button clicked: reset")
-    await dialog_manager.back()
+
+    item_reset(item_id='status_text', dialog_manager=dialog_manager)
+    await dialog_manager.switch_to(state=Aboutme.status)
 
 
 async def btn_status_clear_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Status: button clicked: clear")
-    await dialog_manager.back()
+
+    item_clear(item_id='status_text', dialog_manager=dialog_manager)
+    await dialog_manager.switch_to(state=Aboutme.status)
 
 
-async def btn_status_cancel_clicked(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+async def btn_status_cancel_click(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
     log_dev.debug(" Status: button clicked: cancel")
-    await dialog_manager.back()
+
+    item_reset(item_id='status_text', dialog_manager=dialog_manager)
+    await dialog_manager.switch_to(state=Aboutme.profile)
 
 
 # Оценка ======================================================================================================

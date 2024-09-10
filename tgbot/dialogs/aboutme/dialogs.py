@@ -5,10 +5,11 @@ from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.kbd import Row, Group, Cancel, Back, SwitchTo
 from aiogram_dialog.widgets.media import StaticMedia
-from aiogram_dialog.widgets.text import Format, Const
+from aiogram_dialog.widgets.text import Format
 
 from .callbacks import *
 from .getters import *
+
 
 aboutme_dialog = Dialog(
 
@@ -99,7 +100,10 @@ aboutme_dialog = Dialog(
             on_error=inp_name_error,
         ),
         Row(
-            Back(Format('{btn_name_ok}'), id='btn_name_ok'),
+            SwitchTo(
+                text=Format('{btn_name_ok}'),
+                id='btn_name_ok',
+                state=Aboutme.profile),
             Button(
                 text=Format('{btn_name_reset}'),
                 id='btn_name_reset',
@@ -195,7 +199,9 @@ aboutme_dialog = Dialog(
 
     # Состояние
     Window(
-        Format("{win_status}"),
+        Format("<b>{win_status_h}</b>\n"),
+        Format("<b>{txt_status}</b>\n"),
+        Format("{win_status_txt}\n"),
         TextInput(
             id="status_text",
             type_factory=inp_status_check,
@@ -203,11 +209,10 @@ aboutme_dialog = Dialog(
             on_error=inp_age_error,
         ),
         Row(
-            Button(
+            SwitchTo(
                 text=Format('{btn_status_ok}'),
                 id='btn_status_ok',
-                on_click=btn_status_ok_click
-            ),
+                state=Aboutme.profile),
             Button(
                 text=Format('{btn_status_reset}'),
                 id='btn_status_reset',
@@ -218,10 +223,10 @@ aboutme_dialog = Dialog(
                 id='btn_status_clear',
                 on_click=btn_status_clear_click
             ),
-            SwitchTo(
+            Button(
                 text=Format('{btn_status_cancel}'),
                 id='btn_status_cancel',
-                state=Aboutme.profile
+                on_click=btn_status_cancel_click
             ),
         ),
         getter=get_status,

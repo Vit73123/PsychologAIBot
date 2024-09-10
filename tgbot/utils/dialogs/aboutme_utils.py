@@ -147,7 +147,7 @@ def profile_clear(dialog_manager: DialogManager) -> None:
 
 
 # Сохранить пользователя
-async def save_user(dialog_manager: DialogManager) -> None:
+async def update_user(dialog_manager: DialogManager) -> None:
     widget_data = dialog_manager.current_context().widget_data
 
     state: FSMContext = dialog_manager.middleware_data['state']
@@ -180,6 +180,10 @@ async def save_status(dialog_manager: DialogManager) -> None:
         status.status_text = widget_data['status_text']
     if 'grade' in widget_data:
         status.grade = int(create_grade_string(widget_data['grade']))
+    # status.id = None
 
     repo: Repo = dialog_manager.middleware_data.get('repo')
+    log_dev.debug(" save status: %s", status)
+
     await repo.status.update(status)
+    # await repo.status.add(status)

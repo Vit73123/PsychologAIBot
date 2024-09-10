@@ -10,8 +10,9 @@ from tgbot.db.dao import StatusDAO, UserDAO
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils.dialogs import (create_aboutme_text,
                                  create_status_text,
-                                 create_grade_text, )
-from tgbot.utils.dialogs.aboutme_utils import get_name_string
+                                 create_grade_text,
+                                 get_name_string,
+                                 get_status_string, )
 
 log = getLogger(__name__)
 log_dev = get_logger_dev(__name__, log.level)
@@ -162,8 +163,12 @@ async def get_status(
     log_dev.debug(" Status: get_status: FSM: state: %s, context: %s", await state.get_state(),
                   await state.get_data())
 
+    status_text: str = await get_status_string(dialog_manager)
+
     return {
-        "win_status": i18n.win.status(),
+        "win_status_h": i18n.win.status.h(),
+        "win_status_txt": i18n.win.status.txt(),
+        "txt_status": status_text,
         "btn_status_ok": i18n.btn.ok(),
         "btn_status_reset": i18n.btn.reset(),
         "btn_status_clear": i18n.btn.clear(),

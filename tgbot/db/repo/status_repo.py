@@ -86,8 +86,6 @@ class StatusRepo:
 
             await session.commit()
 
-            log.debug(" Repo: status: %s", str(status))
-
     # Удалить состояние
     async def delete(self, status_id: int) -> None:
         log.debug(" Repo: delete status id=%s", status_id)
