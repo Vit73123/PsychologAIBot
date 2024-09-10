@@ -1,8 +1,9 @@
 import logging
 
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import ManagedTextInput
+from aiogram_dialog.widgets.kbd import Button
 
 from tgbot.dialogs.states import Psychology
 from tgbot.tools.logger import get_logger_dev
@@ -20,4 +21,16 @@ async def inp_message_success(message: Message, widget: ManagedTextInput, dialog
                               text: str) -> None:
     log_dev.debug(" Message: input text: succeed")
 
+    await message.answer("...")
+
     await dialog_manager.switch_to(state=Psychology.appointment)
+
+
+async def btn_appointment_stop(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+    log_dev.debug(" Message: input text: succeed")
+
+    await callback.message.answer("...")
+
+    await dialog_manager.switch_to(state=Psychology.review)
+
+# state = Psychology.review,

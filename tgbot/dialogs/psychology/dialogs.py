@@ -1,7 +1,7 @@
 from aiogram.types import ContentType
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Next
+from aiogram_dialog.widgets.kbd import Cancel, SwitchTo, Next, Button
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Format, Const
 
@@ -31,10 +31,10 @@ psychology_dialog = Dialog(
             type_factory=inp_message_check,
             on_success=inp_message_success,
         ),
-        SwitchTo(
+        Button(
             text=Format("{btn_appointment_stop}"),
             id='btn_appointment_stop',
-            state=Psychology.review,
+            on_click=btn_appointment_stop,
         ),
         getter=get_appointment,
         state=Psychology.appointment,
