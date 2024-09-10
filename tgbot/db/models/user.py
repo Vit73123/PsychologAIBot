@@ -7,8 +7,8 @@ from .base import *
 
 
 class Gender(enum.Enum):
-    male = 1
-    female = 2
+    m = 1
+    f = 2
 
 
 class User(Base):
@@ -19,8 +19,8 @@ class User(Base):
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
     name: Mapped[str | None]
-    gender: Mapped[Gender | None]
-    age: Mapped[int | None] = mapped_column(CheckConstraint("age >= 5 and age <= 150"))
+    gender: Mapped[Gender | None] = mapped_column(CheckConstraint("gender IN ('m', 'f')"))
+    age: Mapped[int | None] = mapped_column(CheckConstraint("age >= 5 AND age <= 150"))
 
     statuses: Mapped[list["Status"]] = relationship(
         back_populates="user",

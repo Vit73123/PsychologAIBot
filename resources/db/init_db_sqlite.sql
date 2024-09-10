@@ -13,7 +13,7 @@ CREATE TABLE users
     first_name TEXT,
     last_name  TEXT,
     name       TEXT,
-    gender     TEXT(1) COLLATE NOCASE CHECK ( gender IN ('male', 'female') ),
+    gender     TEXT(1) COLLATE NOCASE CHECK ( gender IN ('m', 'f') ),
     age        INTEGER CHECK (age >= 5 AND age <= 150),
     created_at DATETIME DEFAULT (DATETIME('now')) NOT NULL,
     updated_at DATETIME DEFAULT (DATETIME('now')) NOT NULL,
