@@ -26,7 +26,7 @@ def create_prompt_text(user_data: dict, i18n: TranslatorRunner) -> str:
 
     if user_data['age']:
         age_string = ' '.join(
-            [i18n.gpt.pmt.psycholog.person.age(), user_data['age']])
+            [i18n.gpt.pmt.psycholog.person.age(), create_age_f_string(age=user_data['age'], i18n=i18n)])
     else:
         age_string = i18n.gpt.pmt.psycholog.person.age.anonim()
 
