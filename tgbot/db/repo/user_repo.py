@@ -74,7 +74,7 @@ class UserRepo:
                 select(u.id, u.name, u.age, u.gender, s.status_text, s.grade, a.review)
                 .join(s, and_(u.id == s.user_id))
                 .join(a, and_(u.id == a.user_id))
-                .order_by(s.updated_at, a.updated_at)
+                .order_by(s.updated_at.desc(), a.updated_at.desc())
                 .limit(1)
                 .where(and_(u.id == user_id))
             )
