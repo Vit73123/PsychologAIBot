@@ -131,7 +131,7 @@ async def get_item_value(item_id: str, host: str, dialog_manager: DialogManager)
     else:
         state_data: dict = await dialog_manager.middleware_data['state'].get_data()
         obj = state_data.get(host)
-        return getattr(obj, item_id)
+        return getattr(obj, item_id) if obj else ''
 
 
 # Окна обработки Виджетов =====================================================================================
