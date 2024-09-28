@@ -199,13 +199,21 @@ async def add_status(dialog_manager: DialogManager) -> None:
     widget_data = dialog_manager.current_context().widget_data
 
     state_data: dict = await dialog_manager.middleware_data['state'].get_data()
-    status: StatusDAO = state_data.get('status')
 
-    if 'status_text' in widget_data:
-        status.status_text = widget_data['status_text']
-    if 'grade' in widget_data:
-        status.grade = int(widget_data['grade'])
-    status.id = None
+    status_text: str = widget_data['status_text'] if 'status_text' in widget_data else None
+    grade: int = int(widget_data['grade']) if 'grade' in widget_data else None
 
-    repo: Repo = dialog_manager.middleware_data.get('repo')
-    await repo.status.add(status)
+    if status_text or grade:
+        status: StatusDAO = state_data.get('status')
+        if status:
+            status.id = None
+        else:
+            status = StatusDAO(user_id=state_data.get('user_data')['user_id'])
+
+        if status_text:
+            status.status_text = status_text
+        if grade:
+            status.grade = grade
+
+        repo: Repo = dialog_manager.middleware_data.get('repo')
+        await repo.status.add(status)
