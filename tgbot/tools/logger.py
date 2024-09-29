@@ -42,14 +42,18 @@ class LoggerFormatterSelected(logging.Formatter):
 def get_logger_dev(name: str, level: int) -> Logger:
     name = name + "dev"
     log = logging.getLogger(name)
-    log.setLevel(level)
+    log.setLevel(level=level)
     log.propagate = False
 
-    handler = logging.StreamHandler()
-    handler.setLevel(level)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(level)
+    stream_handler.setFormatter(LoggerFormatterSelected())
 
-    handler.setFormatter(LoggerFormatterSelected())
+    file_handler = logging.FileHandler('resources/log/bot_dev.log', 'a')
+    file_handler.setLevel(level)
+    file_handler.setFormatter(logging.Formatter(FORMAT))
 
-    log.addHandler(handler)
+    log.addHandler(stream_handler)
+    log.addHandler(file_handler)
 
     return log

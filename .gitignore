@@ -5,6 +5,7 @@
 *.mo
 *.log
 .dev
+.tmp
 bak
 tests
 /bak/
