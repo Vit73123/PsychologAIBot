@@ -10,6 +10,7 @@ from tgbot.db import Repo
 from tgbot.db.dao import AppointmentDAO
 from tgbot.dialogs.states import Psychology
 from tgbot.services.gpt import ChatGptService
+from tgbot.tools.json import load_json
 from tgbot.tools.logger import get_logger_dev
 from tgbot.utils.dialogs import get_state_data, create_prompt
 
@@ -42,7 +43,6 @@ async def get_appointment(
         dialog_manager: DialogManager,
         state: FSMContext,
         repo: Repo,
-        gpt: ChatGptService,
         config: Config,
         i18n: TranslatorRunner,
         **kwargs
@@ -53,8 +53,12 @@ async def get_appointment(
     state_data = await state.get_data()
 
     # Создаём промпт и инициализируем ChatGPT, если его нет в контексте FSM
-    if 'gpt_context' not in state_data:
+    if 'gpt' not in state_data:
         user_id = dialog_manager.start_data['user_id']
+
+        # Создаём экземпляр сервиса GPT текущего пользователя
+        config.gpt.prompts_info = load_json(config.root_path / 'tgbot' / 'config' / 'prompts_info.json')
+        gpt = ChatGptService(token=config.gpt.token, url=config.gpt.url)
 
         # Загружаем все данные, которые учитываются в промпте (user JOIN status JOIN appointment)
         appointment_data: dict = await repo.user.get_with_last_status_appointment(user_id)
@@ -72,27 +76,25 @@ async def get_appointment(
         answer: str = await gpt.add_prompt("Пожалуйста, начни диалог.")
 
         # Сохраняем в FSM контекст GPT
-        # Т.к. с ChatGPT взаимодействуют разные пользователи, то необходимо сохранять весь контекст
-        # сервиса GPT:
+        # Т.к. с ChatGPT взаимодействуют разные пользователи, то необходимо сохранять
+        # целый экземпляр сервиса GPT, который содержит весь необходимый контекст:
         # - client - уникальный идентификатор клиента (пользователя), который направил запрос в ChatGPT
         # - model - на будущее, когда разные пользователи смогут подключать разные модели ChatGPT
         # - messages_list - все реплики диалога, начиная с промпта и обращения
-        await state.update_data({'gpt_context': {
-            'client': gpt.client,
-            'model': gpt.model,
-            'messages_list': gpt.messages_list,
-        }})
+        #
+        # Для каждого сеанса каждого пользователя необходимо создавать свой
+        # новый экземпляр сервиса GPT, т.к. client назначается экземпляру сервиса.
+        #
+        # Если использовать один общий для всех пользователей экземпляр GPT, то
+        # у все пользователи будут выступать как один клиент,
+        # и ChatGPT на сервере будет объединять их реплики в одном своём общем контексте
+        await state.update_data({'gpt': gpt})
 
     # Обрабатываем ответ ChatGPT, если он в контексте FSM, т.е. уже идёт диалог
     else:
 
-        # Получаем текущий контекст GPT из FSM
-        gpt_context = await get_state_data(key='gpt_context', state=state)
-
-        # Инициализируем сервис GPT его текущим контекстом
-        gpt.messages_list = gpt_context['messages_list']
-        gpt.client = gpt_context['client']
-        gpt.model = gpt_context['model']
+        # Получаем экземпляр сервиса GPT из FSM текущего пользователя
+        gpt: ChatGptService = await get_state_data(key='gpt', state=state)
 
         # Получаем из виджета TextInput сообщение пользователя
         text: str = dialog_manager.current_context().widget_data.get('inp_message')
@@ -100,9 +102,8 @@ async def get_appointment(
         # Отправляем в ChatGPT сообщение. Cервис GPT под капотом обновляет свой messages_list
         answer: str = await gpt.add_message(text)
 
-        # Обновляем текущий контекст GPT
-        gpt_context['messages_list'] = gpt.messages_list
-        await state.update_data({'gpt_context': gpt_context})
+        # Обновляем экземпляр сервиса GPT в FSM текущего пользователя
+        await state.update_data({'gpt': gpt})
 
         log_dev.debug(" Appointment: chat: FSM: context: %s", await state.get_data())
 
@@ -116,7 +117,6 @@ async def get_appointment(
 async def get_review(
         dialog_manager: DialogManager,
         state: FSMContext,
-        gpt: ChatGptService,
         repo: Repo,
         i18n: TranslatorRunner,
         **kwargs
@@ -126,15 +126,20 @@ async def get_review(
 
     await state.set_state(Psychology.review)
 
-    # Инициализируем сервис GPT его текущим контекстом
-    gpt_context = await get_state_data(key='gpt_context', state=state)
-    gpt.messages_list = gpt_context['messages_list']
-    gpt.client = gpt_context['client']
-    gpt.model = gpt_context['model']
+    # Инициализируем сервис GPT текущего пользователя
+    gpt: ChatGptService = await get_state_data(key='gpt', state=state)
 
     # Отправляем в ChatGPT сообщение с просьбой сделать ревью сеанса
     text: str = i18n.gpt.pmt.psycholog.finish.createreview()
     answer: str = await gpt.add_message(text)
+
+    # Удаляем сервис GPT из контекста FSM текущего пользователя
+    data = await state.get_data()
+    del data['gpt']
+    await state.set_data(data)
+
+    # Очищаем данные виджетов:
+
 
     # Сохраняем ревью в базе данных
     await repo.appointment.add(

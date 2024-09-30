@@ -48,7 +48,7 @@ def create_prompt_text(user_data: dict, i18n: TranslatorRunner) -> str:
     else:
         grade_string = ''
 
-    if user_data['review'] in user_data:
+    if user_data['review']:
         review_string = ' '.join(
             [i18n.gpt.pmt.psycholog.person.review(), user_data['review']])
     else:

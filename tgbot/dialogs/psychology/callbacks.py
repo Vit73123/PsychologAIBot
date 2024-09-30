@@ -32,5 +32,3 @@ async def btn_appointment_stop(callback: CallbackQuery, button: Button, dialog_m
     await callback.message.answer("...")
 
     await dialog_manager.switch_to(state=Psychology.review)
-
-# state = Psychology.review,

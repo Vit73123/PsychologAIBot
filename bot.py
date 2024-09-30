@@ -69,9 +69,9 @@ async def main():
     grades: dict = load_emoji_grades(config.root_path / 'resources' / 'emoji')
 
     # ChatGPT
-    config.gpt.prompts_info = load_json(config.root_path / 'tgbot' / 'config' / 'prompts_info.json')
+    # config.gpt.prompts_info = load_json(config.root_path / 'tgbot' / 'config' / 'prompts_info.json')
 
-    gpt = ChatGptService(token=config.gpt.token, url=config.gpt.url)
+    # gpt = ChatGptService(token=config.gpt.token, url=config.gpt.url)
 
     # Главное меню
     await create_main_menu(bot=bot)
@@ -82,7 +82,7 @@ async def main():
         grades=grades,
         engine=engine,
         repo=repo,
-        gpt=gpt,
+        # gpt=gpt,
         config=config,
     )
 
